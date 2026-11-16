@@ -4,6 +4,8 @@
 
 const GESCHOSSHOEHE_MIN = 50;  // Plausibilitätsgrenze der Eingabe (kein Normwert)
 const GESCHOSSHOEHE_MAX = 600; // Plausibilitätsgrenze der Eingabe (kein Normwert)
+const LAUFBREITE_MIN = 30;     // Plausibilitätsgrenze der Eingabe (kein Normwert)
+const LAUFBREITE_MAX = 400;    // Plausibilitätsgrenze der Eingabe (kein Normwert)
 
 const formular = document.getElementById("eingabe");
 const fehlerAnzeige = document.getElementById("fehler");
@@ -35,9 +37,14 @@ function zeigeErgebnis(e) {
   setzeText("lauflaenge", cm(e.lauflaenge));
 
   const urteil = document.getElementById("gesamturteil");
-  urteil.textContent = e.normgerecht
-    ? "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065."
-    : "✗ Für diese Geschosshöhe ist keine normgerechte gerade Treppe möglich. Gezeigt wird die nächstliegende Lösung.";
+  if (e.normgerecht) {
+    urteil.textContent = "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065.";
+  } else if (!e.stufenNormgerecht) {
+    urteil.textContent =
+      "✗ Für diese Geschosshöhe ist keine normgerechte gerade Treppe möglich. Gezeigt wird die nächstliegende Lösung.";
+  } else {
+    urteil.textContent = "✗ Die nutzbare Laufbreite unterschreitet das Mindestmaß nach DIN 18065.";
+  }
   urteil.className = "urteil " + (e.normgerecht ? "ok" : "nicht-ok");
 
   const tbody = document.getElementById("pruefungen");
@@ -58,20 +65,61 @@ function zeigeErgebnis(e) {
 
   // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
   letztesErgebnis = e;
-  zeichneSchnitt(schnittSvg, e);
+  zeichneZeichnungen();
 }
 
-// Bei Größenänderung des Fensters den Schnitt neu zeichnen (nur wenn sich die Breite ändert).
+/** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
+function zeichneZeichnungen() {
+  const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis);
+  zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
+}
+
+// Bei Größenänderung des Fensters neu zeichnen (nur wenn sich die Breite ändert).
 const schnittSvg = document.getElementById("schnitt");
+const grundrissSvg = document.getElementById("grundriss");
 let letztesErgebnis = null;
 let letzteBreite = 0;
 new ResizeObserver(() => {
   const breite = schnittSvg.parentElement.clientWidth;
   if (letztesErgebnis && breite > 0 && breite !== letzteBreite) {
     letzteBreite = breite;
-    zeichneSchnitt(schnittSvg, letztesErgebnis);
+    zeichneZeichnungen();
   }
 }).observe(schnittSvg.parentElement);
+
+// Nutzbare Laufbreite: Vorschlag = Mindestmaß der Gebäudeart, rot wenn darunter.
+const laufbreiteHinweis = document.getElementById("laufbreiteHinweis");
+let laufbreiteVomNutzerGeaendert = false;
+
+function laufbreiteMinimum() {
+  return DIN18065.gebaeudearten[formular.gebaeudeart.value].laufbreiteMin;
+}
+
+function aktualisiereLaufbreiteHinweis() {
+  const minimum = laufbreiteMinimum();
+  const wert = Number(formular.laufbreite.value);
+  const zuKlein = formular.laufbreite.value !== "" && Number.isFinite(wert) && wert < minimum;
+  formular.laufbreite.classList.toggle("nicht-ok", zuKlein);
+  laufbreiteHinweis.classList.toggle("nicht-ok", zuKlein);
+  laufbreiteHinweis.textContent = zuKlein
+    ? `Unterschreitet das Mindestmaß von ${minimum} cm nach DIN 18065.`
+    : `Mindestens ${minimum} cm nach DIN 18065.`;
+}
+
+formular.laufbreite.addEventListener("input", () => {
+  laufbreiteVomNutzerGeaendert = true;
+  aktualisiereLaufbreiteHinweis();
+});
+
+for (const auswahl of formular.gebaeudeart) {
+  auswahl.addEventListener("change", () => {
+    // Eigene Eingaben des Nutzers bleiben erhalten.
+    if (!laufbreiteVomNutzerGeaendert) formular.laufbreite.value = laufbreiteMinimum();
+    aktualisiereLaufbreiteHinweis();
+  });
+}
+
+aktualisiereLaufbreiteHinweis();
 
 formular.addEventListener("submit", (ereignis) => {
   ereignis.preventDefault();
@@ -88,5 +136,15 @@ formular.addEventListener("submit", (ereignis) => {
     return;
   }
 
-  zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart));
+  const laufbreite = Number(formular.laufbreite.value);
+  if (!formular.laufbreite.value || !Number.isFinite(laufbreite)) {
+    zeigeFehler("Bitte eine gültige nutzbare Laufbreite in cm eingeben.");
+    return;
+  }
+  if (laufbreite < LAUFBREITE_MIN || laufbreite > LAUFBREITE_MAX) {
+    zeigeFehler(`Die nutzbare Laufbreite muss zwischen ${LAUFBREITE_MIN} und ${LAUFBREITE_MAX} cm liegen.`);
+    return;
+  }
+
+  zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite));
 });

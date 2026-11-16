@@ -73,6 +73,10 @@ input[type="number"] {
 
 input[type="number"]:focus { outline: none; border-bottom-width: 2px; }
 
+input[type="number"].nicht-ok { color: var(--fehler); border-bottom-color: var(--fehler); }
+
+.eingabe-hinweis { margin: -0.9rem 0 1.25rem; }
+
 fieldset { border: var(--haarlinie); margin: 0 0 1.25rem; padding: 0.75rem 1rem; }
 legend { padding: 0 0.3rem; }
 

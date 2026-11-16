@@ -82,12 +82,23 @@ function pruefeVariante(variante, grenzen) {
   ];
 }
 
+/** Prüft die nutzbare Laufbreite gegen das Mindestmaß der Gebäudeart. */
+function pruefeLaufbreite(laufbreite, grenzen) {
+  return {
+    bezeichnung: "Nutzbare Laufbreite",
+    wert: laufbreite,
+    grenze: `≥ ${grenzen.laufbreiteMin} cm`,
+    ok: laufbreite >= grenzen.laufbreiteMin,
+  };
+}
+
 /**
  * Hauptfunktion: findet die beste gerade Treppe für eine Geschosshöhe.
  * @param {number} geschosshoehe in cm
  * @param {string} gebaeudeart Schlüssel aus DIN18065.gebaeudearten
+ * @param {number} laufbreite nutzbare Laufbreite in cm (Eingabe des Nutzers)
  */
-function berechneGeradeTreppe(geschosshoehe, gebaeudeart) {
+function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite) {
   const grenzen = DIN18065.gebaeudearten[gebaeudeart];
 
   // Alle sinnvollen Stufenzahlen durchprobieren (eine mehr als die flachste zulässige).
@@ -100,10 +111,12 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart) {
   }
 
   const anzahlAuftritte = beste.anzahlSteigungen - 1; // gerade Treppe: n − 1 Auftritte
-  const pruefungen = pruefeVariante(beste, grenzen);
+  const stufenPruefungen = pruefeVariante(beste, grenzen);
+  const pruefungen = [...stufenPruefungen, pruefeLaufbreite(laufbreite, grenzen)];
 
   return {
     geschosshoehe,
+    laufbreite,
     anzahlSteigungen: beste.anzahlSteigungen,
     anzahlAuftritte,
     steigung: beste.steigung,
@@ -111,6 +124,7 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart) {
     schrittmass: beste.schrittmass,
     lauflaenge: rundeMm(anzahlAuftritte * beste.auftritt),
     pruefungen,
+    stufenNormgerecht: stufenPruefungen.every((p) => p.ok),
     normgerecht: pruefungen.every((p) => p.ok),
   };
 }

@@ -33,6 +33,12 @@
           <p class="hinweis">Wohngebäude mit mehr als zwei Wohnungen → Gebäude im Allgemeinen.</p>
         </fieldset>
 
+        <label for="laufbreite">Nutzbare Laufbreite (cm)</label>
+        <input id="laufbreite" name="laufbreite" type="number"
+               min="30" max="400" step="1" value="80" required
+               aria-describedby="laufbreiteHinweis">
+        <p id="laufbreiteHinweis" class="hinweis eingabe-hinweis"></p>
+
         <button type="submit">Berechnen</button>
         <p id="fehler" class="fehler" role="alert" hidden></p>
       </form>
@@ -69,6 +75,15 @@
           Laufplattendicke angenommen 18 cm · Deckendicke angenommen 20 cm
         </figcaption>
       </figure>
+
+      <h3>Grundriss</h3>
+      <figure class="zeichnung">
+        <svg id="grundriss" role="img" aria-label="Grundriss der geraden Treppe"></svg>
+        <figcaption>
+          Grundriss, ohne Maßstab · Maße in cm · Darstellung ohne Wände/Handlauf ·
+          Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)
+        </figcaption>
+      </figure>
     </section>
   </main>
 
@@ -81,6 +96,7 @@
   <script src="js/norm.js"></script>
   <script src="js/berechnung.js"></script>
   <script src="js/zeichnung.js"></script>
+  <script src="js/grundriss.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

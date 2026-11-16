@@ -228,4 +228,7 @@ function zeichneSchnitt(svg, ergebnis) {
   text(schrift, (x0 + xRiss) / 2, yMassL - 4, "Lauflänge " + zahl(ergebnis.lauflaenge), {
     "text-anchor": "middle",
   });
+
+  // Abbildung zurückgeben, damit der Grundriss mit gleichem Maßstab darunter liegt.
+  return abb;
 }

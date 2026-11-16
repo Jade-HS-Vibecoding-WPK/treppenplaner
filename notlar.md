@@ -34,3 +34,11 @@
 - s ve a ölçüleri en üst basamakta yazılıyor, çünkü orada yazılar için yer var. Alt basamakta „± 0,00“ kotuyla çakışıyorlardı.
 - İki kot da sağ kenarda, alt alta duruyor. Dar ekranda sol kenarda yer kalmıyordu. *(Kabul edildi, okunurluk için.)*
 - Ölçü çizgilerinde ok yerine 45° eğik çizgi (Schrägstrich) kullanılıyor.
+- Grundriss ayrı bir dosyada: `grundriss.js`. `zeichneSchnitt()` artık ölçeği (abb) döndürüyor, Grundriss aynı ölçeği ve x eksenini kullanıyor. Böylece plan kesitin tam altında duruyor (izdüşüm). *(Kabul edildi.)*
+- Basamak numaraları Steigungen'i sayıyor (1 … n). Son numara üst döşeme kenarının arkasında duruyor. *(Kabul edildi.)*
+- Kesme çizgisi (Schnittlinie), üst yüzü 100 cm'e ilk ulaşan basamakta duruyor. Çift eğik çizgi olarak çiziliyor. Çizginin üstündeki kenarlar ve Lauflinie kesikli. Merdiven 1 m'den alçaksa kesme çizgisi yok. 100 cm bir çizim kuralı, norm değeri değil. Kaynak muhtemelen DIN 1356-1, doğrulanmadı (kodda TODO). *(Kabul edildi.)*
+- Planda şimdilik sadece merdiven çiziliyor. Duvarlar ve Treppenloch, alan girişi adımında eklenecek. *(Kabul edildi.)*
+- Laufbreite varsayılanı bina türünün minimumu. Kullanıcı değeri elle değiştirdiyse, bina türü değişince değer korunuyor. *(Kabul edildi.)*
+- Laufbreite girişi 30–400 cm ile sınırlı. Bu bir makullük sınırı, norm değeri değil.
+- Genel sonuç metni ikiye ayrıldı: Basamaklar uygun ama genişlik küçükse, ayrı bir mesaj gösteriliyor („Die nutzbare Laufbreite unterschreitet …“).
+- Plandaki genişlik ölçüsünde sadece sayı yazıyor (kesitteki Geschosshöhe gibi). „Laufbreite 80,0“ dar merdivenlerde ölçü çizgisine sığmıyordu.

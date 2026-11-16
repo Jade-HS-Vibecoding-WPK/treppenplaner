@@ -11,7 +11,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Schnittzeichnung
 
 ### Should
-- [ ] Grundrisszeichnung (Stufennummern + Lauflinie)
+- ✅ Grundrisszeichnung (Stufennummern + Lauflinie)
+- ✅ Eingabe und Prüfung der nutzbaren Laufbreite
 - [ ] Schnitt vergrößern
 - [ ] Kopfhöhe 2,00 m im Schnitt prüfen
 - [ ] Eingabe der verfügbaren Fläche (Länge × Breite)
@@ -43,9 +44,12 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gerade Treppe: Stufenzahl, Steigung, Auftritt, Schrittmaßregel, Prüfung grün/rot
 - ✅ Schnitt als SVG: Decken, Laufplatte (18 cm angenommen), Schraffur, Höhenkoten, Maßketten (s, a, Lauflänge, Geschosshöhe), automatischer Maßstab
 - ✅ Podestregeln recherchiert (sekundär, siehe `notlar.md`) – noch nicht in der App
+- ✅ Nutzbare Laufbreite als Eingabe: Vorschlag = Mindestmaß der Gebäudeart (80 / 100 cm), eigene Eingabe bleibt erhalten, rot unter dem Mindestmaß, eigene Zeile in der Normprüfung
+- ✅ Grundriss als SVG (`js/grundriss.js`): gleicher Maßstab, genau unter dem Schnitt (Projektion); Stufennummern 1 … n (Steigungen), Lauflinie mit Kreis und Pfeil, Schnittlinie bei ca. 1 m (Darstellungskonvention, Quelle offen), darüber gestrichelt; Maßketten Lauflänge und Laufbreite
 
 ## Nächste Schritte
 
-1. Grundriss der geraden Treppe als SVG: Stufen mit Nummern, Lauflinie mit Pfeil.
-2. Schnitt vergrößerbar machen (z. B. Klick → Vollansicht).
-3. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+1. Schnitt (und Grundriss) vergrößerbar machen (z. B. Klick → Vollansicht).
+2. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+3. Flächeneingabe (Länge × Breite); dabei Wände und Treppenloch im Grundriss ergänzen.
+4. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
