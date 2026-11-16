@@ -19,6 +19,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
 - [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
 - [ ] Variantenvergleich + Bewertung + Empfehlung
+- [ ] Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
+- [ ] Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung
 - [ ] Veröffentlichung auf GitHub Pages
 - [ ] README auf Deutsch
 
@@ -26,15 +28,15 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] Maßstabsfigur (menschliche Silhouette)
 - [ ] Gewichtung der Kriterien durch den Nutzer
 - [ ] Materialvergleich (mit externen Daten)
-- [ ] PDF-Export
+- [ ] IFC-/3D-Export (PDF-Export ist nach „Should“ gewandert)
 
 ## Etappen
 
 | Tag | Inhalt |
 |---|---|
-| Mo 16.11. | Berechnung + Schnitt |
-| Di 17.11. | Grundrisszeichnung + Gestaltung |
-| Mi 18.11. | Flächeneingabe + L/U + Empfehlung |
+| Mo 16.11. | Berechnung, Schnitt, Grundriss, Raumeingabe ✅ + Mehrsprachigkeit |
+| Di 17.11. | Export (DXF, SVG, PDF) + Gestaltung |
+| Mi 18.11. | L/U + Empfehlung |
 | Do 19.11. | 12:00 Freeze, Veröffentlichung, README |
 | Fr 20.11. | Poster + Präsentation (Abgabe 16:00) |
 
