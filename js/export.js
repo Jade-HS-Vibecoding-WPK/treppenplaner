@@ -74,6 +74,22 @@ function exportiereSvg(ergebnis, zeichnung) {
   ladeHerunter(svg, exportDateiname(ergebnis, zeichnung, "svg"), "image/svg+xml");
 }
 
+/*
+ * Drucken: Die Fußzeile kommt auf Seite 1 unter die Normprüfung, damit sie nie allein
+ * auf einer eigenen Seite landet (Seite 2 ist mit Schnitt und Grundriss oft voll).
+ * Nur während des Druckens – am Bildschirm bleibt sie am Seitenende.
+ * Gilt auch für Strg+P, nicht nur für die Schaltfläche.
+ */
+const fusszeile = document.querySelector("footer");
+const fusszeileOriginal = { eltern: fusszeile.parentNode, naechstes: fusszeile.nextSibling };
+
+window.addEventListener("beforeprint", () => {
+  document.getElementById("raumHinweis").after(fusszeile);
+});
+window.addEventListener("afterprint", () => {
+  fusszeileOriginal.eltern.insertBefore(fusszeile, fusszeileOriginal.naechstes);
+});
+
 document.querySelector(".export").addEventListener("click", (ereignis) => {
   const knopf = ereignis.target.closest("button[data-export]");
   if (!knopf || !letztesErgebnis) return;
