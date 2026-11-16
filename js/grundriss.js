@@ -116,14 +116,14 @@ function zeichneRaumMasse(g, schrift, geo, px) {
     linie(g, x0, yUnten + 4, x0, y + 4, STRICH.mass);
     linie(g, xR, yUnten + 4, xR, y + 4, STRICH.mass);
     horizontalesMass(g, x0, xR, y);
-    text(schrift, (x0 + xR) / 2, y - 4, "Raum " + zahl(r.laenge), { "text-anchor": "middle" });
+    text(schrift, (x0 + xR) / 2, y - 4, t("zeichnung.raum", { wert: zahl(r.laenge) }), { "text-anchor": "middle" });
     if (r.fehlt.laenge > 0) {
       const xL = px([geo.L, 0])[0];
       const rot = svgElement(g, "g", { class: "fehlmass" });
       linie(rot, xL, yUnten + 4, xL, y + 4, STRICH.mass);
       horizontalesMass(rot, xR, xL, y);
       text(svgElement(schrift, "g", { class: "fehlmass" }), (xR + xL) / 2, y + 16,
-        "fehlt " + zahl(r.fehlt.laenge), { "text-anchor": "middle" });
+        t("zeichnung.fehlt", { wert: zahl(r.fehlt.laenge) }), { "text-anchor": "middle" });
     }
   }
 
@@ -142,7 +142,7 @@ function zeichneRaumMasse(g, schrift, geo, px) {
       linie(rot, xRechts + 4, yTreppeOben, x + 4, yTreppeOben, STRICH.mass);
       vertikalesMass(rot, x, yRaumOben, yTreppeOben);
       const yFehlt = (yRaumOben + yTreppeOben) / 2;
-      text(svgElement(schrift, "g", { class: "fehlmass" }), x + 14, yFehlt, "fehlt " + zahl(r.fehlt.breite), {
+      text(svgElement(schrift, "g", { class: "fehlmass" }), x + 14, yFehlt, t("zeichnung.fehlt", { wert: zahl(r.fehlt.breite) }), {
         "text-anchor": "middle", transform: `rotate(-90 ${x + 14} ${yFehlt})`,
       });
     }
@@ -164,8 +164,8 @@ function teileAnSchnittlinie(p1, p2, geo) {
   if (f1 <= 0 && f2 <= 0) return { unten: [p1, p2], oben: null };
   if (f1 >= 0 && f2 >= 0) return { unten: null, oben: [p1, p2] };
 
-  const t = f1 / (f1 - f2);
-  const p = [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])];
+  const anteil = f1 / (f1 - f2); // nicht „t“: das ist die Übersetzungsfunktion (i18n.js)
+  const p = [p1[0] + anteil * (p2[0] - p1[0]), p1[1] + anteil * (p2[1] - p1[1])];
   return f1 < 0 ? { unten: [p1, p], oben: [p, p2] } : { unten: [p, p2], oben: [p1, p] };
 }
 
@@ -224,7 +224,7 @@ function zeichneGrundrissMasse(g, schrift, geo, px) {
   linie(g, x0, yUnten + 4, x0, yMassL + 4, STRICH.mass);
   linie(g, xL, yUnten + 4, xL, yMassL + 4, STRICH.mass);
   horizontalesMass(g, x0, xL, yMassL);
-  text(schrift, (x0 + xL) / 2, yMassL - 4, "Lauflänge " + zahl(geo.L), { "text-anchor": "middle" });
+  text(schrift, (x0 + xL) / 2, yMassL - 4, t("zeichnung.lauflaenge", { wert: zahl(geo.L) }), { "text-anchor": "middle" });
 
   // Laufbreite links
   const xMassB = x0 - 28;

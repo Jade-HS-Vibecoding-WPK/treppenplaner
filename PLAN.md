@@ -19,7 +19,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
 - [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
 - [ ] Variantenvergleich + Bewertung + Empfehlung
-- [ ] Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
+- ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - [ ] Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung
 - [ ] Veröffentlichung auf GitHub Pages
 - [ ] README auf Deutsch
@@ -54,16 +54,20 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Rundung korrigiert: Berechnung, Lauflänge, Zeichnungen und Normprüfung mit exakten Werten (z. B. 300 cm → Lauflänge 504,3 cm); gerundet wird nur bei der Anzeige; Normprüfung zeigt bis zu 2 Nachkommastellen (z. B. 19,04 cm ✗)
 - ✅ Schnittlinie im Grundriss liegt an der Setzstufe, die die Schnittebene trifft – zwischen zwei Stufennummern
 - ✅ Raumeingabe (gerade Treppe): verfügbare Länge (in Laufrichtung) und Breite, beide optional; allgemeine Prüfung `pruefeRaum(footprint, vorgabe)` in `js/raum.js` für jeden rechteckigen Footprint; Zeile „Passt in den Raum“ (Raumvorgabe, keine Normprüfung) mit Fehlmaß („Es fehlen 20 cm Länge“) und eigenem Raumurteil; Grundriss mit feinem Raumrechteck (Treppe links unten an der Wand), schraffiertem Überstand und roten Fehlmaßen; vereinfacht: benötigte Breite = Laufbreite, ohne Antritts-/Austrittsfläche
+- ✅ Mehrsprachigkeit DE / EN / FR: alle Texte in `js/i18n.js` (Wörterbuch + `t()`), Umschalter DE | EN | FR rechts oben, Wahl im Browser gespeichert (`localStorage`), Standard Deutsch; Formular, Ergebnis, Normprüfung, Fehlermeldungen, Zeichnungsbeschriftungen und Legenden übersetzt; Zahlenformat je Sprache (de-DE / en-GB / fr-FR); Symbole s, a, 2s + a und Einheit cm in allen Sprachen; EN/FR nennen DIN 18065 als deutsche Norm und zeigen „Übersetzung zur Orientierung“; Berechnung liefert nur Schlüssel und Zahlen (`kriterium`, `grenze`), keine Texte; Fachbegriffe in `notlar.md`
 
 ## Nächste Schritte
 
-1. L- und U-Treppe mit Podest; Footprint je Variante berechnen und mit `pruefeRaum` prüfen.
-2. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
-3. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
-4. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
-5. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+1. Export (Di): Schnitt und Grundriss zuerst als Geometrieliste (Linien, Polygone, Texte, Ebenen; in cm) berechnen, daraus SVG zeichnen und DXF erzeugen; danach SVG- und PDF-Export. Bisher zeichnen `zeichnung.js` / `grundriss.js` direkt ins SVG, Maßketten und Texte in px – vorher Plan abstimmen.
+2. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
+3. L- und U-Treppe mit Podest; Footprint je Variante berechnen und mit `pruefeRaum` prüfen.
+4. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+5. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
+6. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
+7. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
 
-## Gestaltung – nach der Mehrsprachigkeit
+## Gestaltung (Di)
 
 - Grundriss, rechter Rand: Maßtexte („fehlt 20,0“, „60,0“, „100,0“) überschneiden sich mit der Stufennummer „16“ oder stehen zu gedrängt.
 - Formular: Zwischen dem Hinweis „Mindestens 80 cm …“ und dem Kasten „Verfügbarer Raum“ fehlt der Abstand.
+- Maßtexte in EN/FR sind etwas länger („Total going 99.0“ / „Reculement 99,0“: 92 / 98 px statt 86 px im Deutschen) – bei sehr kurzen Treppen prüfen, ob sie noch zwischen die Maßlinien passen.

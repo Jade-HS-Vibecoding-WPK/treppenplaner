@@ -18,6 +18,7 @@ const DIN18065 = Object.freeze({
 
   gebaeudearten: Object.freeze({
     wohngebaeude: Object.freeze({
+      // Normbegriff (deutsch). Angezeigt wird der Text aus i18n.js („gebaeudeart.wohngebaeude“).
       bezeichnung: "Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen",
 
       // Steigung s: 14–20 cm
@@ -38,6 +39,7 @@ const DIN18065 = Object.freeze({
     }),
 
     allgemein: Object.freeze({
+      // Normbegriff (deutsch). Angezeigt wird der Text aus i18n.js („gebaeudeart.allgemein“).
       bezeichnung: "Gebäude im Allgemeinen",
 
       // Steigung s: 14–19 cm

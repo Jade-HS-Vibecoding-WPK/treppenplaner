@@ -33,10 +33,7 @@ function svgElement(eltern, name, attribute = {}) {
   return el;
 }
 
-/** Zahl im deutschen Format, z. B. 17,2 */
-function zahl(wert, stellen = 1) {
-  return wert.toLocaleString("de-DE", { minimumFractionDigits: stellen, maximumFractionDigits: stellen });
-}
+// zahl() (Zahlenformat je Sprache) steht in i18n.js.
 
 /** Berechnet alle Punkte des Schnitts in cm. */
 function schnittGeometrie(ergebnis) {
@@ -203,7 +200,7 @@ function zeichneSchnitt(svg, ergebnis, breitePx) {
 
   // Höhenkoten übereinander am rechten Rand (unter der oberen Decke ist Platz für ± 0,00)
   const xKote = Math.max(abb.x(geo.xEnde) - 45, abb.x(geo.L) + 22);
-  hoehenkote(g, schrift, xKote, abb.y(0), "± 0,00");
+  hoehenkote(g, schrift, xKote, abb.y(0), "± " + zahl(0, 2));
   hoehenkote(g, schrift, xKote, abb.y(geo.H), "+ " + zahl(geo.H / 100, 2));
 
   // Geschosshöhe rechts
@@ -247,7 +244,7 @@ function zeichneSchnitt(svg, ergebnis, breitePx) {
   linie(g, x0, yDeckeUnten + 4, x0, yMassL + 4, STRICH.mass);
   linie(g, xRiss, yDeckeUnten + 4, xRiss, yMassL + 4, STRICH.mass);
   horizontalesMass(g, x0, xRiss, yMassL);
-  text(schrift, (x0 + xRiss) / 2, yMassL - 4, "Lauflänge " + zahl(ergebnis.lauflaenge), {
+  text(schrift, (x0 + xRiss) / 2, yMassL - 4, t("zeichnung.lauflaenge", { wert: zahl(ergebnis.lauflaenge) }), {
     "text-anchor": "middle",
   });
 

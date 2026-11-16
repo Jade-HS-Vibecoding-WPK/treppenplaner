@@ -57,26 +57,30 @@ function bewertung(variante, grenzen) {
   );
 }
 
-/** Erstellt die Liste der Normprüfungen für eine Variante. */
+/**
+ * Erstellt die Liste der Normprüfungen für eine Variante.
+ * Ohne Texte: `kriterium` ist ein Schlüssel für die Übersetzung (i18n.js, „kriterium.…“),
+ * `grenze` enthält nur Zahlen ({min, max} oder {min}); den Text baut app.js.
+ */
 function pruefeVariante(variante, grenzen) {
   const sm = DIN18065.schrittmass;
   return [
     {
-      bezeichnung: "Steigung s",
+      kriterium: "steigung",
       wert: variante.steigung,
-      grenze: `${grenzen.steigung.min}–${grenzen.steigung.max} cm`,
+      grenze: { min: grenzen.steigung.min, max: grenzen.steigung.max },
       ok: abweichung(variante.steigung, grenzen.steigung.min, grenzen.steigung.max) === 0,
     },
     {
-      bezeichnung: "Auftritt a",
+      kriterium: "auftritt",
       wert: variante.auftritt,
-      grenze: `${grenzen.auftritt.min}–${grenzen.auftritt.max} cm`,
+      grenze: { min: grenzen.auftritt.min, max: grenzen.auftritt.max },
       ok: abweichung(variante.auftritt, grenzen.auftritt.min, grenzen.auftritt.max) === 0,
     },
     {
-      bezeichnung: "Schrittmaß 2s + a",
+      kriterium: "schrittmass",
       wert: variante.schrittmass,
-      grenze: `${sm.min}–${sm.max} cm`,
+      grenze: { min: sm.min, max: sm.max },
       ok: abweichung(variante.schrittmass, sm.min, sm.max) === 0,
     },
   ];
@@ -85,9 +89,9 @@ function pruefeVariante(variante, grenzen) {
 /** Prüft die nutzbare Laufbreite gegen das Mindestmaß der Gebäudeart. */
 function pruefeLaufbreite(laufbreite, grenzen) {
   return {
-    bezeichnung: "Nutzbare Laufbreite",
+    kriterium: "laufbreite",
     wert: laufbreite,
-    grenze: `≥ ${grenzen.laufbreiteMin} cm`,
+    grenze: { min: grenzen.laufbreiteMin },
     ok: laufbreite >= grenzen.laufbreiteMin,
   };
 }

@@ -12,17 +12,29 @@ const fehlerAnzeige = document.getElementById("fehler");
 const ergebnisBlock = document.getElementById("ergebnis");
 
 /**
- * Formatiert eine Zahl deutsch mit Einheit cm (nur Anzeige – gerechnet wird exakt).
+ * Formatiert eine Zahl im Format der Sprache mit Einheit cm (nur Anzeige – gerechnet wird exakt).
  * maxStellen = 2 in der Normprüfung, damit z. B. 19,04 cm nicht als „19,0“ erscheint.
  */
 function cm(wert, maxStellen = 1) {
-  return wert.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: maxStellen }) + " cm";
+  return zahlFlexibel(wert, maxStellen, 1) + " cm";
 }
 
-function zeigeFehler(text) {
-  fehlerAnzeige.textContent = text;
+/** Zulässiger Bereich als Text: {min, max} → „14–20 cm“, {min} → „≥ 80 cm“. */
+function grenzeText(grenze) {
+  return grenze.max != null
+    ? `${zahlFlexibel(grenze.min, 1)}–${zahlFlexibel(grenze.max, 1)} cm`
+    : `≥ ${zahlFlexibel(grenze.min, 1)} cm`;
+}
+
+// Letzte Fehlermeldung als Schlüssel, damit sie beim Sprachwechsel neu übersetzt werden kann.
+let letzterFehler = null;
+
+function zeigeFehler(schluessel, werte = {}) {
+  letzterFehler = { schluessel, werte };
+  fehlerAnzeige.textContent = t(schluessel, werte);
   fehlerAnzeige.hidden = false;
   ergebnisBlock.hidden = true;
+  letztesErgebnis = null;
 }
 
 function setzeText(id, text) {
@@ -30,6 +42,7 @@ function setzeText(id, text) {
 }
 
 function zeigeErgebnis(e) {
+  letzterFehler = null;
   fehlerAnzeige.hidden = true;
 
   setzeText("anzahlSteigungen", e.anzahlSteigungen);
@@ -41,19 +54,19 @@ function zeigeErgebnis(e) {
 
   const urteil = document.getElementById("gesamturteil");
   if (e.normgerecht) {
-    urteil.textContent = "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065.";
+    urteil.textContent = t("urteil.normgerecht");
   } else if (!e.stufenNormgerecht) {
-    urteil.textContent =
-      "✗ Für diese Geschosshöhe ist keine normgerechte gerade Treppe möglich. Gezeigt wird die nächstliegende Lösung.";
+    urteil.textContent = t("urteil.keineLoesung");
   } else {
-    urteil.textContent = "✗ Die nutzbare Laufbreite unterschreitet das Mindestmaß nach DIN 18065.";
+    urteil.textContent = t("urteil.laufbreite");
   }
   urteil.className = "urteil " + (e.normgerecht ? "ok" : "nicht-ok");
 
   const tbody = document.getElementById("pruefungen");
   tbody.replaceChildren();
   for (const p of e.pruefungen) {
-    fuegePruefzeileHinzu(tbody, [p.bezeichnung, cm(p.wert, 2), p.grenze, p.ok ? "✓ erfüllt" : "✗ nicht erfüllt"], p.ok);
+    const ergebnis = p.ok ? t("pruefung.erfuellt") : t("pruefung.nichtErfuellt");
+    fuegePruefzeileHinzu(tbody, [t("kriterium." + p.kriterium), cm(p.wert, 2), grenzeText(p.grenze), ergebnis], p.ok);
   }
 
   zeigeRaumpruefung(tbody, e.raum);
@@ -80,42 +93,42 @@ function fuegePruefzeileHinzu(tbody, zellen, ok, klasse = "") {
 
 /** Fehlmaß aufgerundet auf 1 Nachkommastelle, damit ein echter Fehlbetrag nie als „0“ erscheint. */
 function fehlmass(wert) {
-  return (Math.ceil(wert * 10) / 10).toLocaleString("de-DE", { maximumFractionDigits: 1 }) + " cm";
+  return zahlFlexibel(Math.ceil(wert * 10) / 10, 1) + " cm";
 }
 
-/** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ */
+/** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ (Satzbau je Sprache in i18n.js) */
 function fehltText(fehlt) {
   const teile = [];
-  if (fehlt.laenge > 0) teile.push(`${fehlmass(fehlt.laenge)} Länge`);
-  if (fehlt.breite > 0) teile.push(`${fehlmass(fehlt.breite)} Breite`);
-  return `Es fehlen ${teile.join(" und ")}.`;
+  if (fehlt.laenge > 0) teile.push(t("raum.fehltLaenge", { wert: fehlmass(fehlt.laenge) }));
+  if (fehlt.breite > 0) teile.push(t("raum.fehltBreite", { wert: fehlmass(fehlt.breite) }));
+  return t("raum.fehlt", { teile: teile.join(t("raum.und")) });
 }
 
 /** Zeile „Passt in den Raum“ und Raumurteil – getrennt von der Normprüfung. */
 function zeigeRaumpruefung(tbody, raum) {
   const urteil = document.getElementById("raumurteil");
-  document.getElementById("raumHinweis").hidden = !raum;
+  const hinweis = document.getElementById("raumHinweis");
+  hinweis.hidden = !raum;
   urteil.hidden = !raum;
   if (!raum) return;
+  hinweis.textContent = t("raum.hinweis");
 
   const { footprint, vorgabe, fehlt, passt } = raum;
   const wert = `${zahl(footprint.laenge)} × ${zahl(footprint.breite)} cm`;
-  const zahlKurz = (v) => v.toLocaleString("de-DE", { maximumFractionDigits: 1 });
+  const zahlKurz = (v) => zahlFlexibel(v, 1);
   let grenze;
   if (vorgabe.laenge != null && vorgabe.breite != null) {
     grenze = `≤ ${zahlKurz(vorgabe.laenge)} × ${zahlKurz(vorgabe.breite)} cm`;
   } else if (vorgabe.laenge != null) {
-    grenze = `Länge ≤ ${zahlKurz(vorgabe.laenge)} cm`;
+    grenze = `${t("raum.laenge")} ≤ ${zahlKurz(vorgabe.laenge)} cm`;
   } else {
-    grenze = `Breite ≤ ${zahlKurz(vorgabe.breite)} cm`;
+    grenze = `${t("raum.breite")} ≤ ${zahlKurz(vorgabe.breite)} cm`;
   }
-  grenze += " (Raumvorgabe)";
-  const ergebnis = passt ? "✓ passt" : "✗ " + fehltText(fehlt);
-  fuegePruefzeileHinzu(tbody, ["Passt in den Raum", wert, grenze, ergebnis], passt, "raumzeile");
+  grenze += " " + t("raum.vorgabe");
+  const ergebnis = passt ? t("raum.passt") : "✗ " + fehltText(fehlt);
+  fuegePruefzeileHinzu(tbody, [t("raum.kriterium"), wert, grenze, ergebnis], passt, "raumzeile");
 
-  urteil.textContent = passt
-    ? "✓ Die Treppe passt in den verfügbaren Raum."
-    : "✗ Die Treppe passt nicht in den verfügbaren Raum. " + fehltText(fehlt);
+  urteil.textContent = passt ? t("raum.urteilPasst") : t("raum.urteilPasstNicht", { fehlt: fehltText(fehlt) });
   urteil.className = "urteil " + (passt ? "ok" : "nicht-ok");
 }
 
@@ -154,9 +167,9 @@ function aktualisiereLaufbreiteHinweis() {
   const zuKlein = formular.laufbreite.value !== "" && Number.isFinite(wert) && wert < minimum;
   formular.laufbreite.classList.toggle("nicht-ok", zuKlein);
   laufbreiteHinweis.classList.toggle("nicht-ok", zuKlein);
-  laufbreiteHinweis.textContent = zuKlein
-    ? `Unterschreitet das Mindestmaß von ${minimum} cm nach DIN 18065.`
-    : `Mindestens ${minimum} cm nach DIN 18065.`;
+  laufbreiteHinweis.textContent = t(zuKlein ? "laufbreite.unterschritten" : "laufbreite.mindestens", {
+    min: zahlFlexibel(minimum, 1),
+  });
 }
 
 formular.laufbreite.addEventListener("input", () => {
@@ -174,6 +187,16 @@ for (const auswahl of formular.gebaeudeart) {
 
 aktualisiereLaufbreiteHinweis();
 
+// Sprachwechsel (i18n.js): statische Texte sind schon übersetzt; dynamische Texte und Zeichnungen neu aufbauen.
+document.addEventListener("sprachwechsel", () => {
+  aktualisiereLaufbreiteHinweis();
+  if (letzterFehler) {
+    fehlerAnzeige.textContent = t(letzterFehler.schluessel, letzterFehler.werte);
+  } else if (letztesErgebnis) {
+    zeigeErgebnis(letztesErgebnis);
+  }
+});
+
 formular.addEventListener("submit", (ereignis) => {
   ereignis.preventDefault();
 
@@ -181,37 +204,37 @@ formular.addEventListener("submit", (ereignis) => {
   const gebaeudeart = formular.gebaeudeart.value;
 
   if (!formular.geschosshoehe.value || !Number.isFinite(geschosshoehe)) {
-    zeigeFehler("Bitte eine gültige Geschosshöhe in cm eingeben.");
+    zeigeFehler("fehler.geschosshoeheUngueltig");
     return;
   }
   if (geschosshoehe < GESCHOSSHOEHE_MIN || geschosshoehe > GESCHOSSHOEHE_MAX) {
-    zeigeFehler(`Die Geschosshöhe muss zwischen ${GESCHOSSHOEHE_MIN} und ${GESCHOSSHOEHE_MAX} cm liegen.`);
+    zeigeFehler("fehler.geschosshoeheBereich", { min: GESCHOSSHOEHE_MIN, max: GESCHOSSHOEHE_MAX });
     return;
   }
 
   const laufbreite = Number(formular.laufbreite.value);
   if (!formular.laufbreite.value || !Number.isFinite(laufbreite)) {
-    zeigeFehler("Bitte eine gültige nutzbare Laufbreite in cm eingeben.");
+    zeigeFehler("fehler.laufbreiteUngueltig");
     return;
   }
   if (laufbreite < LAUFBREITE_MIN || laufbreite > LAUFBREITE_MAX) {
-    zeigeFehler(`Die nutzbare Laufbreite muss zwischen ${LAUFBREITE_MIN} und ${LAUFBREITE_MAX} cm liegen.`);
+    zeigeFehler("fehler.laufbreiteBereich", { min: LAUFBREITE_MIN, max: LAUFBREITE_MAX });
     return;
   }
 
   const raumVorgabe = { laenge: null, breite: null };
-  for (const [schluessel, feld, name] of [
-    ["laenge", formular.raumLaenge, "verfügbare Länge"],
-    ["breite", formular.raumBreite, "verfügbare Breite"],
+  for (const [schluessel, feld, fehlerPraefix] of [
+    ["laenge", formular.raumLaenge, "fehler.raumLaenge"],
+    ["breite", formular.raumBreite, "fehler.raumBreite"],
   ]) {
     if (feld.value === "" && feld.validity.badInput) {
-      zeigeFehler(`Bitte eine gültige ${name} in cm eingeben oder das Feld leer lassen.`);
+      zeigeFehler(fehlerPraefix + "Ungueltig");
       return;
     }
     if (feld.value === "") continue; // optional
     const wert = Number(feld.value);
     if (!Number.isFinite(wert) || wert < RAUMMASS_MIN || wert > RAUMMASS_MAX) {
-      zeigeFehler(`Die ${name} muss zwischen ${RAUMMASS_MIN} und ${RAUMMASS_MAX} cm liegen.`);
+      zeigeFehler(fehlerPraefix + "Bereich", { min: RAUMMASS_MIN, max: RAUMMASS_MAX });
       return;
     }
     raumVorgabe[schluessel] = wert;

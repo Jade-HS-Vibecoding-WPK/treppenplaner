@@ -26,6 +26,12 @@
   - Kapı kuralı **DIN 18065'te değil, MBO'da**: „Eine Treppe darf nicht unmittelbar hinter einer Tür beginnen, die in Richtung der Treppe aufschlägt; zwischen Treppe und Tür ist ein ausreichender Treppenabsatz anzuordnen.“ Kaynak: MBO 2002, **§ 34 Abs. 7** (umwelt-online.de, Archivfassung, Stand 16.06.2018). Yapay zekâ önce § 35 demişti, bu yanlıştı. Güncel MBO'daki numara **nicht verifiziert**.
   - MBO sadece „ausreichend“ diyor, **sayısal bir derinlik vermiyor**. „Absatz en az kapı genişliği kadar derin olmalı“ ifadesi hiçbir kaynakta bulunamadı: **nicht verifiziert**, kullanılmadı.
   - Baunetz Wissen („Treppen und Treppenräume“) bu konuda bir şey söylemiyor.
+- **Mehrsprachigkeit (16.11., hocanın isteği):** Deutsch, Englisch, Französisch; varsayılan Almanca.
+  - Semboller her dilde **s** ve **a**, formül de **2s + a**. Terimin yanında sembol duruyor: „Rise s“, „Hauteur de marche s“.
+  - Birim her dilde **cm**.
+  - Sayı biçimi dile göre: `de-DE` / `fr-FR` → 17,5 · `en-GB` → 17.5. Hesap her zaman tam değerle.
+  - Normun adı (DIN 18065) her dilde aynı; EN/FR'de bunun bir Alman normu olduğu yazıyor. EN/FR'de „Übersetzung zur Orientierung, maßgebend ist der deutsche Normtext“ notu var.
+  - Terimler aşağıdaki tabloda („Fachbegriffe DE / EN / FR“).
 
 ## Yapay zekânın kararları
 
@@ -67,3 +73,48 @@
 - Ölçü zincirleri: alan uzunluğu Lauflänge'nin altında („Raum 400,0“), alan genişliği sağda. Eksik kısım aynı zincirde kırmızı („fehlt 20,0“).
 - Alan girişinin makullük sınırı 50–2000 cm. Bu bir norm değeri değil.
 - Plandaki genişlik ölçüsünde sadece sayı yazıyor (kesitteki Geschosshöhe gibi). „Laufbreite 80,0“ dar merdivenlerde ölçü çizgisine sığmıyordu.
+- **Mehrsprachigkeit – teknik yapı:**
+  - Tüm metinler `js/i18n.js` içindeki tek bir sözlükte (`TEXTE.de/en/fr`). Diğer dosyalar `t("anahtar", {yer tutucular})` çağırıyor. EN/FR'de eksik anahtar varsa Almanca metin gösteriliyor ve konsolda uyarı çıkıyor.
+  - `index.html` Almanca metni olduğu gibi tutuyor (`data-i18n` / `data-i18n-aria`). JavaScript çalışmasa da sayfa Almanca okunabiliyor.
+  - Hesap dosyaları artık metin değil, anahtar ve sayı döndürüyor (`kriterium: "steigung"`, `grenze: {min, max}`). Metni `app.js` oluşturuyor. `norm.js`'deki `bezeichnung` normun Almanca terimi olarak kaldı, arayüzde kullanılmıyor.
+  - „Es fehlen …“ gibi cümleler parça parça değil, dile göre bütün cümle olarak sözlükte duruyor, çünkü dilbilgisi farklı.
+  - Dil değişince sayfa yeniden yüklenmiyor. Son sonuç veya son hata mesajı yeni dilde tekrar gösteriliyor, çizimler yeniden çiziliyor.
+  - `localStorage` erişimi `try/catch` içinde. Özel pencerede kayıt yapılamazsa dil sadece sayfa yenilenene kadar geçerli.
+  - `zahl()` `zeichnung.js`'den `i18n.js`'e taşındı (sayı biçimi dile bağlı).
+  - Seçici sağ üstte: `DE | EN | FR`, seçili dil kalın ve altı çizili (`aria-pressed`). Gri, küçük, büyük harf, çizim başlıklarıyla aynı stil.
+  - Çizim legendlerindeki 18 cm / 20 cm sözlükte sabit yazıyor, HTML'de de öyleydi. `LAUFPLATTENDICKE`/`DECKENDICKE` değişirse sözlük de güncellenmeli.
+  - Hata mesajlarındaki sınırlar (50, 600, 2000) biçimlendirilmeden yazılıyor („2000“, „2,000“ değil).
+
+## Fachbegriffe DE / EN / FR
+
+Kaynak: yapay zekânın önerisi, kullanıcı tarafından kontrol edildi ve düzeltildi (16.11.). DIN 18065'in resmi EN/FR çevirisi görülmedi. ⚠ = emin değil.
+
+> **TODO:** Französisch von einer Muttersprachlerin / einem Muttersprachler prüfen lassen.
+
+| Deutsch | English | Français | Not |
+|---|---|---|---|
+| Geschosshöhe | storey height | hauteur d'étage | |
+| Steigung s | rise s | hauteur de marche s | |
+| Auftritt a | going a | giron a | |
+| Schrittmaß 2s + a | 2R + G rule (2s + a) | formule de Blondel (2s + a) | EN: Approved Document K'daki adı (kullanıcı) |
+| Nutzbare Laufbreite | clear width ⚠ | emmarchement (largeur utile) | emmarchement = largeur de la volée (kullanıcı) |
+| Lauflinie | walking line | ligne de foulée | |
+| Podest | landing | palier (Zwischenpodest: palier de repos) | |
+| Lauflänge | total going | reculement | EN: kullanıcı düzeltmesi |
+| Treppenlauf | flight | volée | |
+| Raumvorgabe | available space ⚠ | espace disponible ⚠ | terim değil, açıklayıcı ifade |
+| Höhenkote | level / spot level | cote de niveau | |
+| OKFF | FFL (finished floor level) | niveau du sol fini ⚠ | FR kısaltması belirsiz |
+| Laufplatte | waist (stair slab) | paillasse | |
+| Setzstufe | riser | contremarche | |
+| Stufe / Stufennummer | step / step number | marche / numéro de marche | |
+| Antritt / Austritt | foot / top of stair | départ / arrivée | |
+| Schnitt / Grundriss | section / plan | coupe / vue en plan | |
+| Schnittlinie (im Grundriss) | cut line ⚠ | ligne de coupe ⚠ | |
+| Deckendicke | slab thickness | épaisseur de dalle | |
+| Treppenloch | stairwell opening | trémie | |
+| Kopfhöhe | headroom | échappée | |
+| Handlauf / Wange | handrail / stringer | main courante / limon | |
+| Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen | residential buildings with no more than two dwellings / within dwellings ⚠ | bâtiments d'habitation d'au plus deux logements / à l'intérieur des logements ⚠ | kendi çevirimiz |
+| Gebäude im Allgemeinen | buildings in general ⚠ | bâtiments en général ⚠ | kendi çevirimiz |
+| Notwendige Treppe | required stair ⚠ | escalier nécessaire ⚠ | Alman yönetmelik kavramı |

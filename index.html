@@ -7,95 +7,107 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Texte stehen in js/i18n.js; data-i18n ersetzt den deutschen Text hier je nach Sprache. -->
   <header>
-    <h1>Treppenplaner</h1>
-    <p class="untertitel">Gerade Treppe – Bemessung nach DIN 18065</p>
+    <div>
+      <h1>Treppenplaner</h1>
+      <p class="untertitel" data-i18n="seite.untertitel">Gerade Treppe – Bemessung nach DIN 18065</p>
+    </div>
+    <nav class="sprachwahl" data-i18n-aria="sprachwahl.label" aria-label="Sprache">
+      <button type="button" data-sprache="de" lang="de" aria-pressed="true">DE</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-sprache="en" lang="en" aria-pressed="false">EN</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-sprache="fr" lang="fr" aria-pressed="false">FR</button>
+    </nav>
   </header>
 
   <main>
     <section class="block">
-      <h2>Eingabe</h2>
+      <h2 data-i18n="eingabe.titel">Eingabe</h2>
       <form id="eingabe" novalidate>
-        <label for="geschosshoehe">Geschosshöhe (cm)</label>
+        <label for="geschosshoehe" data-i18n="eingabe.geschosshoehe">Geschosshöhe (cm)</label>
         <input id="geschosshoehe" name="geschosshoehe" type="number"
                min="50" max="600" step="0.5" value="275" required>
 
         <fieldset>
-          <legend>Gebäudeart</legend>
+          <legend data-i18n="eingabe.gebaeudeart">Gebäudeart</legend>
           <label class="option">
             <input type="radio" name="gebaeudeart" value="wohngebaeude" checked>
-            Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen
+            <span data-i18n="gebaeudeart.wohngebaeude">Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen</span>
           </label>
           <label class="option">
             <input type="radio" name="gebaeudeart" value="allgemein">
-            Gebäude im Allgemeinen
+            <span data-i18n="gebaeudeart.allgemein">Gebäude im Allgemeinen</span>
           </label>
-          <p class="hinweis">Wohngebäude mit mehr als zwei Wohnungen → Gebäude im Allgemeinen.</p>
+          <p class="hinweis" data-i18n="gebaeudeart.hinweis">Wohngebäude mit mehr als zwei Wohnungen → Gebäude im Allgemeinen.</p>
         </fieldset>
 
-        <label for="laufbreite">Nutzbare Laufbreite (cm)</label>
+        <label for="laufbreite" data-i18n="eingabe.laufbreite">Nutzbare Laufbreite (cm)</label>
         <input id="laufbreite" name="laufbreite" type="number"
                min="30" max="400" step="1" value="80" required
                aria-describedby="laufbreiteHinweis">
         <p id="laufbreiteHinweis" class="hinweis eingabe-hinweis"></p>
 
         <fieldset>
-          <legend>Verfügbarer Raum (optional)</legend>
-          <label for="raumLaenge">Verfügbare Länge (cm, in Laufrichtung)</label>
+          <legend data-i18n="eingabe.raum">Verfügbarer Raum (optional)</legend>
+          <label for="raumLaenge" data-i18n="eingabe.raumLaenge">Verfügbare Länge (cm, in Laufrichtung)</label>
           <input id="raumLaenge" name="raumLaenge" type="number" min="50" max="2000" step="1">
-          <label for="raumBreite">Verfügbare Breite (cm)</label>
+          <label for="raumBreite" data-i18n="eingabe.raumBreite">Verfügbare Breite (cm)</label>
           <input id="raumBreite" name="raumBreite" type="number" min="50" max="2000" step="1">
-          <p class="hinweis">Leer lassen, wenn es keine Vorgabe gibt.</p>
+          <p class="hinweis" data-i18n="eingabe.raumHinweis">Leer lassen, wenn es keine Vorgabe gibt.</p>
         </fieldset>
 
-        <button type="submit">Berechnen</button>
+        <button type="submit" data-i18n="eingabe.berechnen">Berechnen</button>
         <p id="fehler" class="fehler" role="alert" hidden></p>
       </form>
     </section>
 
     <section class="block" id="ergebnis" hidden>
-      <h2>Ergebnis</h2>
+      <h2 data-i18n="ergebnis.titel">Ergebnis</h2>
       <p id="gesamturteil" class="urteil"></p>
       <p id="raumurteil" class="urteil" hidden></p>
 
       <table class="werte">
         <tbody>
-          <tr><th>Anzahl Steigungen</th><td id="anzahlSteigungen"></td></tr>
-          <tr><th>Anzahl Auftritte</th><td id="anzahlAuftritte"></td></tr>
-          <tr><th>Steigung s</th><td id="steigung"></td></tr>
-          <tr><th>Auftritt a</th><td id="auftritt"></td></tr>
-          <tr><th>Schrittmaß 2s + a</th><td id="schrittmass"></td></tr>
-          <tr><th>Lauflänge (Grundriss)</th><td id="lauflaenge"></td></tr>
+          <tr><th data-i18n="ergebnis.anzahlSteigungen">Anzahl Steigungen</th><td id="anzahlSteigungen"></td></tr>
+          <tr><th data-i18n="ergebnis.anzahlAuftritte">Anzahl Auftritte</th><td id="anzahlAuftritte"></td></tr>
+          <tr><th data-i18n="kriterium.steigung">Steigung s</th><td id="steigung"></td></tr>
+          <tr><th data-i18n="kriterium.auftritt">Auftritt a</th><td id="auftritt"></td></tr>
+          <tr><th data-i18n="kriterium.schrittmass">Schrittmaß 2s + a</th><td id="schrittmass"></td></tr>
+          <tr><th data-i18n="ergebnis.lauflaenge">Lauflänge (Grundriss)</th><td id="lauflaenge"></td></tr>
         </tbody>
       </table>
 
-      <h3>Normprüfung</h3>
+      <h3 data-i18n="pruefung.titel">Normprüfung</h3>
       <table class="pruefung">
         <thead>
-          <tr><th>Kriterium</th><th>Wert</th><th>Zulässig</th><th>Ergebnis</th></tr>
+          <tr>
+            <th data-i18n="pruefung.kriterium">Kriterium</th>
+            <th data-i18n="pruefung.wert">Wert</th>
+            <th data-i18n="pruefung.zulaessig">Zulässig</th>
+            <th data-i18n="pruefung.ergebnis">Ergebnis</th>
+          </tr>
         </thead>
         <tbody id="pruefungen"></tbody>
       </table>
-      <p id="raumHinweis" class="hinweis" hidden>
-        Raumprüfung vereinfacht: benötigte Breite = nutzbare Laufbreite (ohne Wangen, Handlauf
-        und Wandabstand); ohne Antritts- und Austrittsfläche.
-      </p>
+      <p id="raumHinweis" class="hinweis" hidden></p>
 
       <!-- Gemeinsamer Scrollbereich: Schnitt und Grundriss bleiben beim Scrollen übereinander. -->
       <div class="zeichnungen">
-      <h3>Schnitt</h3>
+      <h3 data-i18n="schnitt.titel">Schnitt</h3>
       <figure class="zeichnung">
-        <svg id="schnitt" role="img" aria-label="Schnitt der geraden Treppe"></svg>
-        <figcaption>
+        <svg id="schnitt" role="img" data-i18n-aria="schnitt.aria" aria-label="Schnitt der geraden Treppe"></svg>
+        <figcaption data-i18n="schnitt.legende">
           Schnitt, ohne Maßstab · Maße in cm ·
           Laufplattendicke angenommen 18 cm · Deckendicke angenommen 20 cm
         </figcaption>
       </figure>
 
-      <h3>Grundriss</h3>
+      <h3 data-i18n="grundriss.titel">Grundriss</h3>
       <figure class="zeichnung">
-        <svg id="grundriss" role="img" aria-label="Grundriss der geraden Treppe"></svg>
-        <figcaption>
+        <svg id="grundriss" role="img" data-i18n-aria="grundriss.aria" aria-label="Grundriss der geraden Treppe"></svg>
+        <figcaption data-i18n="grundriss.legende">
           Grundriss, ohne Maßstab · Maße in cm · Darstellung ohne Wände/Handlauf ·
           Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)
         </figcaption>
@@ -105,11 +117,13 @@
   </main>
 
   <footer>
-    <p>Orientierungshilfe, ersetzt keine Prüfung nach Landesbauordnung.</p>
-    <p>Grenzwerte: DIN 18065:2020-08, Tabelle 1 (zitiert nach WEKA-Fachportal, Original nicht eingesehen).</p>
+    <p data-i18n="fuss.landesrecht">Orientierungshilfe, ersetzt keine Prüfung nach Landesbauordnung.</p>
+    <p data-i18n="fuss.quelle">Grenzwerte: DIN 18065:2020-08, Tabelle 1 (zitiert nach WEKA-Fachportal, Original nicht eingesehen).</p>
+    <p data-i18n="fuss.uebersetzung" hidden></p>
   </footer>
 
   <!-- Klassische Skripte (keine ES-Module), damit die Seite auch per Doppelklick läuft. -->
+  <script src="js/i18n.js"></script>
   <script src="js/norm.js"></script>
   <script src="js/berechnung.js"></script>
   <script src="js/raum.js"></script>

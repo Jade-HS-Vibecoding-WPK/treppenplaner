@@ -50,6 +50,46 @@ h3 { margin-top: 1.75rem; }
 
 .untertitel { margin: 0.25rem 0 0; color: var(--grau); }
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* Sprachwahl DE | EN | FR – rechts oben, wie eine Planbeschriftung */
+.sprachwahl {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  color: var(--grau);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+
+.sprachwahl button {
+  margin: 0;
+  padding: 0.1rem 0.15rem;
+  border: none;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: var(--grau);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+/* höhere Spezifität als das allgemeine button:hover (invertiert) weiter unten */
+.sprachwahl button:hover,
+.sprachwahl button:focus-visible { background: none; color: var(--tinte); }
+
+.sprachwahl button[aria-pressed="true"] {
+  color: var(--tinte);
+  font-weight: 600;
+  border-bottom-color: var(--tinte);
+}
+
 .block {
   border: var(--linie);
   padding: 1.25rem;
