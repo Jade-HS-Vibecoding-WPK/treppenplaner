@@ -97,8 +97,9 @@ function pruefeLaufbreite(laufbreite, grenzen) {
  * @param {number} geschosshoehe in cm
  * @param {string} gebaeudeart Schlüssel aus DIN18065.gebaeudearten
  * @param {number} laufbreite nutzbare Laufbreite in cm (Eingabe des Nutzers)
+ * @param {{laenge: number|null, breite: number|null}} [raumVorgabe] verfügbare Fläche (optional)
  */
-function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite) {
+function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgabe = null) {
   const grenzen = DIN18065.gebaeudearten[gebaeudeart];
 
   // Alle sinnvollen Stufenzahlen durchprobieren (eine mehr als die flachste zulässige).
@@ -113,6 +114,10 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite) {
   const anzahlAuftritte = beste.anzahlSteigungen - 1; // gerade Treppe: n − 1 Auftritte
   const stufenPruefungen = pruefeVariante(beste, grenzen);
   const pruefungen = [...stufenPruefungen, pruefeLaufbreite(laufbreite, grenzen)];
+  const lauflaenge = anzahlAuftritte * beste.auftritt;
+
+  // Footprint der geraden Treppe, vereinfacht: Breite = nutzbare Laufbreite.
+  const raum = pruefeRaum({ laenge: lauflaenge, breite: laufbreite }, raumVorgabe);
 
   return {
     geschosshoehe,
@@ -122,8 +127,9 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite) {
     steigung: beste.steigung,
     auftritt: beste.auftritt,
     schrittmass: beste.schrittmass,
-    lauflaenge: anzahlAuftritte * beste.auftritt,
+    lauflaenge,
     pruefungen,
+    raum, // null ohne Raumvorgabe; keine Normprüfung, fließt nicht in „normgerecht“ ein
     stufenNormgerecht: stufenPruefungen.every((p) => p.ok),
     normgerecht: pruefungen.every((p) => p.ok),
   };

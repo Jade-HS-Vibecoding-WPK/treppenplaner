@@ -19,6 +19,13 @@
     - Notwendige Treppen'de en geç 18 Steigung'dan sonra bir Podest gerekir. Wohngebäude mit bis zu zwei Wohnungen bunun dışında.
     - Bir Treppenlauf en az 3 Stufe'den oluşur.
     - Podest uzunluğu en az nutzbare Laufbreite kadar olmalı.
+- Raumeingabe: verfügbare Länge (Laufrichtung) ve Breite isteğe bağlı. Merdiven alanın sol alt köşesinde, duvara dayalı. Gereken genişlik = nutzbare Laufbreite („vereinfacht“). Sığma kontrolü bir Normprüfung değil: tabloda „Raumvorgabe“ etiketiyle ayrı bir satır ve ayrı bir sonuç metni var. Taşan kısım taralı, eksik ölçü kırmızı.
+- `pruefeRaum` genel bir fonksiyon: sadece düz merdiveni değil, her dikdörtgen Footprint'i (Länge × Breite) kontrol ediyor. L/U merdivenlerde de kullanılacak.
+- **Antritts- und Austrittsfläche (Recherche 16.11., sekundär):**
+  - DIN 18065'te merdiven başı/sonu için genel bir minimum serbest alan **bulunamadı**. Bulunan sayılar (1,00–1,20 m) sadece forumlardan geliyor ve kaynakları yok, bu yüzden kullanılmadı. Uygulamada şimdilik bu alan yok; tablonun altında „ohne Antritts- und Austrittsfläche“ notu var.
+  - Kapı kuralı **DIN 18065'te değil, MBO'da**: „Eine Treppe darf nicht unmittelbar hinter einer Tür beginnen, die in Richtung der Treppe aufschlägt; zwischen Treppe und Tür ist ein ausreichender Treppenabsatz anzuordnen.“ Kaynak: MBO 2002, **§ 34 Abs. 7** (umwelt-online.de, Archivfassung, Stand 16.06.2018). Yapay zekâ önce § 35 demişti, bu yanlıştı. Güncel MBO'daki numara **nicht verifiziert**.
+  - MBO sadece „ausreichend“ diyor, **sayısal bir derinlik vermiyor**. „Absatz en az kapı genişliği kadar derin olmalı“ ifadesi hiçbir kaynakta bulunamadı: **nicht verifiziert**, kullanılmadı.
+  - Baunetz Wissen („Treppen und Treppenräume“) bu konuda bir şey söylemiyor.
 
 ## Yapay zekânın kararları
 
@@ -54,4 +61,9 @@
 - Plandaki kesme çizgisi, kesme düzlemini (100 cm) kesen rıhtın (Setzstufe) üzerinden geçiyor, basamağın ortasından değil. Bu hem geometrik olarak daha doğru, hem de çizgi iki numaranın arasında kalıyor ve numaraların üstünden geçmiyor.
 - Genişlik yetmezse, kesit ve plan tek bir kaydırma alanında (`.zeichnungen`) birlikte yatay kayıyor. Böylece hizalı kalıyorlar. Başlıklar ve açıklama yazıları `position: sticky` ile yerinde kalıyor. Bunun için `container-type` / `cqw` kullanılıyor. *(Telefonda yatay kaydırma kabul edildi.)*
 - Ölçek, kaydırma alanının görünen genişliğinden hesaplanıyor, `figure`'un genişliğinden değil. Çünkü `figure` çizimle birlikte büyüyor; aksi halde çizim pencere küçülünce bir daha küçülmezdi.
+- Alan kontrolü ayrı bir dosyada: `js/raum.js`. Fonksiyon sadece sayı döndürüyor (fehlt.laenge / fehlt.breite), metinler `app.js`'de oluşuyor. Eksik ölçü 0,1 cm'e yukarı yuvarlanıyor, böylece gerçek bir eksik hiçbir zaman „0 cm“ olarak görünmüyor.
+- Alan merdivenden uzunsa, ortak çizim aralığı (Schnitt + Grundriss) alanın sonuna kadar uzuyor. Böylece plan kesitin altında hizalı kalıyor.
+- Planda sadece girilen kenarlar çiziliyor: sadece Länge girilirse iki enine çizgi, sadece Breite girilirse iki boyuna çizgi.
+- Ölçü zincirleri: alan uzunluğu Lauflänge'nin altında („Raum 400,0“), alan genişliği sağda. Eksik kısım aynı zincirde kırmızı („fehlt 20,0“).
+- Alan girişinin makullük sınırı 50–2000 cm. Bu bir norm değeri değil.
 - Plandaki genişlik ölçüsünde sadece sayı yazıyor (kesitteki Geschosshöhe gibi). „Laufbreite 80,0“ dar merdivenlerde ölçü çizgisine sığmıyordu.

@@ -113,6 +113,11 @@ th, td {
 .werte td { text-align: right; font-variant-numeric: tabular-nums; }
 .pruefung thead th { font-size: 0.8rem; color: var(--grau); border-bottom: var(--linie); }
 .pruefung td { font-variant-numeric: tabular-nums; }
+/* Raumprüfung ist keine Normprüfung – optisch abgesetzt */
+.pruefung .raumzeile td { border-top: var(--linie); }
+
+/* Fehlmaße im Grundriss (Raum zu klein) */
+.fehlmass { color: var(--fehler); }
 
 .ok { color: var(--ok); font-weight: 600; }
 .nicht-ok { color: var(--fehler); font-weight: 600; }

@@ -53,22 +53,70 @@ function zeigeErgebnis(e) {
   const tbody = document.getElementById("pruefungen");
   tbody.replaceChildren();
   for (const p of e.pruefungen) {
-    const zeile = document.createElement("tr");
-    const zellen = [p.bezeichnung, cm(p.wert, 2), p.grenze, p.ok ? "✓ erfüllt" : "✗ nicht erfüllt"];
-    zellen.forEach((inhalt, i) => {
-      const td = document.createElement("td");
-      td.textContent = inhalt;
-      if (i === 3) td.className = p.ok ? "ok" : "nicht-ok";
-      zeile.appendChild(td);
-    });
-    tbody.appendChild(zeile);
+    fuegePruefzeileHinzu(tbody, [p.bezeichnung, cm(p.wert, 2), p.grenze, p.ok ? "✓ erfüllt" : "✗ nicht erfüllt"], p.ok);
   }
+
+  zeigeRaumpruefung(tbody, e.raum);
 
   ergebnisBlock.hidden = false;
 
   // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
   letztesErgebnis = e;
   zeichneZeichnungen();
+}
+
+/** Hängt eine Zeile an die Prüftabelle an; die letzte Zelle ist das Ergebnis (grün/rot). */
+function fuegePruefzeileHinzu(tbody, zellen, ok, klasse = "") {
+  const zeile = document.createElement("tr");
+  if (klasse) zeile.className = klasse;
+  zellen.forEach((inhalt, i) => {
+    const td = document.createElement("td");
+    td.textContent = inhalt;
+    if (i === zellen.length - 1) td.className = ok ? "ok" : "nicht-ok";
+    zeile.appendChild(td);
+  });
+  tbody.appendChild(zeile);
+}
+
+/** Fehlmaß aufgerundet auf 1 Nachkommastelle, damit ein echter Fehlbetrag nie als „0“ erscheint. */
+function fehlmass(wert) {
+  return (Math.ceil(wert * 10) / 10).toLocaleString("de-DE", { maximumFractionDigits: 1 }) + " cm";
+}
+
+/** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ */
+function fehltText(fehlt) {
+  const teile = [];
+  if (fehlt.laenge > 0) teile.push(`${fehlmass(fehlt.laenge)} Länge`);
+  if (fehlt.breite > 0) teile.push(`${fehlmass(fehlt.breite)} Breite`);
+  return `Es fehlen ${teile.join(" und ")}.`;
+}
+
+/** Zeile „Passt in den Raum“ und Raumurteil – getrennt von der Normprüfung. */
+function zeigeRaumpruefung(tbody, raum) {
+  const urteil = document.getElementById("raumurteil");
+  document.getElementById("raumHinweis").hidden = !raum;
+  urteil.hidden = !raum;
+  if (!raum) return;
+
+  const { footprint, vorgabe, fehlt, passt } = raum;
+  const wert = `${zahl(footprint.laenge)} × ${zahl(footprint.breite)} cm`;
+  const zahlKurz = (v) => v.toLocaleString("de-DE", { maximumFractionDigits: 1 });
+  let grenze;
+  if (vorgabe.laenge != null && vorgabe.breite != null) {
+    grenze = `≤ ${zahlKurz(vorgabe.laenge)} × ${zahlKurz(vorgabe.breite)} cm`;
+  } else if (vorgabe.laenge != null) {
+    grenze = `Länge ≤ ${zahlKurz(vorgabe.laenge)} cm`;
+  } else {
+    grenze = `Breite ≤ ${zahlKurz(vorgabe.breite)} cm`;
+  }
+  grenze += " (Raumvorgabe)";
+  const ergebnis = passt ? "✓ passt" : "✗ " + fehltText(fehlt);
+  fuegePruefzeileHinzu(tbody, ["Passt in den Raum", wert, grenze, ergebnis], passt, "raumzeile");
+
+  urteil.textContent = passt
+    ? "✓ Die Treppe passt in den verfügbaren Raum."
+    : "✗ Die Treppe passt nicht in den verfügbaren Raum. " + fehltText(fehlt);
+  urteil.className = "urteil " + (passt ? "ok" : "nicht-ok");
 }
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
@@ -151,5 +199,23 @@ formular.addEventListener("submit", (ereignis) => {
     return;
   }
 
-  zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite));
+  const raumVorgabe = { laenge: null, breite: null };
+  for (const [schluessel, feld, name] of [
+    ["laenge", formular.raumLaenge, "verfügbare Länge"],
+    ["breite", formular.raumBreite, "verfügbare Breite"],
+  ]) {
+    if (feld.value === "" && feld.validity.badInput) {
+      zeigeFehler(`Bitte eine gültige ${name} in cm eingeben oder das Feld leer lassen.`);
+      return;
+    }
+    if (feld.value === "") continue; // optional
+    const wert = Number(feld.value);
+    if (!Number.isFinite(wert) || wert < RAUMMASS_MIN || wert > RAUMMASS_MAX) {
+      zeigeFehler(`Die ${name} muss zwischen ${RAUMMASS_MIN} und ${RAUMMASS_MAX} cm liegen.`);
+      return;
+    }
+    raumVorgabe[schluessel] = wert;
+  }
+
+  zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgabe));
 });

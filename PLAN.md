@@ -15,7 +15,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Eingabe und Prüfung der nutzbaren Laufbreite
 - ✅ Schnitt und Grundriss vergrößern (breitere Seite, Mindestmaßstab, gemeinsames Scrollen)
 - [ ] Kopfhöhe 2,00 m im Schnitt prüfen
-- [ ] Eingabe der verfügbaren Fläche (Länge × Breite)
+- ✅ Eingabe der verfügbaren Fläche (Länge × Breite) – gerade Treppe
+- [ ] Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
 - [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
 - [ ] Variantenvergleich + Bewertung + Empfehlung
 - [ ] Veröffentlichung auf GitHub Pages
@@ -50,9 +51,12 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Größere Zeichnungen: Seite 64rem breit, Schrift 13 px (Stufennummern 12 px), Mindestmaßstab (Grundriss ≥ 90 px hoch, Auftritt ≥ 28 px); 250–350 cm passen auf einem Laptop ohne Scrollen; nur auf schmalen Bildschirmen oder bei sehr hohen Geschossen scrollen Schnitt und Grundriss gemeinsam horizontal und bleiben übereinander
 - ✅ Rundung korrigiert: Berechnung, Lauflänge, Zeichnungen und Normprüfung mit exakten Werten (z. B. 300 cm → Lauflänge 504,3 cm); gerundet wird nur bei der Anzeige; Normprüfung zeigt bis zu 2 Nachkommastellen (z. B. 19,04 cm ✗)
 - ✅ Schnittlinie im Grundriss liegt an der Setzstufe, die die Schnittebene trifft – zwischen zwei Stufennummern
+- ✅ Raumeingabe (gerade Treppe): verfügbare Länge (in Laufrichtung) und Breite, beide optional; allgemeine Prüfung `pruefeRaum(footprint, vorgabe)` in `js/raum.js` für jeden rechteckigen Footprint; Zeile „Passt in den Raum“ (Raumvorgabe, keine Normprüfung) mit Fehlmaß („Es fehlen 20 cm Länge“) und eigenem Raumurteil; Grundriss mit feinem Raumrechteck (Treppe links unten an der Wand), schraffiertem Überstand und roten Fehlmaßen; vereinfacht: benötigte Breite = Laufbreite, ohne Antritts-/Austrittsfläche
 
 ## Nächste Schritte
 
-1. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
-2. Flächeneingabe (Länge × Breite); dabei Wände und Treppenloch im Grundriss ergänzen.
-3. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+1. L- und U-Treppe mit Podest; Footprint je Variante berechnen und mit `pruefeRaum` prüfen.
+2. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+3. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
+4. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
+5. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).

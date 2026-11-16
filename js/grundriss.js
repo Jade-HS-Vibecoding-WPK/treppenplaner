@@ -22,6 +22,8 @@ const LAUFLINIE_KREIS_RADIUS = 3.5;
 const LAUFLINIE_PFEIL = { laenge: 9, halbeBreite: 3.5 };
 const SCHNITTLINIE_UEBERSTAND = 8;    // px über die Treppenkante hinaus
 const SCHNITTLINIE_ABSTAND = 4;       // px zwischen den beiden Linien
+const RAUM_STRICH = 0.75;             // Begrenzung des verfügbaren Raums (fein)
+const RAUMMASS_ABSTAND = 30;          // px zwischen Lauflängen- und Raummaßkette
 
 /** Berechnet die Grundrissgeometrie in cm. */
 function grundrissGeometrie(ergebnis) {
@@ -47,7 +49,104 @@ function grundrissGeometrie(ergebnis) {
     };
   }
 
-  return { n, a, L, B, setzstufen, schnittlinie };
+  return { n, a, L, B, setzstufen, schnittlinie, raum: raumGeometrie(ergebnis.raum, L, B) };
+}
+
+/**
+ * Raumrechteck in cm: Antritt an der linken Raumkante, Treppe an der unteren Wand
+ * (linke untere Ecke). Ohne Vorgabe in einer Richtung gilt dort das Treppenmaß.
+ * Überstand = Teile der Treppe außerhalb des Raums (zwei sich nicht überlappende Rechtecke).
+ */
+function raumGeometrie(raum, L, B) {
+  if (!raum) return null;
+  const laenge = raum.vorgabe.laenge ?? L;
+  const breite = raum.vorgabe.breite ?? B;
+  const yOben = B - breite; // y nach unten; die Treppe liegt bei 0 … B
+  const ueberstand = [];
+  if (raum.fehlt.laenge > 0) ueberstand.push({ x1: laenge, x2: L, y1: 0, y2: B });
+  if (raum.fehlt.breite > 0) ueberstand.push({ x1: 0, x2: Math.min(laenge, L), y1: 0, y2: yOben });
+  return {
+    laenge, breite, yOben,
+    laengeVorgegeben: raum.vorgabe.laenge != null,
+    breiteVorgegeben: raum.vorgabe.breite != null,
+    fehlt: raum.fehlt,
+    ueberstand,
+  };
+}
+
+/** Raumrechteck (nur vorgegebene Seiten) und schraffierter Überstand der Treppe. */
+function zeichneRaum(svg, g, geo, px) {
+  const r = geo.raum;
+
+  const defs = svgElement(svg, "defs");
+  const muster = svgElement(defs, "pattern", {
+    id: "ueberstand", patternUnits: "userSpaceOnUse", width: 5, height: 5, patternTransform: "rotate(45)",
+  });
+  svgElement(muster, "line", {
+    x1: 0, y1: 0, x2: 0, y2: 5, stroke: "currentColor", "stroke-width": STRICH.schraffur,
+  });
+
+  for (const u of r.ueberstand) {
+    const [x1, y1] = px([u.x1, u.y1]);
+    const [x2, y2] = px([u.x2, u.y2]);
+    svgElement(g, "rect", { x: x1, y: y1, width: x2 - x1, height: y2 - y1, fill: "url(#ueberstand)", stroke: "none" });
+  }
+
+  // Nur die vorgegebenen Begrenzungen zeichnen: Länge → Querwände, Breite → Längswände.
+  const ecken = { lo: px([0, r.yOben]), ro: px([r.laenge, r.yOben]), lu: px([0, geo.B]), ru: px([r.laenge, geo.B]) };
+  const strecke = (p, q) => linie(g, p[0], p[1], q[0], q[1], RAUM_STRICH);
+  if (r.breiteVorgegeben) {
+    strecke(ecken.lo, ecken.ro);
+    strecke(ecken.lu, ecken.ru);
+  }
+  if (r.laengeVorgegeben) {
+    strecke(ecken.lo, ecken.lu);
+    strecke(ecken.ro, ecken.ru);
+  }
+}
+
+/** Maßketten des Raums: Länge unter der Lauflänge, Breite rechts; Fehlmaße rot. */
+function zeichneRaumMasse(g, schrift, geo, px) {
+  const r = geo.raum;
+  const [x0, yUnten] = px([0, geo.B]);
+
+  if (r.laengeVorgegeben) {
+    const y = yUnten + 26 + RAUMMASS_ABSTAND;
+    const xR = px([r.laenge, 0])[0];
+    linie(g, x0, yUnten + 4, x0, y + 4, STRICH.mass);
+    linie(g, xR, yUnten + 4, xR, y + 4, STRICH.mass);
+    horizontalesMass(g, x0, xR, y);
+    text(schrift, (x0 + xR) / 2, y - 4, "Raum " + zahl(r.laenge), { "text-anchor": "middle" });
+    if (r.fehlt.laenge > 0) {
+      const xL = px([geo.L, 0])[0];
+      const rot = svgElement(g, "g", { class: "fehlmass" });
+      linie(rot, xL, yUnten + 4, xL, y + 4, STRICH.mass);
+      horizontalesMass(rot, xR, xL, y);
+      text(svgElement(schrift, "g", { class: "fehlmass" }), (xR + xL) / 2, y + 16,
+        "fehlt " + zahl(r.fehlt.laenge), { "text-anchor": "middle" });
+    }
+  }
+
+  if (r.breiteVorgegeben) {
+    const xRechts = px([Math.max(geo.L, r.laenge), 0])[0];
+    const x = xRechts + 30; // Abstand zur Stufennummer n am Laufende
+    const [, yRaumOben] = px([0, r.yOben]);
+    const [, yTreppeOben] = px([0, 0]);
+    linie(g, xRechts + 4, yUnten, x + 4, yUnten, STRICH.mass);
+    linie(g, xRechts + 4, yRaumOben, x + 4, yRaumOben, STRICH.mass);
+    vertikalesMass(g, x, yUnten, yRaumOben);
+    const yMitte = (yUnten + yRaumOben) / 2;
+    text(schrift, x - 4, yMitte, zahl(r.breite), { "text-anchor": "middle", transform: `rotate(-90 ${x - 4} ${yMitte})` });
+    if (r.fehlt.breite > 0) {
+      const rot = svgElement(g, "g", { class: "fehlmass" });
+      linie(rot, xRechts + 4, yTreppeOben, x + 4, yTreppeOben, STRICH.mass);
+      vertikalesMass(rot, x, yRaumOben, yTreppeOben);
+      const yFehlt = (yRaumOben + yTreppeOben) / 2;
+      text(svgElement(schrift, "g", { class: "fehlmass" }), x + 14, yFehlt, "fehlt " + zahl(r.fehlt.breite), {
+        "text-anchor": "middle", transform: `rotate(-90 ${x + 14} ${yFehlt})`,
+      });
+    }
+  }
 }
 
 /**
@@ -150,8 +249,11 @@ function zeichneGrundriss(svg, ergebnis, abb) {
   const breitePx = abb.breitePx; // gleiche Breite wie der Schnitt → gleiche x-Lage
   const geo = grundrissGeometrie(ergebnis);
   const k = abb.k;
-  const hoehePx = GRUNDRISS_RAND.oben + geo.B * k + GRUNDRISS_RAND.unten;
-  const px = ([x, y]) => [abb.x(x), GRUNDRISS_RAND.oben + y * k];
+  // Ist der Raum breiter als die Treppe, liegt seine obere Wand bei y < 0.
+  const yMin = geo.raum ? Math.min(0, geo.raum.yOben) : 0;
+  const randUnten = GRUNDRISS_RAND.unten + (geo.raum?.laengeVorgegeben ? RAUMMASS_ABSTAND + 16 : 0);
+  const hoehePx = GRUNDRISS_RAND.oben + (geo.B - yMin) * k + randUnten;
+  const px = ([x, y]) => [abb.x(x), GRUNDRISS_RAND.oben + (y - yMin) * k];
 
   svg.replaceChildren();
   svg.setAttribute("viewBox", `0 0 ${breitePx} ${hoehePx.toFixed(0)}`);
@@ -160,6 +262,8 @@ function zeichneGrundriss(svg, ergebnis, abb) {
 
   const g = svgElement(svg, "g", { stroke: "currentColor", fill: "none", "stroke-linecap": "square" });
   const schrift = svgElement(svg, "g", { fill: "currentColor", "font-size": SCHRIFTGROESSE });
+
+  if (geo.raum) zeichneRaum(svg, g, geo, px); // zuerst, damit die Treppe darüber liegt
 
   /** Kante unterhalb der Schnittebene durchgezogen, darüber gestrichelt. */
   function kante(p1, p2, breite = STRICH.schnitt) {
@@ -187,4 +291,5 @@ function zeichneGrundriss(svg, ergebnis, abb) {
   zeichneLauflinie(g, geo, px, kante, k);
   zeichneStufennummern(schrift, geo, px, k);
   zeichneGrundrissMasse(g, schrift, geo, px);
+  if (geo.raum) zeichneRaumMasse(g, schrift, geo, px);
 }

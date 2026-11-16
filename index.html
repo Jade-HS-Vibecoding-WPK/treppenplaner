@@ -39,6 +39,15 @@
                aria-describedby="laufbreiteHinweis">
         <p id="laufbreiteHinweis" class="hinweis eingabe-hinweis"></p>
 
+        <fieldset>
+          <legend>Verfügbarer Raum (optional)</legend>
+          <label for="raumLaenge">Verfügbare Länge (cm, in Laufrichtung)</label>
+          <input id="raumLaenge" name="raumLaenge" type="number" min="50" max="2000" step="1">
+          <label for="raumBreite">Verfügbare Breite (cm)</label>
+          <input id="raumBreite" name="raumBreite" type="number" min="50" max="2000" step="1">
+          <p class="hinweis">Leer lassen, wenn es keine Vorgabe gibt.</p>
+        </fieldset>
+
         <button type="submit">Berechnen</button>
         <p id="fehler" class="fehler" role="alert" hidden></p>
       </form>
@@ -47,6 +56,7 @@
     <section class="block" id="ergebnis" hidden>
       <h2>Ergebnis</h2>
       <p id="gesamturteil" class="urteil"></p>
+      <p id="raumurteil" class="urteil" hidden></p>
 
       <table class="werte">
         <tbody>
@@ -66,6 +76,10 @@
         </thead>
         <tbody id="pruefungen"></tbody>
       </table>
+      <p id="raumHinweis" class="hinweis" hidden>
+        Raumprüfung vereinfacht: benötigte Breite = nutzbare Laufbreite (ohne Wangen, Handlauf
+        und Wandabstand); ohne Antritts- und Austrittsfläche.
+      </p>
 
       <!-- Gemeinsamer Scrollbereich: Schnitt und Grundriss bleiben beim Scrollen übereinander. -->
       <div class="zeichnungen">
@@ -98,6 +112,7 @@
   <!-- Klassische Skripte (keine ES-Module), damit die Seite auch per Doppelklick läuft. -->
   <script src="js/norm.js"></script>
   <script src="js/berechnung.js"></script>
+  <script src="js/raum.js"></script>
   <script src="js/zeichnung.js"></script>
   <script src="js/grundriss.js"></script>
   <script src="js/app.js"></script>

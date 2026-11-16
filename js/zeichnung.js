@@ -60,7 +60,10 @@ function schnittGeometrie(ergebnis) {
   const xUnterseiteUnten = vertikalerVersatz / steigungsVerhaeltnis;                  // trifft OKFF unten
   const xUnterseiteOben = (H - DECKENDICKE + vertikalerVersatz) / steigungsVerhaeltnis; // trifft Deckenunterseite oben
 
-  const xEnde = Math.max(L + DECKENUEBERSTAND, xUnterseiteOben + 40);
+  // Ist der verfügbare Raum länger als die Treppe, reicht die Zeichnung bis zum Raumende,
+  // damit der Grundriss (gleiche x-Achse) das Raumrechteck vollständig zeigt.
+  const raumLaenge = ergebnis.raum?.vorgabe.laenge ?? 0;
+  const xEnde = Math.max(L + DECKENUEBERSTAND, xUnterseiteOben + 40, raumLaenge);
 
   // Treppe und obere Decke als ein geschnittener Körper
   const treppeUndDecke = [
