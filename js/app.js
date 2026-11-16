@@ -55,7 +55,23 @@ function zeigeErgebnis(e) {
   }
 
   ergebnisBlock.hidden = false;
+
+  // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
+  letztesErgebnis = e;
+  zeichneSchnitt(schnittSvg, e);
 }
+
+// Bei Größenänderung des Fensters den Schnitt neu zeichnen (nur wenn sich die Breite ändert).
+const schnittSvg = document.getElementById("schnitt");
+let letztesErgebnis = null;
+let letzteBreite = 0;
+new ResizeObserver(() => {
+  const breite = schnittSvg.parentElement.clientWidth;
+  if (letztesErgebnis && breite > 0 && breite !== letzteBreite) {
+    letzteBreite = breite;
+    zeichneSchnitt(schnittSvg, letztesErgebnis);
+  }
+}).observe(schnittSvg.parentElement);
 
 formular.addEventListener("submit", (ereignis) => {
   ereignis.preventDefault();

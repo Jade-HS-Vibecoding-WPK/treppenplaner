@@ -119,6 +119,24 @@ th, td {
   border-left: 3px solid currentColor;
 }
 
+/* Zeichnung */
+.zeichnung { margin: 0; }
+
+.zeichnung svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--papier);
+  color: var(--tinte);
+  font-family: var(--schrift);
+}
+
+.zeichnung figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--grau);
+}
+
 footer {
   border-top: var(--haarlinie);
   padding-top: 0.75rem;

@@ -103,6 +103,7 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart) {
   const pruefungen = pruefeVariante(beste, grenzen);
 
   return {
+    geschosshoehe,
     anzahlSteigungen: beste.anzahlSteigungen,
     anzahlAuftritte,
     steigung: beste.steigung,
