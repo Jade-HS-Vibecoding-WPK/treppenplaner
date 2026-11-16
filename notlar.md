@@ -32,6 +32,14 @@
   - Sayı biçimi dile göre: `de-DE` / `fr-FR` → 17,5 · `en-GB` → 17.5. Hesap her zaman tam değerle.
   - Normun adı (DIN 18065) her dilde aynı; EN/FR'de bunun bir Alman normu olduğu yazıyor. EN/FR'de „Übersetzung zur Orientierung, maßgebend ist der deutsche Normtext“ notu var.
   - Terimler aşağıdaki tabloda („Fachbegriffe DE / EN / FR“).
+- **Export (16.11., hocanın isteği):**
+  - DXF: kesit ve plan **ayrı dosyalar** (Revit/ArchiCAD'da plan ve kesit farklı görünümlere yerleştiriliyor).
+  - Açıklama ölçeği **1:50** (yazı kâğıtta 2,5 mm).
+  - PDF şimdilik sayfaya sığdırılmış, ölçeksiz („ohne Maßstab“). Ölçekli baskı (A4 yatay 1:50) PLAN.md'de Could.
+  - `$INSUNITS` R12 dosyasına **yazılmıyor**: R12'ye ait değil, bazı programlarda içe aktarma hatası verebilir. Yerine butonların yanında „DXF: Einheit mm, Maßstab 1:1“ notu var. **README'ye de yazılacak:** içe aktarırken birim olarak mm seçilmeli.
+  - Codepage ANSI_1252.
+  - **TODO:** Umlaute (ä, ö, ü, ß, é) ve ± işaretini Revit/ArchiCAD'da kontrol et. Sorun olursa ± için AutoCAD kontrol kodu `%%p` denenebilir.
+  - Python/ezdxf kurulmadı; gerçek test üniversitede ArchiCAD/Revit ile.
 
 ## Yapay zekânın kararları
 
@@ -84,6 +92,17 @@
   - Seçici sağ üstte: `DE | EN | FR`, seçili dil kalın ve altı çizili (`aria-pressed`). Gri, küçük, büyük harf, çizim başlıklarıyla aynı stil.
   - Çizim legendlerindeki 18 cm / 20 cm sözlükte sabit yazıyor, HTML'de de öyleydi. `LAUFPLATTENDICKE`/`DECKENDICKE` değişirse sözlük de güncellenmeli.
   - Hata mesajlarındaki sınırlar (50, 600, 2000) biçimlendirilmeden yazılıyor („2000“, „2,000“ değil).
+
+- **Export – teknik yapı (16.11.):**
+  - Çizimler önce bir eleman listesi olarak hesaplanıyor (`js/elemente.js`), SVG ve DXF aynı listeden çıkıyor. Koordinatlar cm, y yukarı, başlangıç = Antritt. Planda merdiven alt duvarda (y = 0 … Laufbreite).
+  - Yazı ve ölçü aralıkları px olarak tanımlı, `cmProPx` ile cm'ye çevriliyor. Ekranda `1 / ölçek`, exportta sabit. Ekran görüntüsünün değişmediği 5 durumda piksel karşılaştırmasıyla kontrol edildi.
+  - DXF yazı yüksekliği = büyük harf yüksekliği. SVG yazı boyutu ise harf kutusu (em). Oran 0,72 (Helvetica için yaklaşık, tipografik değer). Bu yüzden 13 px yazı → 1:50'de 2,5 mm büyük harf.
+  - Kesik çizgi (GESTRICHELT) adı bilerek AutoCAD'ın „DASHED“ adından farklı, `acad.lin` ile çakışmasın diye.
+  - Taşan alan taraması (plan) RAUM katmanında, SCHRAFFUR sadece kesilen elemanlar için.
+  - Kesit: merdiven ve üst döşeme tek tarama, ama dış çizgi TREPPE ve DECKE olarak ikiye bölünmüş.
+  - Grup kodları AutoCAD gibi 3 karaktere sağa hizalı, ondalık sayılar hep noktalı (ör. „0.0“).
+  - Dosya adında ondalık nokta yerine tire: 282,5 cm → `treppe_282-5_schnitt.dxf`.
+  - SVG export: ekrandaki SVG'nin kopyası, renkler ve yazı tipi doğrudan niteliklerde (sayfanın CSS'i dışarıda yok). SVG'de katman grupları yok.
 
 ## Fachbegriffe DE / EN / FR
 

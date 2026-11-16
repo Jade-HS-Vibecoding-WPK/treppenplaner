@@ -20,7 +20,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
 - [ ] Variantenvergleich + Bewertung + Empfehlung
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
-- [ ] Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung
+- ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (Test in ArchiCAD/Revit offen)
 - [ ] Veröffentlichung auf GitHub Pages
 - [ ] README auf Deutsch
 
@@ -29,6 +29,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] Gewichtung der Kriterien durch den Nutzer
 - [ ] Materialvergleich (mit externen Daten)
 - [ ] IFC-/3D-Export (PDF-Export ist nach „Should“ gewandert)
+- [ ] Maßstäbliches Drucken (A4 quer, 1:50; bisher auf Seitenbreite verkleinert, ohne Maßstab)
 
 ## Etappen
 
@@ -55,10 +56,13 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Schnittlinie im Grundriss liegt an der Setzstufe, die die Schnittebene trifft – zwischen zwei Stufennummern
 - ✅ Raumeingabe (gerade Treppe): verfügbare Länge (in Laufrichtung) und Breite, beide optional; allgemeine Prüfung `pruefeRaum(footprint, vorgabe)` in `js/raum.js` für jeden rechteckigen Footprint; Zeile „Passt in den Raum“ (Raumvorgabe, keine Normprüfung) mit Fehlmaß („Es fehlen 20 cm Länge“) und eigenem Raumurteil; Grundriss mit feinem Raumrechteck (Treppe links unten an der Wand), schraffiertem Überstand und roten Fehlmaßen; vereinfacht: benötigte Breite = Laufbreite, ohne Antritts-/Austrittsfläche
 - ✅ Mehrsprachigkeit DE / EN / FR: alle Texte in `js/i18n.js` (Wörterbuch + `t()`), Umschalter DE | EN | FR rechts oben, Wahl im Browser gespeichert (`localStorage`), Standard Deutsch; Formular, Ergebnis, Normprüfung, Fehlermeldungen, Zeichnungsbeschriftungen und Legenden übersetzt; Zahlenformat je Sprache (de-DE / en-GB / fr-FR); Symbole s, a, 2s + a und Einheit cm in allen Sprachen; EN/FR nennen DIN 18065 als deutsche Norm und zeigen „Übersetzung zur Orientierung“; Berechnung liefert nur Schlüssel und Zahlen (`kriterium`, `grenze`), keine Texte; Fachbegriffe in `notlar.md`
+- ✅ Export: Schnitt und Grundriss werden zuerst als Geometrieliste berechnet (`js/elemente.js`: Linie, Polylinie, Fläche, Kreis, Schraffur, Text; in cm, y nach oben, Ursprung = Antritt; jedes Element mit Ebene), daraus zeichnet `js/svg-ausgabe.js` das SVG (Bildschirm unverändert, per Pixelvergleich geprüft). Beschriftungsgrößen in px, umgerechnet über `cmProPx`
+- ✅ DXF (`js/dxf.js`): R12 / AC1009 ASCII, zwei Dateien `treppe_<H>_schnitt.dxf` / `_grundriss.dxf`, mm, 1:1, Ebenen TREPPE, DECKE, SCHRAFFUR, MASS, TEXT, LAUFLINIE, RAUM; Schraffur als Einzellinien (kein HATCH in R12), Bemaßung als Linien + Texte, Fehlmaße rot (Farbe 1), Kanten über der Schnittebene Linientyp GESTRICHELT; Beschriftung für 1:50 (2,5 mm Versalhöhe); Texte Windows-1252 (`$DWGCODEPAGE` ANSI_1252); kein `$INSUNITS`, stattdessen Hinweis „DXF: Einheit mm, Maßstab 1:1“ (übersetzt)
+- ✅ SVG-Export wie am Bildschirm (eigenständige Datei), Drucken / PDF über den Druckdialog (Print-Stylesheet, ohne Maßstab); Schaltflächen unter den Zeichnungen, Texte in der gewählten Sprache
 
 ## Nächste Schritte
 
-1. Export (Di): Schnitt und Grundriss zuerst als Geometrieliste (Linien, Polygone, Texte, Ebenen; in cm) berechnen, daraus SVG zeichnen und DXF erzeugen; danach SVG- und PDF-Export. Bisher zeichnen `zeichnung.js` / `grundriss.js` direkt ins SVG, Maßketten und Texte in px – vorher Plan abstimmen.
+1. DXF in ArchiCAD und Revit (Uni) öffnen: Einheit, Ebenen, Umlaute, ±, Strichelung prüfen.
 2. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
 3. L- und U-Treppe mit Podest; Footprint je Variante berechnen und mit `pruefeRaum` prüfen.
 4. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
