@@ -41,7 +41,7 @@
   - **TODO:** Umlaute (ä, ö, ü, ß, é) ve ± işaretini Revit/ArchiCAD'da kontrol et. Sorun olursa ± için AutoCAD kontrol kodu `%%p` denenebilir.
   - Python/ezdxf kurulmadı; gerçek test üniversitede ArchiCAD/Revit ile.
   - **DXF in AutoCAD 2027 erfolgreich getestet (Layer, Maße, Texte korrekt).** Kullanıcı testi, 16.11.: kesit ve plan açılıyor; yazılar, çizimler, katmanlar, ölçüler, tarama, kotlar, kesikli çizgiler ve „±“ doğru. ArchiCAD/Revit testi hâlâ açık.
-  - PDF: kesit ve plan her zaman 2. sayfada başlıyor (`break-before: page`), başlık çizimden ayrılmıyor (`break-after: avoid`). Hedef: 1. sayfa sonuçlar ve tablolar, 2. sayfa çizimler ve footer.
+  - PDF: kesit ve plan her zaman 2. sayfada başlıyor (`break-before: page`), başlık çizimden ayrılmıyor (`break-after: avoid`). 1. sayfa sonuçlar ve tablolar, 2. sayfa çizimler. Footer yazdırırken 1. sayfaya, Normprüfung'ün altına taşınıyor (`beforeprint`/`afterprint`, ekranda yeri değişmiyor); 600 cm, alan 600 × 600'de footer tek başına 3. sayfaya düşüyordu. *(Benim kararım.)*
 
 ## Yapay zekânın kararları
 
