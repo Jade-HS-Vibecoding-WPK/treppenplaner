@@ -39,6 +39,7 @@
 - In **kleinen Schritten** vorgehen.
 - Vor größeren Änderungen den **Plan erklären und auf Zustimmung warten**.
 - Nach jedem funktionierenden Schritt einen **Commit vorschlagen**.
+- Nach jedem fertigen Feature in `PLAN.md` die Abschnitte **MVP**, **Stand** und **Nächste Schritte** aktualisieren.
 - Wichtige Design- oder Technikentscheidungen kurz in `notlar.md` festhalten (unter „Benim kararlarım“ bzw. „Yapay zekânın kararları“).
 
 ## Abgabe
