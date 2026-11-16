@@ -42,9 +42,45 @@ function exportiereDxf(ergebnis, zeichnung) {
   ladeHerunter(alsWindows1252(dxf), exportDateiname(ergebnis, zeichnung, "dxf"), "application/dxf");
 }
 
+/**
+ * SVG wie am Bildschirm, als eigenständige Datei: Farben und Schrift stehen direkt in
+ * den Attributen, weil das Stylesheet der Seite außerhalb des Browsers fehlt.
+ */
+function exportiereSvg(ergebnis, zeichnung) {
+  const stil = getComputedStyle(document.documentElement);
+  const tinte = stil.getPropertyValue("--tinte").trim();
+  const rot = stil.getPropertyValue("--fehler").trim();
+
+  const kopie = document.getElementById(zeichnung).cloneNode(true);
+  kopie.setAttribute("xmlns", SVG_NS);
+  kopie.setAttribute("font-family", stil.getPropertyValue("--schrift").trim());
+  kopie.removeAttribute("role");
+  for (const el of kopie.querySelectorAll("[stroke='currentColor'], [fill='currentColor']")) {
+    for (const attribut of ["stroke", "fill"]) {
+      if (el.getAttribute(attribut) === "currentColor") el.setAttribute(attribut, tinte);
+    }
+  }
+  // Fehlmaße: Linien (stroke) und Texte (fill) rot
+  for (const gruppe of kopie.querySelectorAll(".fehlmass")) {
+    gruppe.setAttribute(gruppe.closest("[font-size]") ? "fill" : "stroke", rot);
+    gruppe.removeAttribute("class");
+  }
+  // weißer Hintergrund wie am Bildschirm
+  const hintergrund = document.createElementNS(SVG_NS, "rect");
+  for (const [name, wert] of [["width", "100%"], ["height", "100%"], ["fill", "#fff"]]) hintergrund.setAttribute(name, wert);
+  kopie.prepend(hintergrund);
+
+  const svg = '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(kopie);
+  ladeHerunter(svg, exportDateiname(ergebnis, zeichnung, "svg"), "image/svg+xml");
+}
+
 document.querySelector(".export").addEventListener("click", (ereignis) => {
   const knopf = ereignis.target.closest("button[data-export]");
   if (!knopf || !letztesErgebnis) return;
   const zeichnung = knopf.dataset.zeichnung;
-  if (knopf.dataset.export === "dxf") exportiereDxf(letztesErgebnis, zeichnung);
+  switch (knopf.dataset.export) {
+    case "dxf": exportiereDxf(letztesErgebnis, zeichnung); break;
+    case "svg": exportiereSvg(letztesErgebnis, zeichnung); break;
+    case "drucken": window.print(); break; // PDF über „Als PDF speichern“ im Druckdialog
+  }
 });

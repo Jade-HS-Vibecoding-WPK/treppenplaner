@@ -215,6 +215,28 @@ footer {
 
 footer p { margin: 0.2rem 0; }
 
+/* Drucken / PDF: nur Ergebnis und Zeichnungen, auf Seitenbreite verkleinert (ohne Maßstab). */
+@media print {
+  @page { margin: 15mm; }
+
+  body { max-width: none; padding: 0; font-size: 11pt; }
+
+  .sprachwahl,
+  .block:has(#eingabe),
+  .export { display: none; }
+
+  .block { border: none; padding: 0; margin: 0; }
+
+  .zeichnungen { overflow: visible; }
+  .zeichnungen h3,
+  .zeichnungen figcaption { position: static; max-width: none; }
+  .zeichnung { width: auto; min-width: 0; break-inside: avoid; }
+  .zeichnung svg { max-width: 100%; height: auto; }
+
+  /* Farben (grün/rot) auch beim Drucken */
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+
 @media (max-width: 480px) {
   body { padding-top: 1.25rem; }
   .block { padding: 1rem; }
