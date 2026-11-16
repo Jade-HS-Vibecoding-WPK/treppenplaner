@@ -40,6 +40,8 @@
   - Codepage ANSI_1252.
   - **TODO:** Umlaute (ä, ö, ü, ß, é) ve ± işaretini Revit/ArchiCAD'da kontrol et. Sorun olursa ± için AutoCAD kontrol kodu `%%p` denenebilir.
   - Python/ezdxf kurulmadı; gerçek test üniversitede ArchiCAD/Revit ile.
+  - **DXF in AutoCAD 2027 erfolgreich getestet (Layer, Maße, Texte korrekt).** Kullanıcı testi, 16.11.: kesit ve plan açılıyor; yazılar, çizimler, katmanlar, ölçüler, tarama, kotlar, kesikli çizgiler ve „±“ doğru. ArchiCAD/Revit testi hâlâ açık.
+  - PDF: kesit ve plan her zaman 2. sayfada başlıyor (`break-before: page`), başlık çizimden ayrılmıyor (`break-after: avoid`). Hedef: 1. sayfa sonuçlar ve tablolar, 2. sayfa çizimler ve footer.
 
 ## Yapay zekânın kararları
 

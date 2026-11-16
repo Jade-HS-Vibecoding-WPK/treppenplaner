@@ -227,11 +227,17 @@ footer p { margin: 0.2rem 0; }
 
   .block { border: none; padding: 0; margin: 0; }
 
-  .zeichnungen { overflow: visible; }
+  /* Seite 1: Ergebnis und Tabellen · Seite 2: Schnitt und Grundriss (+ Fußzeile) */
+  .zeichnungen { overflow: visible; break-before: page; }
   .zeichnungen h3,
   .zeichnungen figcaption { position: static; max-width: none; }
+  .zeichnungen h3 { margin-top: 0.75rem; break-after: avoid; } /* Titel nie allein am Seitenende */
   .zeichnung { width: auto; min-width: 0; break-inside: avoid; }
+  .zeichnung figcaption { margin-top: 0.25rem; }
+  /* Beide Zeichnungen gleich breit skaliert → Projektion bleibt erhalten */
   .zeichnung svg { max-width: 100%; height: auto; }
+
+  footer { margin-top: 0.75rem; padding-top: 0.4rem; font-size: 8pt; break-inside: avoid; }
 
   /* Farben (grün/rot) auch beim Drucken */
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
