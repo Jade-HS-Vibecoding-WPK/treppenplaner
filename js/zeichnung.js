@@ -1,9 +1,10 @@
 /*
- * zeichnung.js – Schnitt einer geraden Treppe als SVG.
+ * zeichnung.js – Schnitt einer geraden Treppe.
  *
- * Geometrie wird in cm berechnet (y nach oben, Ursprung = Antritt auf OKFF unten)
- * und dann in Pixel umgerechnet. Der Maßstab ergibt sich automatisch aus der
- * verfügbaren Breite; bei Größenänderung wird neu gezeichnet.
+ * Geometrie in cm (y nach oben, Ursprung = Antritt auf OKFF unten).
+ * schnittElemente() liefert eine Elementliste (elemente.js); zeichneSchnitt() gibt sie
+ * als SVG aus. Der Maßstab ergibt sich automatisch aus der verfügbaren Breite;
+ * bei Größenänderung wird neu gezeichnet.
  */
 
 // Zeichnungsannahmen – keine Normwerte.
@@ -20,18 +21,6 @@ const MAX_HOEHE_PX = 560;    // sehr hohe Treppen nicht zu lang werden lassen (M
 // Gewählt so, dass Geschosshöhen von 250–350 cm auf einem Laptop (~950 px Zeichenbreite) ohne Scrollen passen.
 const MIN_LAUFBREITE_PX = 90;  // Höhe des Treppenlaufs im Grundriss
 const MIN_AUFTRITT_PX = 28;    // Platz für zweistellige Stufennummern (12 px)
-const STRICH = { decke: 2, schnitt: 1, mass: 0.5, schraffur: 0.4 };
-const SCHRIFTGROESSE = 13;
-
-const SVG_NS = "http://www.w3.org/2000/svg";
-
-/** Erzeugt ein SVG-Element mit Attributen und hängt es an. */
-function svgElement(eltern, name, attribute = {}) {
-  const el = document.createElementNS(SVG_NS, name);
-  for (const [schluessel, wert] of Object.entries(attribute)) el.setAttribute(schluessel, wert);
-  eltern.appendChild(el);
-  return el;
-}
 
 // zahl() (Zahlenformat je Sprache) steht in i18n.js.
 
@@ -62,14 +51,11 @@ function schnittGeometrie(ergebnis) {
   const raumLaenge = ergebnis.raum?.vorgabe.laenge ?? 0;
   const xEnde = Math.max(L + DECKENUEBERSTAND, xUnterseiteOben + 40, raumLaenge);
 
-  // Treppe und obere Decke als ein geschnittener Körper
-  const treppeUndDecke = [
-    ...profil,
-    [xEnde, H],
-    [xEnde, H - DECKENDICKE],
-    [xUnterseiteOben, H - DECKENDICKE],
-    [xUnterseiteUnten, 0],
-  ];
+  // Treppe und obere Decke bilden einen geschnittenen Körper (eine Schraffur).
+  // Die Umrisslinie wird für die Ebenen in Treppe und Decke geteilt.
+  const umrissTreppe = [[xUnterseiteOben, H - DECKENDICKE], [xUnterseiteUnten, 0], ...profil]; // endet bei [L, H]
+  const umrissObereDecke = [[L, H], [xEnde, H], [xEnde, H - DECKENDICKE], [xUnterseiteOben, H - DECKENDICKE]];
+  const treppeUndDecke = [...profil, ...umrissObereDecke.slice(1), [xUnterseiteUnten, 0]];
 
   const untereDecke = [
     [-DECKENUEBERSTAND, 0],
@@ -79,7 +65,7 @@ function schnittGeometrie(ergebnis) {
   ];
 
   return {
-    H, n, s, a, L, xEnde, treppeUndDecke, untereDecke,
+    H, n, s, a, L, xEnde, treppeUndDecke, umrissTreppe, umrissObereDecke, untereDecke,
     bereich: { xMin: -DECKENUEBERSTAND, xMax: xEnde, yMin: -DECKENDICKE, yMax: H },
   };
 }
@@ -115,47 +101,69 @@ function erstelleAbbildung(bereich, breitePx, kMin) {
   };
 }
 
-function punkteText(punkte, abb) {
-  return punkte.map(([x, y]) => `${abb.x(x).toFixed(2)},${abb.y(y).toFixed(2)}`).join(" ");
-}
+/**
+ * Elementliste des Schnitts in cm.
+ * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {number} cmProPx Umrechnung der Beschriftungsgrößen (px) in cm
+ */
+function schnittElemente(ergebnis, cmProPx) {
+  const geo = schnittGeometrie(ergebnis);
+  const z = neueZeichenliste(cmProPx);
+  const m = cmProPx;
+  const { H, L, s, a, xEnde } = geo;
 
-function linie(g, x1, y1, x2, y2, breite) {
-  return svgElement(g, "line", { x1, y1, x2, y2, "stroke-width": breite });
-}
+  // Geschnittene Bauteile: Schraffur und Umriss
+  z.schraffur(EBENE.schraffur, geo.untereDecke);
+  z.polylinie(EBENE.decke, geo.untereDecke, STRICH.schnitt, { geschlossen: true });
+  z.schraffur(EBENE.schraffur, geo.treppeUndDecke);
+  z.polylinie(EBENE.treppe, geo.umrissTreppe, STRICH.schnitt);
+  z.polylinie(EBENE.decke, geo.umrissObereDecke, STRICH.schnitt);
 
-function text(g, x, y, inhalt, attribute = {}) {
-  const el = svgElement(g, "text", { x, y, ...attribute });
-  el.textContent = inhalt;
-  return el;
-}
+  // Fußbodenoberkanten kräftig
+  z.linie(EBENE.decke, [geo.bereich.xMin, 0], [xEnde, 0], STRICH.decke);
+  z.linie(EBENE.decke, [L, H], [xEnde, H], STRICH.decke);
 
-/** Architektonischer Maßstrich (45°-Schrägstrich) an Punkt (x, y) in px. */
-function massstrich(g, x, y) {
-  linie(g, x - 4, y + 4, x + 4, y - 4, STRICH.schnitt);
-}
+  // Höhenkoten übereinander am rechten Rand (unter der oberen Decke ist Platz für ± 0,00)
+  const xKote = Math.max(xEnde - 45 * m, L + 22 * m);
+  hoehenkote(z, xKote, 0, "± " + zahl(0, 2));
+  hoehenkote(z, xKote, H, "+ " + zahl(H / 100, 2));
 
-/** Horizontale Maßlinie in px bei y, von x1 bis x2 (y-Achse nach unten, x1 < x2). */
-function horizontalesMass(g, x1, x2, y) {
-  linie(g, x1 - 5, y, x2 + 5, y, STRICH.mass);
-  massstrich(g, x1, y);
-  massstrich(g, x2, y);
-}
+  // Geschosshöhe rechts
+  const xMassRechts = xEnde + 28 * m;
+  hilfslinie(z, [xEnde + 4 * m, 0], [xMassRechts + 4 * m, 0]);
+  hilfslinie(z, [xEnde + 4 * m, H], [xMassRechts + 4 * m, H]);
+  vertikalesMass(z, xMassRechts, 0, H);
+  z.text([xMassRechts + 14 * m, H / 2], zahl(H), { ausrichtung: "mitte", drehung: 90 });
 
-/** Vertikale Maßlinie in px bei x, von y1 (unten) bis y2 (oben). */
-function vertikalesMass(g, x, y1, y2) {
-  linie(g, x, y1 + 5, x, y2 - 5, STRICH.mass);
-  massstrich(g, x, y1);
-  massstrich(g, x, y2);
-}
+  // s und a an der obersten Stufe – darüber ist der Luftraum frei
+  const xVorderkante = L - a;  // Vorderkante der obersten Trittstufe (letzte Setzstufe bei L)
+  const yTritt = H - s;        // oberste Trittstufe
 
-/** Höhenkote: Dreieck mit Spitze auf der Linie, Text rechts daneben. */
-function hoehenkote(g, schrift, x, y, beschriftung) {
-  svgElement(g, "polygon", {
-    points: `${x},${y} ${x - 5},${y - 8} ${x + 5},${y - 8}`,
-    "stroke-width": STRICH.schnitt,
+  // Steigung s: links der letzten Setzstufe
+  const xMassS = L - 14 * m;
+  hilfslinie(z, [L - 3 * m, H], [xMassS - 4 * m, H]);
+  vertikalesMass(z, xMassS, yTritt, H);
+  // Text links an der Hilfslinie von a vorbei, damit nichts kreuzt
+  const xTextS = Math.min(xMassS - 6 * m, xVorderkante - 6 * m);
+  z.text([xTextS, (yTritt + H) / 2 - 4 * m], "s = " + zahl(ergebnis.steigung), { ausrichtung: "rechts" });
+
+  // Auftritt a: über der obersten Trittstufe, Beschriftung links
+  const yMassA = H + 16 * m;
+  hilfslinie(z, [xVorderkante, yTritt + 3 * m], [xVorderkante, yMassA + 4 * m]);
+  hilfslinie(z, [L, H + 3 * m], [L, yMassA + 4 * m]);
+  horizontalesMass(z, xVorderkante, L, yMassA);
+  z.text([xVorderkante - 8 * m, yMassA - 4 * m], "a = " + zahl(ergebnis.auftritt), { ausrichtung: "rechts" });
+
+  // Lauflänge unten, unter der Decke
+  const yMassL = -DECKENDICKE - 26 * m;
+  hilfslinie(z, [0, -DECKENDICKE - 4 * m], [0, yMassL - 4 * m]);
+  hilfslinie(z, [L, -DECKENDICKE - 4 * m], [L, yMassL - 4 * m]);
+  horizontalesMass(z, 0, L, yMassL);
+  z.text([L / 2, yMassL + 4 * m], t("zeichnung.lauflaenge", { wert: zahl(ergebnis.lauflaenge) }), {
+    ausrichtung: "mitte",
   });
-  linie(g, x - 5, y - 8, x + 40, y - 8, STRICH.mass);
-  text(schrift, x + 8, y - 11, beschriftung);
+
+  return z.elemente;
 }
 
 /**
@@ -163,91 +171,14 @@ function hoehenkote(g, schrift, x, y, beschriftung) {
  * @param {SVGSVGElement} svg
  * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
  * @param {number} breitePx sichtbare Breite der Zeichenfläche
+ * @returns Abbildung (Maßstab, x-Lage) – der Grundriss liegt mit gleichem Maßstab darunter.
  */
 function zeichneSchnitt(svg, ergebnis, breitePx) {
   const geo = schnittGeometrie(ergebnis);
   const abb = erstelleAbbildung(geo.bereich, breitePx, mindestMassstab(ergebnis));
-
-  svg.replaceChildren();
-  svg.setAttribute("viewBox", `0 0 ${abb.breitePx} ${abb.hoehePx.toFixed(0)}`);
-  svg.setAttribute("width", abb.breitePx);
-  svg.setAttribute("height", abb.hoehePx.toFixed(0));
-
-  // Schraffur für geschnittene Bauteile
-  const defs = svgElement(svg, "defs");
-  const muster = svgElement(defs, "pattern", {
-    id: "schraffur", patternUnits: "userSpaceOnUse", width: 5, height: 5, patternTransform: "rotate(45)",
+  const cmProPx = 1 / abb.k;
+  zeichneElemente(svg, schnittElemente(ergebnis, cmProPx), ([x, y]) => [abb.x(x), abb.y(y)], cmProPx, {
+    breite: abb.breitePx, hoehe: abb.hoehePx,
   });
-  svgElement(muster, "line", {
-    x1: 0, y1: 0, x2: 0, y2: 5, stroke: "currentColor", "stroke-width": STRICH.schraffur,
-  });
-
-  const g = svgElement(svg, "g", { stroke: "currentColor", fill: "none", "stroke-linecap": "square" });
-  const schrift = svgElement(svg, "g", { fill: "currentColor", "font-size": SCHRIFTGROESSE });
-
-  // Geschnittene Bauteile
-  svgElement(g, "polygon", {
-    points: punkteText(geo.untereDecke, abb), fill: "url(#schraffur)", "stroke-width": STRICH.schnitt,
-  });
-  svgElement(g, "polygon", {
-    points: punkteText(geo.treppeUndDecke, abb), fill: "url(#schraffur)", "stroke-width": STRICH.schnitt,
-    "stroke-linejoin": "miter",
-  });
-
-  // Fußbodenoberkanten kräftig
-  linie(g, abb.x(geo.bereich.xMin), abb.y(0), abb.x(geo.xEnde), abb.y(0), STRICH.decke);
-  linie(g, abb.x(geo.L), abb.y(geo.H), abb.x(geo.xEnde), abb.y(geo.H), STRICH.decke);
-
-  // Höhenkoten übereinander am rechten Rand (unter der oberen Decke ist Platz für ± 0,00)
-  const xKote = Math.max(abb.x(geo.xEnde) - 45, abb.x(geo.L) + 22);
-  hoehenkote(g, schrift, xKote, abb.y(0), "± " + zahl(0, 2));
-  hoehenkote(g, schrift, xKote, abb.y(geo.H), "+ " + zahl(geo.H / 100, 2));
-
-  // Geschosshöhe rechts
-  const xMassRechts = abb.x(geo.xEnde) + 28;
-  linie(g, abb.x(geo.xEnde) + 4, abb.y(0), xMassRechts + 4, abb.y(0), STRICH.mass);
-  linie(g, abb.x(geo.xEnde) + 4, abb.y(geo.H), xMassRechts + 4, abb.y(geo.H), STRICH.mass);
-  vertikalesMass(g, xMassRechts, abb.y(0), abb.y(geo.H));
-  const yMitte = (abb.y(0) + abb.y(geo.H)) / 2;
-  text(schrift, xMassRechts + 14, yMitte, zahl(geo.H), {
-    "text-anchor": "middle",
-    transform: `rotate(-90 ${xMassRechts + 14} ${yMitte})`,
-  });
-
-  // s und a an der obersten Stufe – darüber ist der Luftraum frei
-  const xRiss = abb.x(geo.L);                // letzte Setzstufe
-  const xVorderkante = abb.x(geo.L - geo.a); // Vorderkante der obersten Trittstufe
-  const yTritt = abb.y(geo.H - geo.s);       // oberste Trittstufe
-  const yOben = abb.y(geo.H);                // OKFF oben
-
-  // Steigung s: links der letzten Setzstufe
-  const xMassS = xRiss - 14;
-  linie(g, xRiss - 3, yOben, xMassS - 4, yOben, STRICH.mass);
-  vertikalesMass(g, xMassS, yTritt, yOben);
-  // Text links an der Hilfslinie von a vorbei, damit nichts kreuzt
-  const xTextS = Math.min(xMassS - 6, xVorderkante - 6);
-  text(schrift, xTextS, (yTritt + yOben) / 2 + 4, "s = " + zahl(ergebnis.steigung), {
-    "text-anchor": "end",
-  });
-
-  // Auftritt a: über der obersten Trittstufe, Beschriftung links
-  const yMassA = yOben - 16;
-  linie(g, xVorderkante, yTritt - 3, xVorderkante, yMassA - 4, STRICH.mass);
-  linie(g, xRiss, yOben - 3, xRiss, yMassA - 4, STRICH.mass);
-  horizontalesMass(g, xVorderkante, xRiss, yMassA);
-  text(schrift, xVorderkante - 8, yMassA + 4, "a = " + zahl(ergebnis.auftritt), { "text-anchor": "end" });
-
-  // Lauflänge unten, unter der Decke
-  const x0 = abb.x(0);
-  const yDeckeUnten = abb.y(-DECKENDICKE);
-  const yMassL = yDeckeUnten + 26;
-  linie(g, x0, yDeckeUnten + 4, x0, yMassL + 4, STRICH.mass);
-  linie(g, xRiss, yDeckeUnten + 4, xRiss, yMassL + 4, STRICH.mass);
-  horizontalesMass(g, x0, xRiss, yMassL);
-  text(schrift, (x0 + xRiss) / 2, yMassL - 4, t("zeichnung.lauflaenge", { wert: zahl(ergebnis.lauflaenge) }), {
-    "text-anchor": "middle",
-  });
-
-  // Abbildung zurückgeben, damit der Grundriss mit gleichem Maßstab darunter liegt.
   return abb;
 }
