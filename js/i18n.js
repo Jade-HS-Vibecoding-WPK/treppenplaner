@@ -100,6 +100,12 @@ const TEXTE = {
     "zeichnung.raum": "Raum {wert}",
     "zeichnung.fehlt": "fehlt {wert}",
 
+    "export.titel": "Export",
+    "export.schnitt": "Schnitt",
+    "export.grundriss": "Grundriss",
+    "export.drucken": "Drucken / PDF",
+    "export.hinweisDxf": "DXF: Einheit mm, Maßstab 1:1",
+
     "fuss.landesrecht": "Orientierungshilfe, ersetzt keine Prüfung nach Landesbauordnung.",
     "fuss.quelle":
       "Grenzwerte: DIN 18065:2020-08, Tabelle 1 (zitiert nach WEKA-Fachportal, Original nicht eingesehen).",
@@ -184,6 +190,12 @@ const TEXTE = {
     "zeichnung.lauflaenge": "Total going {wert}",
     "zeichnung.raum": "Space {wert}",
     "zeichnung.fehlt": "missing {wert}",
+
+    "export.titel": "Export",
+    "export.schnitt": "Section",
+    "export.grundriss": "Plan",
+    "export.drucken": "Print / PDF",
+    "export.hinweisDxf": "DXF: unit mm, scale 1:1",
 
     "fuss.landesrecht":
       "For guidance only; does not replace a check under the German state building regulations (Landesbauordnung).",
@@ -274,6 +286,12 @@ const TEXTE = {
     "zeichnung.lauflaenge": "Reculement {wert}",
     "zeichnung.raum": "Espace {wert}",
     "zeichnung.fehlt": "manque {wert}",
+
+    "export.titel": "Export",
+    "export.schnitt": "Coupe",
+    "export.grundriss": "Vue en plan",
+    "export.drucken": "Imprimer / PDF",
+    "export.hinweisDxf": "DXF : unité mm, échelle 1:1",
 
     "fuss.landesrecht":
       "Aide à l'orientation ; ne remplace pas une vérification selon les règlements de construction " +

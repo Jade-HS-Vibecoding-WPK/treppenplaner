@@ -194,6 +194,18 @@ th, td {
   color: var(--grau);
 }
 
+/* Export: kleine Schaltflächen je Zeichnung */
+.export-zeile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+}
+
+.export-zeile span { min-width: 7rem; }
+
+.export button { padding: 0.2rem 0.75rem; font-size: 0.8rem; }
+
 footer {
   border-top: var(--haarlinie);
   padding-top: 0.75rem;

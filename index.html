@@ -113,6 +113,19 @@
         </figcaption>
       </figure>
       </div>
+
+      <div class="export">
+        <h3 data-i18n="export.titel">Export</h3>
+        <div class="export-zeile">
+          <span data-i18n="export.schnitt">Schnitt</span>
+          <button type="button" data-export="dxf" data-zeichnung="schnitt">DXF</button>
+        </div>
+        <div class="export-zeile">
+          <span data-i18n="export.grundriss">Grundriss</span>
+          <button type="button" data-export="dxf" data-zeichnung="grundriss">DXF</button>
+        </div>
+        <p class="hinweis" data-i18n="export.hinweisDxf">DXF: Einheit mm, Maßstab 1:1</p>
+      </div>
     </section>
   </main>
 
@@ -132,5 +145,7 @@
   <script src="js/zeichnung.js"></script>
   <script src="js/grundriss.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/dxf.js"></script>
+  <script src="js/export.js"></script>
 </body>
 </html>
