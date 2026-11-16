@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treppenplaner</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Treppenplaner</h1>
+    <p class="untertitel">Gerade Treppe – Bemessung nach DIN 18065</p>
+  </header>
+
+  <main>
+    <section class="block">
+      <h2>Eingabe</h2>
+      <form id="eingabe" novalidate>
+        <label for="geschosshoehe">Geschosshöhe (cm)</label>
+        <input id="geschosshoehe" name="geschosshoehe" type="number"
+               min="50" max="600" step="0.5" value="275" required>
+
+        <fieldset>
+          <legend>Gebäudeart</legend>
+          <label class="option">
+            <input type="radio" name="gebaeudeart" value="wohngebaeude" checked>
+            Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen
+          </label>
+          <label class="option">
+            <input type="radio" name="gebaeudeart" value="allgemein">
+            Gebäude im Allgemeinen
+          </label>
+          <p class="hinweis">Wohngebäude mit mehr als zwei Wohnungen → Gebäude im Allgemeinen.</p>
+        </fieldset>
+
+        <button type="submit">Berechnen</button>
+        <p id="fehler" class="fehler" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <section class="block" id="ergebnis" hidden>
+      <h2>Ergebnis</h2>
+      <p id="gesamturteil" class="urteil"></p>
+
+      <table class="werte">
+        <tbody>
+          <tr><th>Anzahl Steigungen</th><td id="anzahlSteigungen"></td></tr>
+          <tr><th>Anzahl Auftritte</th><td id="anzahlAuftritte"></td></tr>
+          <tr><th>Steigung s</th><td id="steigung"></td></tr>
+          <tr><th>Auftritt a</th><td id="auftritt"></td></tr>
+          <tr><th>Schrittmaß 2s + a</th><td id="schrittmass"></td></tr>
+          <tr><th>Lauflänge (Grundriss)</th><td id="lauflaenge"></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Normprüfung</h3>
+      <table class="pruefung">
+        <thead>
+          <tr><th>Kriterium</th><th>Wert</th><th>Zulässig</th><th>Ergebnis</th></tr>
+        </thead>
+        <tbody id="pruefungen"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Orientierungshilfe, ersetzt keine Prüfung nach Landesbauordnung.</p>
+    <p>Grenzwerte: DIN 18065:2020-08, Tabelle 1 (zitiert nach WEKA-Fachportal, Original nicht eingesehen).</p>
+  </footer>
+
+  <!-- Klassische Skripte (keine ES-Module), damit die Seite auch per Doppelklick läuft. -->
+  <script src="js/norm.js"></script>
+  <script src="js/berechnung.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
