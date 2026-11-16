@@ -9,14 +9,19 @@
 // Zeichnungsannahmen – keine Normwerte.
 const LAUFPLATTENDICKE = 18; // cm, Annahme (Vorgabe des Nutzers)
 const DECKENDICKE = 20;      // cm, Annahme für die Darstellung der Geschossdecken
-const DECKENUEBERSTAND = 100; // cm, sichtbare Decke vor bzw. hinter der Treppe
+const DECKENUEBERSTAND = 60; // cm, sichtbare Decke vor bzw. hinter der Treppe
 
 // Darstellung in Pixeln
-const RAND = { links: 80, rechts: 60, oben: 36, unten: 56 };
+const RAND = { links: 40, rechts: 56, oben: 36, unten: 60 };
 const MAX_PX_PRO_CM = 2.5;   // sehr kleine Treppen nicht übergroß zeichnen
-const MAX_HOEHE_PX = 560;    // sehr hohe Treppen nicht zu lang werden lassen
+const MAX_HOEHE_PX = 560;    // sehr hohe Treppen nicht zu lang werden lassen (Mindestmaßstab hat Vorrang)
+// Mindestmaßstab für die Lesbarkeit des Grundrisses (gilt für Schnitt und Grundriss gemeinsam).
+// Reicht die Breite nicht, wird horizontal gescrollt.
+// Gewählt so, dass Geschosshöhen von 250–350 cm auf einem Laptop (~950 px Zeichenbreite) ohne Scrollen passen.
+const MIN_LAUFBREITE_PX = 90;  // Höhe des Treppenlaufs im Grundriss
+const MIN_AUFTRITT_PX = 28;    // Platz für zweistellige Stufennummern (12 px)
 const STRICH = { decke: 2, schnitt: 1, mass: 0.5, schraffur: 0.4 };
-const SCHRIFTGROESSE = 11;
+const SCHRIFTGROESSE = 13;
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -79,19 +84,33 @@ function schnittGeometrie(ergebnis) {
   };
 }
 
-/** Legt Maßstab und Umrechnung cm → px fest. */
-function erstelleAbbildung(bereich, breitePx) {
+/** Kleinster Maßstab (px/cm), bei dem Grundriss und Stufennummern lesbar bleiben. */
+function mindestMassstab(ergebnis) {
+  return Math.min(
+    Math.max(MIN_LAUFBREITE_PX / ergebnis.laufbreite, MIN_AUFTRITT_PX / ergebnis.auftritt),
+    MAX_PX_PRO_CM
+  );
+}
+
+/**
+ * Legt Maßstab und Umrechnung cm → px fest.
+ * Der Maßstab füllt die verfügbare Breite, unterschreitet aber nie kMin;
+ * dann wird die Zeichnung breiter als der Container (horizontal scrollbar).
+ */
+function erstelleAbbildung(bereich, breitePx, kMin) {
   const breiteCm = bereich.xMax - bereich.xMin;
   const hoeheCm = bereich.yMax - bereich.yMin;
-  const k = Math.min(
+  const kPasst = Math.min(
     (breitePx - RAND.links - RAND.rechts) / breiteCm,
     (MAX_HOEHE_PX - RAND.oben - RAND.unten) / hoeheCm,
     MAX_PX_PRO_CM
   );
+  const k = Math.max(kPasst, kMin);
   return {
     k,
     x: (x) => RAND.links + (x - bereich.xMin) * k,
     y: (y) => RAND.oben + (bereich.yMax - y) * k,
+    breitePx: Math.max(breitePx, Math.ceil(RAND.links + breiteCm * k + RAND.rechts)),
     hoehePx: RAND.oben + hoeheCm * k + RAND.unten,
   };
 }
@@ -143,15 +162,15 @@ function hoehenkote(g, schrift, x, y, beschriftung) {
  * Zeichnet den Schnitt der berechneten Treppe in das übergebene SVG-Element.
  * @param {SVGSVGElement} svg
  * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {number} breitePx sichtbare Breite der Zeichenfläche
  */
-function zeichneSchnitt(svg, ergebnis) {
-  const breitePx = svg.parentElement.clientWidth;
+function zeichneSchnitt(svg, ergebnis, breitePx) {
   const geo = schnittGeometrie(ergebnis);
-  const abb = erstelleAbbildung(geo.bereich, breitePx);
+  const abb = erstelleAbbildung(geo.bereich, breitePx, mindestMassstab(ergebnis));
 
   svg.replaceChildren();
-  svg.setAttribute("viewBox", `0 0 ${breitePx} ${abb.hoehePx.toFixed(0)}`);
-  svg.setAttribute("width", breitePx);
+  svg.setAttribute("viewBox", `0 0 ${abb.breitePx} ${abb.hoehePx.toFixed(0)}`);
+  svg.setAttribute("width", abb.breitePx);
   svg.setAttribute("height", abb.hoehePx.toFixed(0));
 
   // Schraffur für geschnittene Bauteile

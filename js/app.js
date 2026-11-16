@@ -70,22 +70,24 @@ function zeigeErgebnis(e) {
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
 function zeichneZeichnungen() {
-  const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis);
+  // Sichtbare Breite des Scrollbereichs, nicht der Abbildung (die wächst mit der Zeichnung).
+  const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, zeichenflaeche.clientWidth);
   zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
 }
 
 // Bei Größenänderung des Fensters neu zeichnen (nur wenn sich die Breite ändert).
+const zeichenflaeche = document.querySelector(".zeichnungen");
 const schnittSvg = document.getElementById("schnitt");
 const grundrissSvg = document.getElementById("grundriss");
 let letztesErgebnis = null;
 let letzteBreite = 0;
 new ResizeObserver(() => {
-  const breite = schnittSvg.parentElement.clientWidth;
+  const breite = zeichenflaeche.clientWidth;
   if (letztesErgebnis && breite > 0 && breite !== letzteBreite) {
     letzteBreite = breite;
     zeichneZeichnungen();
   }
-}).observe(schnittSvg.parentElement);
+}).observe(zeichenflaeche);
 
 // Nutzbare Laufbreite: Vorschlag = Mindestmaß der Gebäudeart, rot wenn darunter.
 const laufbreiteHinweis = document.getElementById("laufbreiteHinweis");

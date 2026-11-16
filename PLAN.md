@@ -13,7 +13,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 ### Should
 - ✅ Grundrisszeichnung (Stufennummern + Lauflinie)
 - ✅ Eingabe und Prüfung der nutzbaren Laufbreite
-- [ ] Schnitt vergrößern
+- ✅ Schnitt und Grundriss vergrößern (breitere Seite, Mindestmaßstab, gemeinsames Scrollen)
 - [ ] Kopfhöhe 2,00 m im Schnitt prüfen
 - [ ] Eingabe der verfügbaren Fläche (Länge × Breite)
 - [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
@@ -47,9 +47,12 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Nutzbare Laufbreite als Eingabe: Vorschlag = Mindestmaß der Gebäudeart (80 / 100 cm), eigene Eingabe bleibt erhalten, rot unter dem Mindestmaß, eigene Zeile in der Normprüfung
 - ✅ Grundriss als SVG (`js/grundriss.js`): gleicher Maßstab, genau unter dem Schnitt (Projektion); Stufennummern 1 … n (Steigungen), Lauflinie mit Kreis und Pfeil, Schnittlinie bei ca. 1 m (Darstellungskonvention, Quelle offen), darüber gestrichelt; Maßketten Lauflänge und Laufbreite
 
+- ✅ Größere Zeichnungen: Seite 64rem breit, Schrift 13 px (Stufennummern 12 px), Mindestmaßstab (Grundriss ≥ 90 px hoch, Auftritt ≥ 28 px); 250–350 cm passen auf einem Laptop ohne Scrollen; nur auf schmalen Bildschirmen oder bei sehr hohen Geschossen scrollen Schnitt und Grundriss gemeinsam horizontal und bleiben übereinander
+- ✅ Rundung korrigiert: Auftritt und Schrittmaß werden aus der exakten Steigung (H / n) berechnet, erst danach gerundet
+- ✅ Schnittlinie im Grundriss liegt an der Setzstufe, die die Schnittebene trifft – zwischen zwei Stufennummern
+
 ## Nächste Schritte
 
-1. Schnitt (und Grundriss) vergrößerbar machen (z. B. Klick → Vollansicht).
-2. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
-3. Flächeneingabe (Länge × Breite); dabei Wände und Treppenloch im Grundriss ergänzen.
-4. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+1. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+2. Flächeneingabe (Länge × Breite); dabei Wände und Treppenloch im Grundriss ergänzen.
+3. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).

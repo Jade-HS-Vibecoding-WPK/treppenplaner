@@ -17,6 +17,7 @@ const GRUNDRISS_SCHNITTHOEHE = 100; // cm
 const GRUNDRISS_RAND = { oben: 24, unten: 56 };
 const STRICHELUNG = "5 3";            // Teile oberhalb der Schnittebene
 const LAUFLINIE_STRICH = 0.75;
+const NUMMER_SCHRIFTGROESSE = 12;
 const LAUFLINIE_KREIS_RADIUS = 3.5;
 const LAUFLINIE_PFEIL = { laenge: 9, halbeBreite: 3.5 };
 const SCHNITTLINIE_UEBERSTAND = 8;    // px über die Treppenkante hinaus
@@ -33,11 +34,12 @@ function grundrissGeometrie(ergebnis) {
   // Vorderkanten der Stufen (Setzstufen) – die letzte liegt an der oberen Deckenkante.
   const setzstufen = Array.from({ length: n }, (_, i) => i * a);
 
-  // Erste Trittstufe, deren Oberkante die Schnitthöhe erreicht; dort liegt die Schnittlinie.
+  // Erste Stufe, deren Oberkante die Schnitthöhe erreicht. Die Schnittebene trifft deren
+  // Setzstufe; dort (zwischen zwei Stufennummern) kreuzt die Schnittlinie die Lauflinie.
   const stufeImSchnitt = Math.ceil(GRUNDRISS_SCHNITTHOEHE / s - 1e-9);
   let schnittlinie = null;
   if (stufeImSchnitt <= n - 1) {
-    const mitte = (stufeImSchnitt - 0.5) * a;
+    const mitte = (stufeImSchnitt - 1) * a;
     const halbeSpanne = Math.max(1.5 * a, 0.5 * B) / 2;
     schnittlinie = {
       xAnfang: Math.max(mitte - halbeSpanne, 0), // bei y = 0
@@ -106,7 +108,7 @@ function zeichneLauflinie(g, geo, px, kante, k) {
 
 /** Stufennummern 1 … n (Steigungen), über der Lauflinie; n liegt an der oberen Deckenkante. */
 function zeichneStufennummern(schrift, geo, px, k) {
-  const schriftgroesse = Math.min(SCHRIFTGROESSE, (geo.a * k) / 1.3);
+  const schriftgroesse = Math.min(NUMMER_SCHRIFTGROESSE, (geo.a * k) / 1.3);
   for (let nr = 1; nr <= geo.n; nr++) {
     const [x, y] = px([(nr - 0.5) * geo.a, geo.B / 2]);
     text(schrift, x, y - 5, String(nr), { "text-anchor": "middle", "font-size": schriftgroesse.toFixed(1) });
@@ -145,7 +147,7 @@ function zeichneGrundrissMasse(g, schrift, geo, px) {
  * @param {object} abb Abbildung des Schnitts (Rückgabe von zeichneSchnitt())
  */
 function zeichneGrundriss(svg, ergebnis, abb) {
-  const breitePx = svg.parentElement.clientWidth;
+  const breitePx = abb.breitePx; // gleiche Breite wie der Schnitt → gleiche x-Lage
   const geo = grundrissGeometrie(ergebnis);
   const k = abb.k;
   const hoehePx = GRUNDRISS_RAND.oben + geo.B * k + GRUNDRISS_RAND.unten;

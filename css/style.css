@@ -16,7 +16,7 @@
 body {
   margin: 0 auto;
   padding: 2rem 1rem 3rem;
-  max-width: 44rem;
+  max-width: 64rem;
   background: var(--papier);
   color: var(--tinte);
   font-family: var(--schrift);
@@ -124,12 +124,20 @@ th, td {
 }
 
 /* Zeichnung */
-.zeichnung { margin: 0; }
+/* Reicht die Breite für den Mindestmaßstab nicht, scrollen beide Zeichnungen gemeinsam. */
+.zeichnungen { overflow-x: auto; container-type: inline-size; }
 
+/* Die Abbildung ist so breit wie die Zeichnung, mindestens wie der Container. */
+.zeichnung { margin: 0; width: min-content; min-width: 100%; }
+
+/* Überschriften und Bildunterschriften bleiben beim Scrollen stehen. */
+.zeichnungen h3,
+.zeichnungen figcaption { position: sticky; left: 0; }
+.zeichnungen figcaption { max-width: 100cqw; }
+
+/* Breite und Höhe kommen aus zeichnung.js / grundriss.js (Maßstab in px/cm). */
 .zeichnung svg {
   display: block;
-  width: 100%;
-  height: auto;
   background: var(--papier);
   color: var(--tinte);
   font-family: var(--schrift);

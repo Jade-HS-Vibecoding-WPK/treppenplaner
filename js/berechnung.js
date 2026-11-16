@@ -33,12 +33,14 @@ function abweichung(wert, min, max) {
  * Der Auftritt wird aus der Schrittmaßregel abgeleitet und auf die Normgrenzen begrenzt.
  */
 function varianteFuerStufenzahl(geschosshoehe, n, grenzen) {
-  const steigung = rundeMm(geschosshoehe / n);
+  // Mit der exakten Steigung weiterrechnen und erst am Ende runden,
+  // sonst addieren sich Rundungsfehler (z. B. 300 / 18: a = 29,7 statt 29,6).
+  const steigungExakt = geschosshoehe / n;
   const auftritt = rundeMm(
-    begrenze(ZIEL_SCHRITTMASS - 2 * steigung, grenzen.auftritt.min, grenzen.auftritt.max)
+    begrenze(ZIEL_SCHRITTMASS - 2 * steigungExakt, grenzen.auftritt.min, grenzen.auftritt.max)
   );
-  const schrittmass = rundeMm(2 * steigung + auftritt);
-  return { anzahlSteigungen: n, steigung, auftritt, schrittmass };
+  const schrittmass = rundeMm(2 * steigungExakt + auftritt);
+  return { anzahlSteigungen: n, steigung: rundeMm(steigungExakt), auftritt, schrittmass };
 }
 
 /**

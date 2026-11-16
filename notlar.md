@@ -41,4 +41,10 @@
 - Laufbreite varsayılanı bina türünün minimumu. Kullanıcı değeri elle değiştirdiyse, bina türü değişince değer korunuyor. *(Kabul edildi.)*
 - Laufbreite girişi 30–400 cm ile sınırlı. Bu bir makullük sınırı, norm değeri değil.
 - Genel sonuç metni ikiye ayrıldı: Basamaklar uygun ama genişlik küçükse, ayrı bir mesaj gösteriliyor („Die nutzbare Laufbreite unterschreitet …“).
+- Çizimler büyütüldü: Sayfa 44rem → 64rem genişliğinde, yazılar 11 → 13 px (basamak numaraları 12 px). Kenar boşlukları küçüldü, görünen döşeme parçası (DECKENUEBERSTAND) 100 → 60 cm oldu. *(Kabul edildi.)*
+- Minimum ölçek: Plan bandı en az 90 px yüksek, bir basamak en az 28 px geniş. Bu, kesit ve plan için ortak ölçek. Kesitin yükseklik sınırı (560 px) minimum ölçeğin önüne geçmiyor. İlk değer (120 px / 30 px) laptopta 300 cm'de bile kaydırma gerektiriyordu, küçültüldü. Artık 250–350 cm arası ~950 px'lik kutuya sığıyor. *(Nutzer: laptopta normal katlarda kaydırma olmasın.)*
+- Rundung: Auftritt ve Schrittmaß artık tam rıht yüksekliğiyle (H / n) hesaplanıyor, sonra yuvarlanıyor. Önce yuvarlanmış s ile hesaplanıyordu, bu bilerek değildi (300 cm: 63 − 2 × 16,7 = 29,6; doğrusu 63 − 2 × 16,667 = 29,7). *(Nutzer fark etti.)*
+- Plandaki kesme çizgisi, kesme düzlemini (100 cm) kesen rıhtın (Setzstufe) üzerinden geçiyor, basamağın ortasından değil. Bu hem geometrik olarak daha doğru, hem de çizgi iki numaranın arasında kalıyor ve numaraların üstünden geçmiyor.
+- Genişlik yetmezse, kesit ve plan tek bir kaydırma alanında (`.zeichnungen`) birlikte yatay kayıyor. Böylece hizalı kalıyorlar. Başlıklar ve açıklama yazıları `position: sticky` ile yerinde kalıyor. Bunun için `container-type` / `cqw` kullanılıyor. *(Telefonda yatay kaydırma kabul edildi.)*
+- Ölçek, kaydırma alanının görünen genişliğinden hesaplanıyor, `figure`'un genişliğinden değil. Çünkü `figure` çizimle birlikte büyüyor; aksi halde çizim pencere küçülünce bir daha küçülmezdi.
 - Plandaki genişlik ölçüsünde sadece sayı yazıyor (kesitteki Geschosshöhe gibi). „Laufbreite 80,0“ dar merdivenlerde ölçü çizgisine sığmıyordu.
