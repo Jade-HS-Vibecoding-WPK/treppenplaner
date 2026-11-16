@@ -35,8 +35,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 | Tag | Inhalt |
 |---|---|
-| Mo 16.11. | Berechnung, Schnitt, Grundriss, Raumeingabe ✅ + Mehrsprachigkeit |
-| Di 17.11. | Export (DXF, SVG, PDF) + Gestaltung |
+| Mo 16.11. | Berechnung, Schnitt, Grundriss, Raumeingabe, Mehrsprachigkeit ✅ + Export (DXF, SVG, PDF) ✅ (vorgezogen) |
+| Di 17.11. | Gestaltung (nach dem UI-Design-Kurs am Vormittag) + DXF-Test in ArchiCAD/Revit |
 | Mi 18.11. | L/U + Empfehlung |
 | Do 19.11. | 12:00 Freeze, Veröffentlichung, README |
 | Fr 20.11. | Poster + Präsentation (Abgabe 16:00) |
@@ -60,15 +60,25 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ DXF (`js/dxf.js`): R12 / AC1009 ASCII, zwei Dateien `treppe_<H>_schnitt.dxf` / `_grundriss.dxf`, mm, 1:1, Ebenen TREPPE, DECKE, SCHRAFFUR, MASS, TEXT, LAUFLINIE, RAUM; Schraffur als Einzellinien (kein HATCH in R12), Bemaßung als Linien + Texte, Fehlmaße rot (Farbe 1), Kanten über der Schnittebene Linientyp GESTRICHELT; Beschriftung für 1:50 (2,5 mm Versalhöhe); Texte Windows-1252 (`$DWGCODEPAGE` ANSI_1252); kein `$INSUNITS`, stattdessen Hinweis „DXF: Einheit mm, Maßstab 1:1“ (übersetzt)
 - ✅ SVG-Export wie am Bildschirm (eigenständige Datei), Drucken / PDF über den Druckdialog (Print-Stylesheet, ohne Maßstab); Seite 1 Ergebnis und Tabellen und Fußzeile (beim Drucken unter die Normprüfung verschoben), Seite 2 Schnitt und Grundriss; Schaltflächen unter den Zeichnungen, Texte in der gewählten Sprache
 
+**Stand 16.11. abends:** Gerade Treppe vollständig (Berechnung, Normprüfung, Raumprüfung, Schnitt, Grundriss, DE/EN/FR, Export DXF/SVG/PDF). DXF in AutoCAD 2027 erfolgreich getestet; PDF mit zwei Seiten in zwei Fällen (600 cm, Raum 1000 × 1000 und 600 × 600) geprüft. Alles committet und gepusht.
+
 ## Nächste Schritte
 
-1. DXF in ArchiCAD und Revit (Uni) öffnen: Einheit, Ebenen, Umlaute prüfen (AutoCAD 2027 ✅).
-2. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
-3. L- und U-Treppe mit Podest; Footprint je Variante berechnen und mit `pruefeRaum` prüfen.
-4. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
-5. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
-6. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
-7. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+**Di 17.11.**
+1. Gestaltung nach dem UI-Design-Kurs am Vormittag: Punkte unter „Gestaltung (Di)“ abarbeiten, Erkenntnisse aus dem Kurs ergänzen – vorher Plan abstimmen.
+2. DXF in ArchiCAD und Revit (Uni) öffnen: Einheit (mm wählen), Ebenen, Umlaute (ä, ö, ü, ß, é), ± prüfen (AutoCAD 2027 ✅).
+
+**Mi 18.11.**
+3. L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`); Footprint je Variante berechnen und mit `pruefeRaum` prüfen; Schnitt, Grundriss und Export auf die neue Geometrieliste aufbauen.
+4. Variantenvergleich, Bewertung und Empfehlung der passendsten Treppenform – Kriterien vorher abstimmen.
+
+**Später / offen**
+5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
+6. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
+7. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
+8. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
+9. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+10. README (Do): Hinweis „DXF: beim Import Einheit mm wählen“ aufnehmen (siehe `notlar.md`).
 
 ## Gestaltung (Di)
 
