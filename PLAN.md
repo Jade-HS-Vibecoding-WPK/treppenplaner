@@ -60,3 +60,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 3. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
 4. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
 5. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
+
+## Gestaltung – nach der Mehrsprachigkeit
+
+- Grundriss, rechter Rand: Maßtexte („fehlt 20,0“, „60,0“, „100,0“) überschneiden sich mit der Stufennummer „16“ oder stehen zu gedrängt.
+- Formular: Zwischen dem Hinweis „Mindestens 80 cm …“ und dem Kasten „Verfügbarer Raum“ fehlt der Abstand.
