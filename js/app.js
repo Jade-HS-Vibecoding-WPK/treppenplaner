@@ -11,9 +11,12 @@ const formular = document.getElementById("eingabe");
 const fehlerAnzeige = document.getElementById("fehler");
 const ergebnisBlock = document.getElementById("ergebnis");
 
-/** Formatiert eine Zahl deutsch mit einer Nachkommastelle und Einheit cm. */
-function cm(wert) {
-  return wert.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " cm";
+/**
+ * Formatiert eine Zahl deutsch mit Einheit cm (nur Anzeige – gerechnet wird exakt).
+ * maxStellen = 2 in der Normprüfung, damit z. B. 19,04 cm nicht als „19,0“ erscheint.
+ */
+function cm(wert, maxStellen = 1) {
+  return wert.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: maxStellen }) + " cm";
 }
 
 function zeigeFehler(text) {
@@ -51,7 +54,7 @@ function zeigeErgebnis(e) {
   tbody.replaceChildren();
   for (const p of e.pruefungen) {
     const zeile = document.createElement("tr");
-    const zellen = [p.bezeichnung, cm(p.wert), p.grenze, p.ok ? "✓ erfüllt" : "✗ nicht erfüllt"];
+    const zellen = [p.bezeichnung, cm(p.wert, 2), p.grenze, p.ok ? "✓ erfüllt" : "✗ nicht erfüllt"];
     zellen.forEach((inhalt, i) => {
       const td = document.createElement("td");
       td.textContent = inhalt;

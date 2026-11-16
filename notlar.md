@@ -43,7 +43,14 @@
 - Genel sonuç metni ikiye ayrıldı: Basamaklar uygun ama genişlik küçükse, ayrı bir mesaj gösteriliyor („Die nutzbare Laufbreite unterschreitet …“).
 - Çizimler büyütüldü: Sayfa 44rem → 64rem genişliğinde, yazılar 11 → 13 px (basamak numaraları 12 px). Kenar boşlukları küçüldü, görünen döşeme parçası (DECKENUEBERSTAND) 100 → 60 cm oldu. *(Kabul edildi.)*
 - Minimum ölçek: Plan bandı en az 90 px yüksek, bir basamak en az 28 px geniş. Bu, kesit ve plan için ortak ölçek. Kesitin yükseklik sınırı (560 px) minimum ölçeğin önüne geçmiyor. İlk değer (120 px / 30 px) laptopta 300 cm'de bile kaydırma gerektiriyordu, küçültüldü. Artık 250–350 cm arası ~950 px'lik kutuya sığıyor. *(Nutzer: laptopta normal katlarda kaydırma olmasın.)*
-- Rundung: Auftritt ve Schrittmaß artık tam rıht yüksekliğiyle (H / n) hesaplanıyor, sonra yuvarlanıyor. Önce yuvarlanmış s ile hesaplanıyordu, bu bilerek değildi (300 cm: 63 − 2 × 16,7 = 29,6; doğrusu 63 − 2 × 16,667 = 29,7). *(Nutzer fark etti.)*
+- **Rundungsfehler durch Handrechnung entdeckt.** Elle hesaplayınca iki hata çıktı:
+  - a yuvarlanmış s ile hesaplanıyordu: 300 cm'de 63 − 2 × 16,7 = 29,6. Doğrusu 63 − 2 × 16,667 = 29,67.
+  - Lauflänge yuvarlanmış a ile hesaplanıyordu: 17 × 29,7 = 504,9. Doğrusu 17 × 29,667 = 504,3.
+
+  Karar: Tüm hesaplar (s, a, 2s + a, Lauflänge, çizimler) ve Normprüfung artık tam değerle yapılıyor. Sadece gösterimde yuvarlanıyor. *(Benim kararım.)*
+- Normprüfung tam değerle yapılıyor: s = 19,04 cm, „Gebäude im Allgemeinen“ (≤ 19 cm) için „nicht erfüllt“. Sınırı aşan bir varyant puanlamada ceza alıyor, bu yüzden bir basamak daha ekleniyor. Gleitkomma için 1e-9 cm tolerans var (`RECHENTOLERANZ`). *(Benim kararım.)*
+- Prüfung tablosunda değerler en fazla 2 ondalıkla gösteriliyor (ör. 19,04 cm, 29,67 cm). 1 ondalıkla 19,04 „19,0 cm ✗“ olarak görünürdü, bu kafa karıştırırdı. Üstteki değer tablosu ve çizimler 1 ondalık gösteriyor.
+- Test: 50–600 cm arası 0,1 cm adımlarla tarandı. Eski kod da hiçbir zaman sınırı tam değerle aşan bir s seçmemişti, çünkü puanlama 17 cm'e yakın s'yi tercih ediyor. Yani yeni kontrol daha çok bir güvenlik ağı. Bazı yüksekliklerde, iki uygun çözüm arasındaki seçim değişti (konfor puanı artık tam değerle hesaplanıyor).
 - Plandaki kesme çizgisi, kesme düzlemini (100 cm) kesen rıhtın (Setzstufe) üzerinden geçiyor, basamağın ortasından değil. Bu hem geometrik olarak daha doğru, hem de çizgi iki numaranın arasında kalıyor ve numaraların üstünden geçmiyor.
 - Genişlik yetmezse, kesit ve plan tek bir kaydırma alanında (`.zeichnungen`) birlikte yatay kayıyor. Böylece hizalı kalıyorlar. Başlıklar ve açıklama yazıları `position: sticky` ile yerinde kalıyor. Bunun için `container-type` / `cqw` kullanılıyor. *(Telefonda yatay kaydırma kabul edildi.)*
 - Ölçek, kaydırma alanının görünen genişliğinden hesaplanıyor, `figure`'un genişliğinden değil. Çünkü `figure` çizimle birlikte büyüyor; aksi halde çizim pencere küçülünce bir daha küçülmezdi.

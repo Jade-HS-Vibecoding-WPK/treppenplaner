@@ -1,7 +1,13 @@
 /*
  * berechnung.js – Berechnung und Normprüfung einer geraden Treppe.
  * Unabhängig von der Oberfläche; liest Grenzwerte nur aus DIN18065 (norm.js).
+ *
+ * Alle Werte werden exakt (ungerundet) berechnet und geprüft.
+ * Gerundet wird nur bei der Anzeige (app.js, zeichnung.js, grundriss.js).
  */
+
+// Toleranz für Gleitkomma-Vergleiche (z. B. 19.000000000000004 ≤ 19), weit unter 0,1 mm.
+const RECHENTOLERANZ = 1e-9;
 
 // Zielwert für 2s + a bei der Wahl der Stufenzahl.
 // Keine Normvorgabe, sondern gängige Faustregel (z. B. s = 17 cm, a = 29 cm → 63 cm).
@@ -16,31 +22,23 @@ function begrenze(wert, min, max) {
   return Math.min(Math.max(wert, min), max);
 }
 
-/** Rundet auf eine Nachkommastelle (Millimeter). */
-function rundeMm(wert) {
-  return Math.round(wert * 10) / 10;
-}
-
 /** Wie weit liegt ein Wert außerhalb von [min, max]? 0 = innerhalb. */
 function abweichung(wert, min, max) {
-  if (wert < min) return min - wert;
-  if (wert > max) return wert - max;
+  if (wert < min - RECHENTOLERANZ) return min - wert;
+  if (wert > max + RECHENTOLERANZ) return wert - max;
   return 0;
 }
 
 /**
- * Berechnet Steigung und Auftritt für eine bestimmte Anzahl Steigungen n.
+ * Berechnet Steigung und Auftritt für eine bestimmte Anzahl Steigungen n (exakte Werte).
  * Der Auftritt wird aus der Schrittmaßregel abgeleitet und auf die Normgrenzen begrenzt.
+ * Beispiel 300 cm, n = 18: s = 16,666…, a = 29,666…, Lauflänge = 17 · a = 504,33… cm.
  */
 function varianteFuerStufenzahl(geschosshoehe, n, grenzen) {
-  // Mit der exakten Steigung weiterrechnen und erst am Ende runden,
-  // sonst addieren sich Rundungsfehler (z. B. 300 / 18: a = 29,7 statt 29,6).
-  const steigungExakt = geschosshoehe / n;
-  const auftritt = rundeMm(
-    begrenze(ZIEL_SCHRITTMASS - 2 * steigungExakt, grenzen.auftritt.min, grenzen.auftritt.max)
-  );
-  const schrittmass = rundeMm(2 * steigungExakt + auftritt);
-  return { anzahlSteigungen: n, steigung: rundeMm(steigungExakt), auftritt, schrittmass };
+  const steigung = geschosshoehe / n;
+  const auftritt = begrenze(ZIEL_SCHRITTMASS - 2 * steigung, grenzen.auftritt.min, grenzen.auftritt.max);
+  const schrittmass = 2 * steigung + auftritt;
+  return { anzahlSteigungen: n, steigung, auftritt, schrittmass };
 }
 
 /**
@@ -124,7 +122,7 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite) {
     steigung: beste.steigung,
     auftritt: beste.auftritt,
     schrittmass: beste.schrittmass,
-    lauflaenge: rundeMm(anzahlAuftritte * beste.auftritt),
+    lauflaenge: anzahlAuftritte * beste.auftritt,
     pruefungen,
     stufenNormgerecht: stufenPruefungen.every((p) => p.ok),
     normgerecht: pruefungen.every((p) => p.ok),
