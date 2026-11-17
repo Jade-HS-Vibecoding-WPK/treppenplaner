@@ -18,6 +18,7 @@ Web-App für Architekturstudierende: Aus Geschosshöhe, Gebäudeart und verfügb
 | Variantenvergleich | Drei Karten mit Mini-Grundriss, Punkten und Empfehlung mit Begründungssatz |
 | Hinweis „sehr steil“ | Bei s ≥ 19 cm oder a ≤ 24 cm (Hinweis, kein Normverstoß) |
 | Zeichnungen | Schnitt bzw. Abwicklung entlang der Lauflinie und Grundriss mit Stufennummern, Lauflinie und Maßketten |
+| Materialwahl | Stahlbeton (Laufplatte), Holz oder Stahl (Wangentreppe mit offenen Trittstufen): ändert Konstruktion und Schraffur in Schnitt, Grundriss und Export – nicht die Normprüfung. Maße sind Annahmen, keine Normwerte; Schraffur vereinfacht |
 | Export | DXF (Schnitt und Grundriss getrennt), SVG, PDF über den Druckdialog |
 | Sprachen | Deutsch, Englisch, Französisch |
 
@@ -39,9 +40,10 @@ Web-App für Architekturstudierende: Aus Geschosshöhe, Gebäudeart und verfügb
 1. **Werte eingeben:** Geschosshöhe, Gebäudeart, nutzbare Laufbreite und optional den verfügbaren Raum (Länge × Breite). Dann **Berechnen**.
 2. **Karten vergleichen:** Empfehlung, Punkte und Ausschlussgründe der drei Varianten lesen.
 3. **Variante anklicken:** Kennwerte, Zeichnungen und Normprüfung wechseln zur gewählten Variante (bei der L-Treppe Drehsinn links/rechts wählbar).
-4. **Exportieren:** DXF oder SVG für Schnitt und Grundriss, PDF über „Drucken“.
+4. **Material wählen:** Über den Zeichnungen Stahlbeton, Holz oder Stahl – die Zeichnungen wechseln sofort.
+5. **Exportieren:** DXF oder SVG für Schnitt und Grundriss, PDF über „Drucken“.
 
-**DXF-Import:** Einheit **mm**, Maßstab **1:1**. Die Beschriftung ist für 1:50 bemessen. In AutoCAD 2027 getestet (Ebenen, Maße, Texte, Schraffur, Höhenkoten); ArchiCAD und Revit noch nicht getestet.
+**DXF-Import:** Einheit **mm**, Maßstab **1:1**. Die Beschriftung ist für 1:50 bemessen. Bei Holz und Stahl zusätzliche Ebenen WANGE, TRITTSTUFE und SCHRAFFUR_HOLZ bzw. SCHRAFFUR_STAHL. In AutoCAD 2027 getestet (Ebenen, Maße, Texte, Schraffur, Höhenkoten); ArchiCAD und Revit noch nicht getestet.
 
 ## Datenschutz
 
@@ -60,6 +62,7 @@ Reines HTML, CSS und JavaScript, ohne Frameworks, ohne Build-Schritt und ohne In
 | `js/bewertung.js` | Variantenvergleich: Ausschluss, Punkte, Gewichte, Empfehlung und Hinweis „sehr steil“. |
 | `js/variantenkarten.js` | Zeigt Empfehlung, die drei Karten mit Mini-Grundriss und die Kurztabelle für den Druck. |
 | `js/elemente.js` | Gemeinsame Geometrieliste (Linie, Fläche, Text …) für Bildschirm und Export. |
+| `js/material.js` | Materialien (Stahlbeton, Holz, Stahl): Konstruktion, Bauteilmaße als Annahmen und Schraffur an einer Stelle. |
 | `js/zeichnung.js` | Schnitt der geraden Treppe bzw. Abwicklung entlang der Lauflinie. |
 | `js/grundriss.js` | Grundriss mit Läufen, Podest, Stufennummern, Lauflinie, Raum und Maßketten. |
 | `js/svg-ausgabe.js` | Gibt eine Geometrieliste als SVG aus. |
@@ -109,6 +112,8 @@ Der Arbeitsprozess ist nachvollziehbar in [`PLAN.md`](PLAN.md) (Plan und Stand),
 - Maßstabsfigur (menschliche Silhouette) in Schnitt und Grundriss
 - Maßstäbliches Drucken (A4 quer, 1:50)
 - Gewendelte Stufen statt Podest
+- Treppenauge abhängig vom Material (bei Holzwangen wären ≥ 12 cm nötig, bisher fest 10 cm)
+- Prüfung offener Stufen (Holz/Stahl) ergänzen
 - IFC-/3D-Export
 - Gewichtung der Kriterien durch den Nutzer
 

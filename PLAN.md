@@ -23,7 +23,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
-- [ ] Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
+- ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
 - [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; eigener Schritt, nutzt die Materiallogik aus `js/material.js`)
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
@@ -87,6 +87,11 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Druck korrigiert (Test des Nutzers: 280 cm, Wohngebäude, 100 cm, Raum 320 × 220 ergab 3 Seiten): Karten im Druck jetzt wirklich ausgeblendet (die Kartenregel stand nach dem Druckblock und überschrieb ihn), Kennwerte-Leiste und Tabellenzeilen nie geteilt, Seite 1 kompakter (halbes Raster, Tabellen 9 pt, Titel 18 pt); simulierter Druck in 219 Fällen (DE/EN/FR): Seite 1 passt in 218, Ausnahme FR, 600 cm, Raum 450 × 120 (44 px zu lang)
 - ✅ Hinweis „sehr steil“ / „very steep“ / „très raide“ (Could): Grenzen `SEHR_STEIL` in `js/bewertung.js` (s ≥ 19 cm oder a ≤ 24 cm, eigene Annahme, kein Normwert), Funktion `steilheit()`; auf der Karte schwarz umrandete Marke im Kopf, in den Kennwerten unter dem auslösenden Wert (s und/oder a); schwarz, nicht rot (Hinweis, kein Normverstoß); kein Einfluss auf Ausschluss, Punkte oder Normprüfung; Sweep: 918 Karten korrekt markiert
 
+- ✅ Materialwahl (17.11., Wunsch der Betreuung): `js/material.js` (Konstruktion, Bauteilmaße als Annahmen, Schraffur; Zugriff nur über `materialVon()`, `bauteil()`, `materialSchraffur()`, `geschnittenesBauteil()` – für die Spindeltreppe wiederverwendbar); Schalter „Material: Stahlbeton | Holz | Stahl“ über den Zeichnungen (Standard Stahlbeton, im Druck ausgeblendet); Holz/Stahl als Wangentreppe: offene Trittstufen 5 / 4 cm geschnitten (Holz Linien längs, Stahl voll), Wange 6 × 30 / 1,5 × 25 cm in Ansicht als Band, Podestbelag wie Trittstufen, obere Decke Stahlbeton; Grundriss: Wangen außerhalb der Laufbreite (Gehrung, U: am Auge aneinanderstoßend bei Holz); Legenden aus `material.js` (DE/EN/FR) mit „Annahmen“, „Schraffur vereinfacht“, „Prüfung offener Stufen nicht enthalten“; DXF-Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ, SCHRAFFUR_STAHL (nur wenn benutzt), Materialzeile in DXF/SVG, Druckzeile mit Material; Normprüfung, Raumprüfung und Bewertung unverändert
+- ✅ Konsolentests Material: Stahlbeton-Elementlisten in 96 Fällen identisch; 2592 Schnitte und 5616 Grundrisse (Holz/Stahl) ohne NaN, alle Trittstufen innerhalb der Wange; DXF in 18 Fällen (Ebenen, SOLID, Materialzeile); Schalter bei 375 px in DE/EN/FR ohne Überlauf. Nebenbei korrigiert: SVG-Schraffurwinkel (bisher nur 45° richtig)
+
+**Stand 17.11., Materialwahl fertig** – Sichtprüfung durch den Nutzer steht aus (Holz/Stahl, gerade/L/U, DXF in AutoCAD).
+
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
 
 **Stand 17.11., Teil B (U-Treppe) fertig** – Sichtprüfung im Browser durch den Nutzer steht aus. Nächster Teil: Variantenvergleich.
@@ -109,6 +114,10 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
    ✅ Szenarien gemeinsam bewertet (siehe `notlar.md`): Gewichte bleiben; Platz-Punkte mit der belegten Fläche (Läufe + Podest), Raumprüfung weiter mit dem Rechteck; steilere Stufung für die 18er-Regel bleibt; Karten kompakt (ca. 250 px); Kontrollszenario „schmaler Flur“ (280 cm, Wohngebäude, 80 cm, 450 × 120) → gerade Treppe empfohlen.
    ✅ Druck/PDF: Karten ausgeblendet, Kennwerte ungeteilt, Seite 1 kompakt (gepusht).
    **Offen:** PDF nach der Korrektur erneut prüfen (280 cm, Wohngebäude, 100, 320 × 220 → 2 Seiten erwartet). Bekannt: bei 600 cm passen Abwicklung und Grundriss zusammen nicht auf Seite 2 (Grundriss auf Seite 3).
+
+**Do 18.11.**
+- Spindeltreppe als 4. Variante (eigener Schritt, Plan vorher abstimmen; nutzt `js/material.js`, je Material ein Eintrag `spindel` ergänzen)
+- Sichtprüfung Materialwahl (Nutzer)
 
 **Später / offen**
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).

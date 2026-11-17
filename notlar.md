@@ -76,7 +76,26 @@
 - **„sehr steil“ uyarısı (17.11., Could):** s ≥ 19 cm **veya** a ≤ 24 cm olan varyantlarda kartta ve Kennwerte şeridinde „sehr steil“ / „very steep“ / „très raide“. Sınırlar `js/bewertung.js`'de tek yerde (`SEHR_STEIL`), „eigene Annahme, kein Normwert“ notuyla. **Siyah**, kırmızı değil: bu bir norm ihlali değil, sadece bir uyarı (kırmızı = sorun kuralı). Eleme, puan veya Normprüfung'ü etkilemiyor. Sadece kartlarda ve Kennwerte'de. *(Benim kararım.)*
   - Görünüm (yapay zekâ): kartta başlık satırında siyah çerçeveli, dolgusuz etiket (Empfehlung etiketi siyah dolgulu, karışmasın diye); Kennwerte'de uyarıyı tetikleyen değerin (s ve/veya a) altında küçük çerçeveli bir not. EN'de not değerin yanına sığmıyordu, tutarlı olsun diye her dilde ayrı satırda. Kartın yüksekliği değişmiyor (1366 px: 239 px), Kennwerte şeridi uyarı varken 88 → 111 px.
 
+- **Materialwahl (17.11., hocanın isteği):** Stahlbeton, Holz, Stahl; varsayılan Stahlbeton. Malzeme sadece çizimi değiştiriyor, Normprüfung'ü değiştirmiyor.
+  - Ölçüler (Annahme, kein Normwert): Holz Trittstufe 5 cm, Wange 6 × 30 cm; Stahl Trittstufe 4 cm, Wange Flachstahl 1,5 × 25 cm; Wange'nin üst kenarı basamak ön kenarlarının 5 cm üstünde. Laufplatte (Stahlbeton) 18 cm olarak kalıyor.
+  - Holz/Stahl'da açık basamaklar (Setzstufe yok). Lejantta „Prüfung offener Stufen nicht enthalten“ notu var.
+  - Wange'ler nutzbare Laufbreite'nin dışında. Raumprüfung ve puanlama Wange'leri saymıyor (vereinfacht).
+  - U'da Holz Wange'leri Auge'nin içinde birbirine değiyor. Lejantta „vereinfacht: bei Holz wäre ein Treppenauge ≥ 12 cm nötig“ notu var. Malzemeye göre Auge: README Ausblick'te.
+  - Taramalar vereinfacht, notu da var: Stahlbeton 45°, Holz lif yönünde (Trittstufe boyunca), Stahl tam siyah. DIN 1356-1 / DIN ISO 128'deki tam gösterim doğrulanmadı.
+  - Spindeltreppe yarın ayrı bir adımda yapılacak ve aynı malzeme mantığını kullanacak.
+
 ## Yapay zekânın kararları
+
+- **Materialwahl – teknik (17.11.):**
+  - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.
+  - Malzeme hesap sonucuna ait değil, bir görünüm seçimi (`auswahl.material`). `letztesErgebnis = { ...e, material }`; böylece çizim, lejant ve export aynı değeri kullanıyor.
+  - Anahtar formda değil, Kennwerte ile çizimler arasında, çünkü „Berechnen“ gerektirmiyor. Stil links/rechts anahtarıyla aynı, yazdırmada gizli.
+  - Kesit: Trittstufe kesilen parça (kalın çizgi + tarama). Wange kesit düzleminin arkasında, görünüşte: ince çizgili, taramasız bir şerit. Trittstufe'ler tamamen şeridin içinde kalıyor (2592 durumda kontrol edildi), bu yüzden dolgu gerekmiyor. Şerit = basamak ön kenar çizgisine paraleller, sahanlıkta yatay; döşemenin altında ve üst döşemenin önünde (x = L) kesiliyor (Sutherland–Hodgman).
+  - Holz/Stahl'da çizim alanı (ve dolayısıyla ölçek) Stahlbeton'la aynı. Malzeme değişince çizim yerinden oynamıyor.
+  - Plan: Wange'ler Lauflinie'ye paralel çizgiler (B/2 … B/2 + t), köşelerde gönye. Sadece dış kenar ve uçlar çiziliyor; iç kenar zaten merdiven kenarı. U'da Auge tarafında t = min(t, Auge/2).
+  - DXF: yeni katmanlar sadece kullanılıyorsa tabloda; Stahlbeton dosyaları aynı katmanlarla kalıyor. Çelik dolgu `SOLID` (4 köşe). DXF ve SVG'de çizimin altında „Material: … (Maße angenommen, keine Normwerte)“ satırı var (ekranda bu bilgi lejantta).
+  - Hata bulundu: SVG'de tarama açısı sadece 45°'de doğruydu (desen dikey + `rotate(winkel)`). Düzeltme `rotate(90 − winkel)`; 45° aynı kaldığı için Stahlbeton değişmedi.
+  - Lejantlardaki 18 / 20 cm artık `material.js` ve `DECKENDICKE`'den geliyor (sözlükte sabit sayı yok).
 
 - **Treppenformen – teknik (17.11., Parça A):**
   - s ve a forma bağlı değil (`stufenKandidaten()` en iyi Stufung'u veriyor); form sadece kollara bölüyor. Lauf i: nᵢ Steigung, nᵢ − 1 Auftritt; Podest bir Auftritt'in yerine geçiyor.
