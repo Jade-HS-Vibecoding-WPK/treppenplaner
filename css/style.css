@@ -143,6 +143,7 @@ input[type="number"].nicht-ok { color: var(--fehler); border-bottom-color: var(-
 fieldset {
   border: var(--haarlinie);
   margin: 0 0 calc(3 * var(--r));
+  min-width: 0;
   padding: calc(1.5 * var(--r)) calc(2 * var(--r));
 }
 

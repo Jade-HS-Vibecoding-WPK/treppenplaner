@@ -104,7 +104,10 @@ function raumMassElemente(z, geo) {
     hilfslinie(z, [0, -4 * m], [0, y - 4 * m]);
     hilfslinie(z, [r.laenge, -4 * m], [r.laenge, y - 4 * m]);
     horizontalesMass(z, 0, r.laenge, y);
-    z.text([r.laenge / 2, y + 4 * m], t("zeichnung.raum", { wert: zahl(r.laenge) }), { ausrichtung: "mitte" });
+    const wertRaum = zahl(r.laenge);
+    z.text([r.laenge / 2, y + 4 * m], masstext(z, t("zeichnung.raum", { wert: wertRaum }), wertRaum, r.laenge), {
+      ausrichtung: "mitte",
+    });
     if (r.fehlt.laenge > 0) {
       hilfslinie(z, [geo.L, -4 * m], [geo.L, y - 4 * m], rot);
       horizontalesMass(z, r.laenge, geo.L, y, rot);
@@ -115,8 +118,9 @@ function raumMassElemente(z, geo) {
   }
 
   if (r.breiteVorgegeben) {
-    const xRechts = Math.max(geo.L, r.laenge);
-    const x = xRechts + 30 * m; // Abstand zur Stufennummer n am Laufende
+    // Die Stufennummer n steht hinter der letzten Setzstufe (L … L + a) – Maßkette erst danach.
+    const xRechts = Math.max(geo.L + geo.a, r.laenge);
+    const x = xRechts + 30 * m;
     hilfslinie(z, [xRechts + 4 * m, 0], [x + 4 * m, 0]);
     hilfslinie(z, [xRechts + 4 * m, r.breite], [x + 4 * m, r.breite]);
     vertikalesMass(z, x, 0, r.breite);
@@ -124,7 +128,8 @@ function raumMassElemente(z, geo) {
     if (r.fehlt.breite > 0) {
       hilfslinie(z, [xRechts + 4 * m, geo.B], [x + 4 * m, geo.B], rot);
       vertikalesMass(z, x, r.breite, geo.B, rot);
-      z.text([x + 14 * m, (r.breite + geo.B) / 2], t("zeichnung.fehlt", { wert: zahl(r.fehlt.breite) }), {
+      // rechts neben den Maßstrichen (± 4 px), damit der Text die Hilfslinien nicht berührt
+      z.text([x + 18 * m, (r.breite + geo.B) / 2], t("zeichnung.fehlt", { wert: zahl(r.fehlt.breite) }), {
         ausrichtung: "mitte", drehung: 90, ...rot,
       });
     }
@@ -204,7 +209,10 @@ function grundrissMassElemente(z, geo) {
   hilfslinie(z, [0, -4 * m], [0, yMassL - 4 * m]);
   hilfslinie(z, [geo.L, -4 * m], [geo.L, yMassL - 4 * m]);
   horizontalesMass(z, 0, geo.L, yMassL);
-  z.text([geo.L / 2, yMassL + 4 * m], t("zeichnung.lauflaenge", { wert: zahl(geo.L) }), { ausrichtung: "mitte" });
+  const wertL = zahl(geo.L);
+  z.text([geo.L / 2, yMassL + 4 * m], masstext(z, t("zeichnung.lauflaenge", { wert: wertL }), wertL, geo.L), {
+    ausrichtung: "mitte",
+  });
 
   // Laufbreite links
   const xMassB = -28 * m;

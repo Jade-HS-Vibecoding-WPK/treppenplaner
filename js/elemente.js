@@ -80,6 +80,20 @@ function hilfslinie(z, p1, p2, optionen = {}) {
   z.linie(EBENE.mass, p1, p2, STRICH.mass, optionen);
 }
 
+// Geschätzte mittlere Zeichenbreite der technischen Schrift (Helvetica ≈ 0,55 Schriftgrad).
+// Näherungswert: die Elementliste kennt kein DOM und kann Texte nicht messen.
+const ZEICHENBREITE = 0.55;
+const MASSTEXT_ABSTAND = 8; // px Luft links und rechts zwischen Text und Hilfslinien
+
+/**
+ * Maßtext mit Bezeichnung („Lauflänge 420,0“), wenn er zwischen die Hilfslinien passt,
+ * sonst nur die Zahl (z. B. bei kurzen Treppen oder längeren Texten in EN/FR).
+ */
+function masstext(z, langText, kurzText, verfuegbar) {
+  const breite = (langText.length * ZEICHENBREITE * SCHRIFTGROESSE + 2 * MASSTEXT_ABSTAND) * z.m;
+  return breite <= verfuegbar ? langText : kurzText;
+}
+
 /** Höhenkote: Dreieck mit Spitze auf der Linie, Text rechts daneben. */
 function hoehenkote(z, x, y, beschriftung) {
   const m = z.m;

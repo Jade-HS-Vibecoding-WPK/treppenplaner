@@ -159,7 +159,8 @@ function schnittElemente(ergebnis, cmProPx) {
   hilfslinie(z, [0, -DECKENDICKE - 4 * m], [0, yMassL - 4 * m]);
   hilfslinie(z, [L, -DECKENDICKE - 4 * m], [L, yMassL - 4 * m]);
   horizontalesMass(z, 0, L, yMassL);
-  z.text([L / 2, yMassL + 4 * m], t("zeichnung.lauflaenge", { wert: zahl(ergebnis.lauflaenge) }), {
+  const wertL = zahl(ergebnis.lauflaenge);
+  z.text([L / 2, yMassL + 4 * m], masstext(z, t("zeichnung.lauflaenge", { wert: wertL }), wertL, L), {
     ausrichtung: "mitte",
   });
 
