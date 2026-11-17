@@ -287,6 +287,9 @@ th, td {
   main > .block:first-child input[type="number"] { width: 100%; }
 }
 
+/* Zeile „Eingabe“ nur im Druck */
+.druck-eingabe { display: none; }
+
 footer {
   margin-top: calc(4 * var(--r));
   border-top: var(--haarlinie);
@@ -303,6 +306,14 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   body { max-width: none; padding: 0; font-size: 11pt; }
 
   main { display: block; } /* einspaltig */
+
+  .druck-eingabe {
+    display: block;
+    margin: 0 0 calc(3 * var(--r));
+    padding-bottom: calc(1.5 * var(--r));
+    border-bottom: var(--haarlinie);
+  }
+  .druck-eingabe strong { margin-right: var(--r); }
   .kennwerte { grid-template-columns: repeat(3, 1fr); }
 
   h1 { font-size: 22pt; }

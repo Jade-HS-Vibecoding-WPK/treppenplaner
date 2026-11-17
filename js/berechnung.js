@@ -124,6 +124,7 @@ function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgab
   const raum = pruefeRaum({ laenge: lauflaenge, breite: laufbreite }, raumVorgabe);
 
   return {
+    gebaeudeart, // Eingabe, für die Druckzeile „Eingabe“
     geschosshoehe,
     laufbreite,
     anzahlSteigungen: beste.anzahlSteigungen,

@@ -70,6 +70,7 @@ function zeigeErgebnis(e) {
   }
 
   zeigeRaumpruefung(tbody, e.raum);
+  zeigeDruckEingabe(e);
 
   ergebnisBlock.hidden = false;
 
@@ -130,6 +131,32 @@ function zeigeRaumpruefung(tbody, raum) {
 
   urteil.textContent = passt ? t("raum.urteilPasst") : t("raum.urteilPasstNicht", { fehlt: fehltText(fehlt) });
   urteil.className = "urteil " + (passt ? "ok" : "nicht-ok");
+}
+
+/**
+ * Zeile „Eingabe“ für den Druck (das Formular ist dort ausgeblendet), z. B.
+ * „Eingabe Geschosshöhe 275 cm · Gebäudeart: … · Nutzbare Laufbreite 80 cm · Verfügbarer Raum 400 × 100 cm“.
+ */
+function zeigeDruckEingabe(e) {
+  const masz = (wert) => zahlFlexibel(wert, 1) + " cm";
+  const teile = [
+    `${t("druck.geschosshoehe")} ${masz(e.geschosshoehe)}`,
+    t("druck.gebaeudeart", { wert: t("gebaeudeart." + e.gebaeudeart) }), // Doppelpunkt je Sprache (FR: „ : “)
+    `${t("druck.laufbreite")} ${masz(e.laufbreite)}`,
+  ];
+  const vorgabe = e.raum?.vorgabe;
+  if (vorgabe?.laenge != null && vorgabe.breite != null) {
+    teile.push(`${t("druck.raum")} ${zahlFlexibel(vorgabe.laenge, 1)} × ${masz(vorgabe.breite)}`);
+  } else if (vorgabe?.laenge != null) {
+    teile.push(t("druck.raumSeite", { seite: t("raum.laenge"), wert: masz(vorgabe.laenge) }));
+  } else if (vorgabe?.breite != null) {
+    teile.push(t("druck.raumSeite", { seite: t("raum.breite"), wert: masz(vorgabe.breite) }));
+  }
+
+  const zeile = document.getElementById("druckEingabe");
+  const titel = document.createElement("strong");
+  titel.textContent = t("eingabe.titel");
+  zeile.replaceChildren(titel, " " + teile.join(" · "));
 }
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
