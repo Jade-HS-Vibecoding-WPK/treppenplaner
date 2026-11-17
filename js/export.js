@@ -17,10 +17,14 @@ const ZEICHNUNGEN = {
   grundriss: (ergebnis, cmProPx) => grundrissElemente(ergebnis, cmProPx),
 };
 
-/** Dateiname mit Geschosshöhe, z. B. treppe_280_schnitt.dxf (282,5 cm → treppe_282-5_…). */
+/**
+ * Dateiname mit Geschosshöhe und Form, z. B. treppe_280_schnitt.dxf (gerade),
+ * treppe_280_L-links_grundriss.dxf, treppe_280_U_schnitt.svg (282,5 cm → treppe_282-5_…).
+ */
 function exportDateiname(ergebnis, zeichnung, endung) {
   const hoehe = String(Math.round(ergebnis.geschosshoehe * 10) / 10).replace(".", "-");
-  return `treppe_${hoehe}_${zeichnung}.${endung}`;
+  const form = ergebnis.form === "gerade" ? "" : [ergebnis.form, ergebnis.richtung].filter(Boolean).join("-") + "_";
+  return `treppe_${hoehe}_${form}${zeichnung}.${endung}`;
 }
 
 /** Bietet Daten als Datei zum Herunterladen an. */

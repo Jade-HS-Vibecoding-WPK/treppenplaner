@@ -52,6 +52,7 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Anzahl Steigungen",
     "ergebnis.anzahlAuftritte": "Anzahl Auftritte",
     "ergebnis.lauflaenge": "Lauflänge (Grundriss)",
+    "ergebnis.platzbedarf": "Platzbedarf (Grundriss)",
     "formwahl.label": "Treppenform",
     "form.gerade": "Gerade Treppe",
     "form.L": "L-Treppe",
@@ -92,6 +93,7 @@ const TEXTE = {
     "druck.laufbreite": "Nutzbare Laufbreite",
     "druck.raum": "Verfügbarer Raum",
     "druck.gebaeudeart": "Gebäudeart: {wert}",
+    "druck.form": "Treppenform: {wert}",
     "druck.raumSeite": "Verfügbarer Raum: {seite} {wert}",
     "raum.passt": "✓ passt",
     "raum.fehltLaenge": "{wert} Länge",
@@ -110,6 +112,12 @@ const TEXTE = {
       "Schnitt, ohne Maßstab · Maße in cm · Laufplattendicke angenommen 18 cm · Deckendicke angenommen 20 cm",
     "grundriss.titel": "Grundriss",
     "grundriss.aria": "Grundriss der geraden Treppe",
+    "schnitt.titelAbwicklung": "Abwicklung entlang der Lauflinie",
+    "schnitt.ariaAbwicklung": "Abwicklung der Treppe entlang der Lauflinie",
+    "schnitt.legendeAbwicklung":
+      "Abwicklung entlang der Lauflinie, ohne Maßstab · Maße in cm · Lauf- und Podestplatte angenommen 18 cm · " +
+      "Deckendicke angenommen 20 cm",
+    "grundriss.ariaPodest": "Grundriss der Treppe mit Podest",
     "grundriss.legende":
       "Grundriss, ohne Maßstab · Maße in cm · Darstellung ohne Wände/Handlauf · " +
       "Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)",
@@ -164,6 +172,7 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Number of rises",
     "ergebnis.anzahlAuftritte": "Number of goings",
     "ergebnis.lauflaenge": "Total going (plan)",
+    "ergebnis.platzbedarf": "Space required (plan)",
     "formwahl.label": "Stair shape",
     "form.gerade": "Straight stair",
     "form.L": "L-shaped stair",
@@ -203,6 +212,7 @@ const TEXTE = {
     "druck.laufbreite": "Clear width",
     "druck.raum": "Available space",
     "druck.gebaeudeart": "Building type: {wert}",
+    "druck.form": "Stair shape: {wert}",
     "druck.raumSeite": "Available space: {seite} {wert}",
     "raum.passt": "✓ fits",
     "raum.fehltLaenge": "{wert} of length",
@@ -221,6 +231,12 @@ const TEXTE = {
       "Section, not to scale · dimensions in cm · waist thickness assumed 18 cm · slab thickness assumed 20 cm",
     "grundriss.titel": "Plan",
     "grundriss.aria": "Plan of the straight stair",
+    "schnitt.titelAbwicklung": "Development along the walking line",
+    "schnitt.ariaAbwicklung": "Development of the stair along the walking line",
+    "schnitt.legendeAbwicklung":
+      "Development along the walking line, not to scale · dimensions in cm · waist and landing thickness " +
+      "assumed 18 cm · slab thickness assumed 20 cm",
+    "grundriss.ariaPodest": "Plan of the stair with landing",
     "grundriss.legende":
       "Plan, not to scale · dimensions in cm · shown without walls/handrail · " +
       "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
@@ -278,6 +294,7 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Nombre de contremarches",
     "ergebnis.anzahlAuftritte": "Nombre de marches",
     "ergebnis.lauflaenge": "Reculement (vue en plan)",
+    "ergebnis.platzbedarf": "Encombrement (vue en plan)",
     "formwahl.label": "Forme de l’escalier",
     "form.gerade": "Escalier droit",
     "form.L": "Escalier en L",
@@ -318,6 +335,7 @@ const TEXTE = {
     "druck.laufbreite": "Emmarchement",
     "druck.raum": "Espace disponible",
     "druck.gebaeudeart": "Type de bâtiment : {wert}",
+    "druck.form": "Forme : {wert}",
     "druck.raumSeite": "Espace disponible : {seite} {wert}",
     "raum.passt": "✓ tient",
     "raum.fehltLaenge": "{wert} en longueur",
@@ -336,6 +354,12 @@ const TEXTE = {
       "Coupe, sans échelle · cotes en cm · épaisseur de paillasse supposée 18 cm · épaisseur de dalle supposée 20 cm",
     "grundriss.titel": "Vue en plan",
     "grundriss.aria": "Vue en plan de l'escalier droit",
+    "schnitt.titelAbwicklung": "Développement selon la ligne de foulée",
+    "schnitt.ariaAbwicklung": "Développement de l’escalier selon la ligne de foulée",
+    "schnitt.legendeAbwicklung":
+      "Développement selon la ligne de foulée, sans échelle · cotes en cm · épaisseur de paillasse et de palier " +
+      "supposée 18 cm · épaisseur de dalle supposée 20 cm",
+    "grundriss.ariaPodest": "Vue en plan de l’escalier avec palier",
     "grundriss.legende":
       "Vue en plan, sans échelle · cotes en cm · représentée sans murs ni main courante · " +
       "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",

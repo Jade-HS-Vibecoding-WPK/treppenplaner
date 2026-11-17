@@ -66,12 +66,18 @@ function zeigeErgebnis(e) {
   letzterFehler = null;
   fehlerAnzeige.hidden = true;
 
-  setzeText("anzahlSteigungen", e.anzahlSteigungen);
-  setzeText("anzahlAuftritte", e.anzahlAuftritte);
+  // Mit Podest: Aufteilung auf die Läufe in Klammern, z. B. „16 (8 + 8)“
+  const jeLauf = (wert) => (e.laeufe.length > 1 ? ` (${e.laeufe.map(wert).join(" + ")})` : "");
+  setzeText("anzahlSteigungen", e.anzahlSteigungen + jeLauf((l) => l.steigungen));
+  setzeText("anzahlAuftritte", e.anzahlAuftritte + jeLauf((l) => l.auftritte));
   setzeText("steigung", cm(e.steigung));
   setzeText("auftritt", cm(e.auftritt));
   setzeText("schrittmass", cm(e.schrittmass));
-  setzeText("lauflaenge", cm(e.lauflaenge));
+  // Gerade Treppe: Lauflänge; mit Podest: Platzbedarf Länge × Breite
+  const gerade = e.form === "gerade";
+  setzeI18n(document.getElementById("lauflaengeTitel"), gerade ? "ergebnis.lauflaenge" : "ergebnis.platzbedarf");
+  setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : `${zahl(e.footprint.laenge)} × ${zahl(e.footprint.breite)} cm`);
+  setzeZeichnungstitel(gerade);
 
   const urteil = document.getElementById("gesamturteil");
   urteil.textContent = urteilText(e);
@@ -92,6 +98,31 @@ function zeigeErgebnis(e) {
   // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
   letztesErgebnis = e;
   zeichneZeichnungen();
+}
+
+/** Setzt einen Wörterbuchschlüssel (Text oder aria-label), damit ein Sprachwechsel ihn mit übersetzt. */
+function setzeI18n(el, schluessel, aria = false) {
+  if (aria) {
+    el.dataset.i18nAria = schluessel;
+    el.setAttribute("aria-label", t(schluessel));
+  } else {
+    el.dataset.i18n = schluessel;
+    el.textContent = t(schluessel);
+  }
+}
+
+/** Gerade Treppe: Schnitt; mit Podest: Abwicklung entlang der Lauflinie. */
+function setzeZeichnungstitel(gerade) {
+  setzeI18n(document.getElementById("schnittTitel"), gerade ? "schnitt.titel" : "schnitt.titelAbwicklung");
+  setzeI18n(document.getElementById("schnittLegende"), gerade ? "schnitt.legende" : "schnitt.legendeAbwicklung");
+  setzeI18n(schnittSvg, gerade ? "schnitt.aria" : "schnitt.ariaAbwicklung", true);
+  setzeI18n(grundrissSvg, gerade ? "grundriss.aria" : "grundriss.ariaPodest", true);
+}
+
+/** Name der Treppenform, z. B. „L-Treppe (links)“. */
+function formText(e) {
+  const name = t("form." + e.form);
+  return e.richtung ? `${name} (${t("richtung." + e.richtung)})` : name;
 }
 
 /** Hängt eine Zeile an die Prüftabelle an; die letzte Zelle ist das Ergebnis (grün/rot). */
@@ -167,6 +198,8 @@ function zeigeDruckEingabe(e) {
   } else if (vorgabe?.breite != null) {
     teile.push(t("druck.raumSeite", { seite: t("raum.breite"), wert: masz(vorgabe.breite) }));
   }
+
+  teile.push(t("druck.form", { wert: formText(e) })); // Formwahl ist im Druck ausgeblendet
 
   const zeile = document.getElementById("druckEingabe");
   const titel = document.createElement("strong");

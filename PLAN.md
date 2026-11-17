@@ -16,8 +16,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Schnitt und Grundriss vergrößern (breitere Seite, Mindestmaßstab, gemeinsames Scrollen)
 - [ ] Kopfhöhe 2,00 m im Schnitt prüfen
 - ✅ Eingabe der verfügbaren Fläche (Länge × Breite) – gerade Treppe
-- [ ] Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
-- [ ] L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`)
+- ✅ Raumprüfung für die L-Treppe (gleiche Funktion `pruefeRaum`) – U folgt
+- ✅ L-Treppe mit Viertelpodest, links und rechts (Podestregeln siehe `notlar.md`)
+- [ ] U-Treppe mit Halbpodest
 - [ ] Variantenvergleich + Bewertung + Empfehlung
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
@@ -48,7 +49,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Grenzwerte DIN 18065:2020-08 zentral in `js/norm.js`, mit Quellenangabe
 - ✅ Gerade Treppe: Stufenzahl, Steigung, Auftritt, Schrittmaßregel, Prüfung grün/rot
 - ✅ Schnitt als SVG: Decken, Laufplatte (18 cm angenommen), Schraffur, Höhenkoten, Maßketten (s, a, Lauflänge, Geschosshöhe), automatischer Maßstab
-- ✅ Podestregeln recherchiert (sekundär, siehe `notlar.md`) – noch nicht in der App
+- ✅ Podestregeln recherchiert (sekundär, siehe `notlar.md`) und in `js/norm.js` übernommen (18.11.)
 - ✅ Nutzbare Laufbreite als Eingabe: Vorschlag = Mindestmaß der Gebäudeart (80 / 100 cm), eigene Eingabe bleibt erhalten, rot unter dem Mindestmaß, eigene Zeile in der Normprüfung
 - ✅ Grundriss als SVG (`js/grundriss.js`): gleicher Maßstab, genau unter dem Schnitt (Projektion); Stufennummern 1 … n (Steigungen), Lauflinie mit Kreis und Pfeil, Schnittlinie bei ca. 1 m (Darstellungskonvention, Quelle offen), darüber gestrichelt; Maßketten Lauflänge und Laufbreite
 
@@ -64,6 +65,13 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung (17.11., UI-Design-Kurs): Swiss-inspiriert, Stil-Prompt und vier bewusste Entscheidungen in `CLAUDE.md`; Bitter Bold (Überschriften) und Nunito Regular/Bold (Text) lokal aus `fonts/` (OFL), Zeichnungen und SVG-Export in technischer Schrift; nur Schwarz, Weiß, Signalrot (#e2001a, nur für Probleme), „erfüllt“ schwarz; Abstände im 0,5-rem-Raster; „Berechnen“ als einziger Hauptbutton, Export leiser; ab 64rem zwei Spalten (links Eingabe 18rem, rechts Urteil → Kennwerte-Leiste → Zeichnungen → Normprüfung → Export), bei 1366 px 250–350 cm ohne Scrollen; Handy und Druck einspaltig, beim Drucken Normprüfung und Fußzeile auf Seite 1
 - ✅ Gestaltungsnotizen erledigt: Raumbreiten-Maßkette im Grundriss erst hinter der Stufennummer n (keine Überschneidung mehr); Formularabstände im Raster; Maßtexte mit Bezeichnung nur, wenn sie zwischen die Hilfslinien passen, sonst nur die Zahl (betrifft v. a. EN/FR und das DXF bei kurzen Treppen); in DE/EN/FR bei 1366 px und 375 px ohne Überschneidungen geprüft
 
+- ✅ Treppenformen (18.11., Teil A „L“): `js/treppenformen.js` mit `berechneTreppe(form, richtung, eingabe)` für gerade, L (und vorbereitet U); Steigung/Auftritt unabhängig von der Form, die Form teilt nur auf Läufe auf (Lauf i: nᵢ Steigungen, nᵢ − 1 Auftritte, Podest ersetzt einen Auftritt); L probiert alle Aufteilungen (Läufe normgerecht → passt in den Raum bzw. kleinstes Fehlmaß → ausgewogen); Normprüfung neu: ≥ 3 Steigungen je Lauf, ≤ 18 Steigungen je Lauf (nur Gebäude im Allgemeinen – gerade Treppe mit 19+ Steigungen dort jetzt ✗ „Podest nötig“), Podestlänge ≥ Laufbreite
+- ✅ L-Treppe gezeichnet: Grundriss mit Läufen und Viertelpodest (links/rechts gespiegelt), Stufennummern fortlaufend, Lauflinie über das Podest, Schnittlinie und gestrichelte Teile über die Läufe hinweg, Raumüberstand je Lauf/Podest, Maßketten Lauf 1 | Podest und Breite in Abschnitten; Schnitt als Abwicklung entlang der Lauflinie mit Podestplatte (18 cm angenommen), Kette Lauf | Podest | Lauf, Höhenkote auf dem Podest; Grundriss bei L in eigener Lage (gleicher Maßstab, nicht mehr unter dem Schnitt)
+- ✅ Vorläufige Formwahl im Ergebnis „Gerade Treppe | L-Treppe (links | rechts)“ – wird im Variantenvergleich zu Karten; Kennwerte mit Aufteilung („16 (8 + 8)“) und Platzbedarf Länge × Breite; Export-Dateiname mit Form (`treppe_275_L-links_grundriss.dxf`); Druckzeile nennt die Treppenform; alle Texte DE/EN/FR
+- ✅ Gerade Treppe nach dem Umbau unverändert: Elementlisten (Bildschirm und Export) in 6 Fällen und das SVG im Browser identisch geprüft (Konsole, ohne Node)
+
+**Stand 18.11., Teil A (L-Treppe) fertig.** Nächster Teil: U-Treppe.
+
 **Stand 16.11. abends:** Gerade Treppe vollständig (Berechnung, Normprüfung, Raumprüfung, Schnitt, Grundriss, DE/EN/FR, Export DXF/SVG/PDF). DXF in AutoCAD 2027 erfolgreich getestet; PDF mit zwei Seiten in zwei Fällen (600 cm, Raum 1000 × 1000 und 600 × 600) geprüft. Alles committet und gepusht.
 
 ## Nächste Schritte
@@ -73,8 +81,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 2. DXF in ArchiCAD und Revit (Uni) öffnen: Einheit (mm wählen), Ebenen, Umlaute (ä, ö, ü, ß, é), ± prüfen (AutoCAD 2027 ✅).
 
 **Mi 18.11.**
-3. L- und U-Treppe mit Podest (Podestregeln siehe `notlar.md`); Footprint je Variante berechnen und mit `pruefeRaum` prüfen; Schnitt, Grundriss und Export auf die neue Geometrieliste aufbauen.
-4. Variantenvergleich, Bewertung und Empfehlung der passendsten Treppenform – Kriterien vorher abstimmen.
+3. ✅ Teil A: L-Treppe (Berechnung, Grundriss, Abwicklung, Export, Texte).
+4. Teil B: U-Treppe – Berechnung ist schon in `treppenformen.js` (ausgewogen, Halbpodest 2B + Auge, Treppenauge 10 cm), Grundriss/Abwicklung sind vorbereitet; noch: Knopf „U-Treppe“ in der Formwahl, Untertitel der Seite, Geometrie im Browser prüfen lassen (Nutzer), Commit.
+5. Teil C: Variantenvergleich – `js/bewertung.js` (Gewichte an einer Stelle: Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %; Formeln siehe `notlar.md`), Ausschluss (passt nicht / Norm nicht erfüllt), Stufenzahl je Form (steilere normgerechte Stufung, wenn die bequemste nicht passt), drei Karten (gerade, L mit links/rechts, U) mit Mini-Grundriss, Werten und Punkten, Empfehlung mit Begründungssatz, Ausgeschlossene blass und gestrichelt; danach Szenarien gemeinsam prüfen und Gewichte ggf. anpassen.
 
 **Später / offen**
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).

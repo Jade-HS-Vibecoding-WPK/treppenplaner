@@ -22,7 +22,7 @@
 - Şimdilik sadece DIN 18065 esas alınıyor. Eyalet yönetmeliği için sayfanın altında uyarı var.
 - Kesitte Höhenkoten (üçgen sembol, „± 0,00“ / „+ 2,75“) gösteriliyor.
 - Laufplatte çiziliyor, kalınlığı 18 cm varsayıldı. Kesilen döşeme ve plak ince tarama (Schraffur) ile gösteriliyor.
-- **İleride:** Uzun kollarda ara sahanlık (Podest) kontrolü. Örneğin 600 cm'de tek kolda 35 rıht çıkıyor. L/U merdivenler adımında uygulamaya eklenecek, şimdilik uygulamada değişiklik yok.
+- Uzun kollarda ara sahanlık (Podest) kontrolü. Örneğin 600 cm'de tek kolda 35 rıht çıkıyor. **18.11.'de uygulamaya eklendi** (`norm.js`, `treppenformen.js`).
   - **Doğrulandı (sekundär):** Kaynak: Baunetz Wissen (DIN 18065'e atıfla), Original nicht eingesehen.
     - Notwendige Treppen'de en geç 18 Steigung'dan sonra bir Podest gerekir. Wohngebäude mit bis zu zwei Wohnungen bunun dışında.
     - Bir Treppenlauf en az 3 Stufe'den oluşur.
@@ -51,7 +51,39 @@
   - **DXF in AutoCAD 2027 erfolgreich getestet (Layer, Maße, Texte korrekt).** Kullanıcı testi, 16.11.: kesit ve plan açılıyor; yazılar, çizimler, katmanlar, ölçüler, tarama, kotlar, kesikli çizgiler ve „±“ doğru. ArchiCAD/Revit testi hâlâ açık.
   - PDF: kesit ve plan her zaman 2. sayfada başlıyor (`break-before: page`), başlık çizimden ayrılmıyor (`break-after: avoid`). 1. sayfa sonuçlar ve tablolar, 2. sayfa çizimler. Footer yazdırırken 1. sayfaya, Normprüfung'ün altına taşınıyor (`beforeprint`/`afterprint`, ekranda yeri değişmiyor); 600 cm, alan 600 × 600'de footer tek başına 3. sayfaya düşüyordu. *(Benim kararım.)*
 
+- **L-/U-Treppe ve Variantenvergleich (18.11.):**
+  - Sadece Podest'li çözümler, gewendelte Stufen yok. L: iki kol + Viertelpodest, sola ve sağa dönüş. U: iki paralel kol + Halbpodest.
+  - „Ein Lauf mindestens 3 Stufen“ **3 Steigung** olarak sayılıyor (`TODO: Quelle prüfen`).
+  - 18-Steigungen-Regel sadece „Gebäude im Allgemeinen“de; Wohngebäude bunun dışında.
+  - Treppenauge (U) **10 cm – Annahme, kein Normwert.**
+  - Ausschluss puanlamadan önce: alana sığmıyor (`pruefeRaum`) veya norm sağlanmıyor (18-Steigungen-Regel dahil) → ausgeschlossen.
+  - Ağırlıklar (benim): Komfort 40 %, Platzbedarf 30 %, Sicherheit 20 %, Nutzung 10 %. Kodda tek bir yerde (`js/bewertung.js`, norm değeri değil).
+    - Komfort = (Kₛ + Kₐ)/2, Kₛ = 100·(1 − |s − 17|/3), Kₐ = 100·(1 − |a − 29|/6), 0…100 arası.
+    - Platz: alanın iki ölçüsü varsa 100·(1 − Footprint ÷ Raumfläche); yoksa göreli: 100·(en küçük Footprint ÷ kendi Footprint).
+    - Sicherheit: en uzun koldaki Steigung sayısı m: m ≤ 8 → 100, m ≥ 18 → 0, arası doğrusal (8 benim varsayımım, 18 normdan).
+    - Nutzung: Allgemein'de düz kollar +50 (hepsinde var) + Podest +50; Wohngebäude'de hepsi 100.
+  - Varyantlar: 3 kart (gerade, L, U); L kartında links/rechts anahtarı, çünkü ikisinin puanı her zaman aynı (ayna görüntüsü, kapı konumu modellenmiyor).
+  - Forma göre basamak sayısı: en konforlu Stufung alana sığmazsa, form normdan çıkmadan daha dik bir Stufung deniyor. Böylece Komfort formlar arasında gerçekten farklılaşıyor.
+  - Elenen kartlar soluk + kesikli çerçeve (stil kuralı: sadece siyah, beyaz, kırmızı; gri yok), gerekçe kırmızı.
+  - Schnitt: L/U'da **Abwicklung entlang der Lauflinie** (benim fikrim). Gerçek kesit (U'da ikinci kol görünüşte) Could.
+  - **Not – ağırlıklar tekrar bakılacak:** Düz merdiven Sicherheit'ta düşük puan alıyor (ör. 16 Steigung → 20), Sicherheit ve Nutzung ikisi de Podest'i ödüllendiriyor. Bu bilinçli bir çift sayım, ama öneri sık sık U çıkabilir. Parça C'den sonra farklı senaryolarla birlikte bakacağız, gerekirse ağırlıkları ayarlayacağız.
+
 ## Yapay zekânın kararları
+
+- **Treppenformen – teknik (18.11., Parça A):**
+  - s ve a forma bağlı değil (`stufenKandidaten()` en iyi Stufung'u veriyor); form sadece kollara bölüyor. Lauf i: nᵢ Steigung, nᵢ − 1 Auftritt; Podest bir Auftritt'in yerine geçiyor.
+  - L bölmesi: tüm bölmeler deneniyor (her kol ≥ 3). Sıra: kollar normgerecht → alana sığıyor / en küçük eksik ölçü → en dengeli (tek sayıda uzun kol önce). U her zaman dengeli (en kısa çözüm).
+  - Footprint: L = (n₁−1)a + B × B + (n₂−1)a, U = (n₁−1)a + B × 2B + Auge. Viertelpodest B × B, Halbpodest B × (2B + Auge).
+  - Planda her kolun kendi koordinat sistemi var (başlangıç noktası, yön, sol normal). Böylece gerade, L ve U aynı kodla çiziliyor. L links: Lauf 1 alt duvarda, Lauf 2 yukarı; L rechts ayna (Lauf 1 üstte, Lauf 2 aşağı). U sola dönüyor.
+  - Basamak numaraları bütün kollar boyunca sürüyor. Bir kolun son numarası Podest'te duruyor (o rıht Podest'e çıkıyor). Dikey kollarda numara Lauflinie'nin sağında.
+  - Schnittlinie hangi kola denk gelirse orada; ondan sonraki her şey (Podest, ikinci kol) kesikli.
+  - Taşma taraması her kol ve Podest dikdörtgeni için ayrı hesaplanıyor (L-şekli dikdörtgen değil).
+  - L/U'da plan kesitin altında hizalı değil (Abwicklung'un x ekseni plandaki x değil); aynı ölçek, kendi konumu.
+  - Abwicklung'da Podest uzunluğu = Lauflinie'nin Podest üzerindeki uzunluğu: L'de B, U'da 2B + Auge. Podestplatte Laufplatte gibi 18 cm varsayıldı (legend'de yazıyor). Podest'e yükseklik kotu eklendi.
+  - Formlar arası seçim şimdilik sonuç alanında geçici bir anahtar („Gerade Treppe | L-Treppe (links | rechts)“), Parça C'de kartlara dönüşecek.
+  - Export dosya adı forma göre: `treppe_275_L-links_grundriss.dxf`; düz merdivende eski ad kalıyor.
+  - Bu bilgisayarda Node yok: regresyon testi tarayıcı konsolunda. Düz merdivenin eleman listeleri (ekran ve export ölçeği, 6 durum) değişiklikten önce `localStorage`'a kaydedildi, sonra karşılaştırıldı: hepsi aynı; SVG de aynı.
+  - Yeni davranış: Gebäude im Allgemeinen'de 19+ Steigung'lu düz merdiven artık „nicht erfüllt“ (örn. 320 cm) ve sonuç metni „Podest nötig“ diyor.
 
 - CLAUDE.md Almanca yazıldı (proje dili Almanca); Türkçe iletişim kuralı içinde açıkça belirtildi.
 - Dosyalar ayrıldı: `norm.js` (değerler), `berechnung.js` (hesap), `app.js` (arayüz). Script'ler klasik `<script>` olarak yükleniyor (ES module değil), böylece sayfa çift tıklayınca da açılıyor.
