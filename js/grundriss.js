@@ -162,11 +162,20 @@ function grundrissGeometrie(ergebnis) {
     yMin: Math.min(0, zelle.y1), yMax: Math.max(fp.breite, zelle.y2),
   };
 
+  // Wangen (nur Holz/Stahl) erweitern die belegte Fläche – Maßketten rücken nach außen.
+  const wangen = wangenGeometrie(ergebnis.form, laeufe, podest, B, materialVon(ergebnis));
+  for (const [p, q] of wangen.flat()) {
+    for (const [x, y] of [p, q]) {
+      belegt.xMin = Math.min(belegt.xMin, x); belegt.xMax = Math.max(belegt.xMax, x);
+      belegt.yMin = Math.min(belegt.yMin, y); belegt.yMax = Math.max(belegt.yMax, y);
+    }
+  }
+
   const rechtecke = laeufe.map((l) => laufRechteck(l, B));
   if (podest) rechtecke.push(podest.rechteck);
 
   return {
-    form: ergebnis.form, n, a, B, fp, laeufe, podest, schnittlinie, belegt, rechtecke,
+    form: ergebnis.form, n, a, B, fp, laeufe, podest, schnittlinie, belegt, rechtecke, wangen,
     raum: raumGeometrie(ergebnis.raum, rechtecke, fp),
   };
 }
@@ -337,6 +346,77 @@ function schnittlinieElemente(z, geo) {
   }
 }
 
+/*
+ * Wangen im Grundriss (Holz, Stahl): je Seite ein Streifen der Wangendicke außerhalb der
+ * nutzbaren Laufbreite, entlang der Läufe und um das Podest (Gehrung an den Ecken).
+ * Konstruiert als Parallelen zur Lauflinie im Abstand B/2 … B/2 + Dicke.
+ * U-Treppe: die beiden Wangen am Treppenauge stoßen aneinander, wenn zwei Wangendicken
+ * breiter als das Auge sind (vereinfacht, Hinweis in der Legende).
+ */
+
+/** Lauflinie als Punktfolge mit Pfadindex je Strecke (Lauf i → 2i, Podest → 2i + 1). */
+function lauflinienPfad(laeufe, podest) {
+  const punkte = [laufPunkt(laeufe[0], 0, 0)];
+  const index = [];
+  const anhaengen = (p, pfadIndex) => {
+    const letzter = punkte[punkte.length - 1];
+    if (Math.hypot(p[0] - letzter[0], p[1] - letzter[1]) <= RECHENTOLERANZ) return;
+    punkte.push(p);
+    index.push(pfadIndex);
+  };
+  laeufe.forEach((lauf, i) => {
+    anhaengen(laufPunkt(lauf, 0, 0), 2 * i - 1); // Ende des Podests davor (bei i = 0 ohne Wirkung)
+    anhaengen(laufPunkt(lauf, lauf.laenge, 0), 2 * i);
+    if (i < laeufe.length - 1 && podest) for (const p of podest.lauflinie) anhaengen(p, 2 * i + 1);
+  });
+  return { punkte, index };
+}
+
+/** Parallele zum Pfad im Abstand abstand (positiv = links in Laufrichtung), Ecken auf Gehrung. */
+function parallelePfad(punkte, abstand) {
+  const links = (p, q) => {
+    const l = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    return [-(q[1] - p[1]) / l, (q[0] - p[0]) / l];
+  };
+  return punkte.map((p, k) => {
+    const n1 = k > 0 ? links(punkte[k - 1], p) : null;
+    const n2 = k < punkte.length - 1 ? links(p, punkte[k + 1]) : null;
+    let n = n1 ?? n2;
+    if (n1 && n2) {
+      const f = 1 + n1[0] * n2[0] + n1[1] * n2[1]; // Gehrung: (n1 + n2) / (1 + n1·n2)
+      n = [(n1[0] + n2[0]) / f, (n1[1] + n2[1]) / f];
+    }
+    return [p[0] + abstand * n[0], p[1] + abstand * n[1]];
+  });
+}
+
+/**
+ * Wangen als Kantenlisten [p, q, pfadIndex]: Außenkante und Stirnseiten. Die Innenkante ist
+ * die Treppenkante (schon gezeichnet). Ohne Wangen (Stahlbeton): leere Liste.
+ */
+function wangenGeometrie(form, laeufe, podest, B, material) {
+  const dicke = wangendicke(material);
+  if (dicke <= 0) return [];
+  const pfad = lauflinienPfad(laeufe, podest);
+  const letzte = pfad.punkte.length - 1;
+  return [1, -1].map((seite) => {
+    // U dreht links: Seite +1 liegt am Treppenauge.
+    const d = form === "U" && seite === 1 ? Math.min(dicke, TREPPENAUGE / 2) : dicke;
+    const innen = parallelePfad(pfad.punkte, seite * B / 2);
+    const aussen = parallelePfad(pfad.punkte, seite * (B / 2 + d));
+    const kanten = [[innen[0], aussen[0], pfad.index[0]], [innen[letzte], aussen[letzte], pfad.index[letzte - 1]]];
+    for (let k = 0; k < letzte; k++) kanten.push([aussen[k], aussen[k + 1], pfad.index[k]]);
+    return kanten.filter(([p, q]) => Math.hypot(q[0] - p[0], q[1] - p[1]) > RECHENTOLERANZ);
+  });
+}
+
+/** Wangen: fein wie die Treppenkanten, über der Schnittebene gestrichelt. */
+function wangenElemente(z, geo) {
+  for (const kanten of geo.wangen) {
+    for (const [p, q, pfadIndex] of kanten) kante(z, geo, p, q, pfadIndex, EBENE.wange);
+  }
+}
+
 /** Lauflinie in der Mitte der Läufe, über das Podest: Kreis am Antritt, Pfeil am Austritt. */
 function lauflinieElemente(z, geo) {
   const m = z.m;
@@ -400,10 +480,11 @@ function geradeMassElemente(z, geo) {
   const m = z.m;
   const L = geo.fp.laenge;
 
-  // Lauflänge unten
-  const yMassL = -26 * m;
-  hilfslinie(z, [0, -4 * m], [0, yMassL - 4 * m]);
-  hilfslinie(z, [L, -4 * m], [L, yMassL - 4 * m]);
+  // Lauflänge unten (unter der Wange, falls vorhanden)
+  const yBasis = geo.belegt.yMin;
+  const yMassL = yBasis - 26 * m;
+  hilfslinie(z, [0, yBasis - 4 * m], [0, yMassL - 4 * m]);
+  hilfslinie(z, [L, yBasis - 4 * m], [L, yMassL - 4 * m]);
   horizontalesMass(z, 0, L, yMassL);
   const wertL = zahl(L);
   z.text([L / 2, yMassL + 4 * m], masstext(z, t("zeichnung.lauflaenge", { wert: wertL }), wertL, L), {
@@ -475,6 +556,7 @@ function grundrissElemente(ergebnis, cmProPx) {
   if (geo.raum) raumElemente(z, geo); // zuerst, damit die Treppe darüber liegt
 
   treppenkantenElemente(z, geo);
+  wangenElemente(z, geo);
   if (geo.schnittlinie) schnittlinieElemente(z, geo);
   lauflinieElemente(z, geo);
   stufennummerElemente(z, geo);
@@ -499,8 +581,9 @@ function zeichneGrundriss(svg, ergebnis, abb) {
 
   if (geo.form === "gerade") {
     // Ist der Raum breiter als die Treppe, liegt seine obere Wand über der Treppe.
-    const yMax = Math.max(geo.B, geo.raum?.breite ?? 0);
-    const hoehePx = GRUNDRISS_RAND.oben + yMax * k + randUnten;
+    // Wangen (Holz/Stahl) liegen außerhalb der Laufbreite: oben über B, unten unter 0.
+    const yMax = Math.max(geo.belegt.yMax, geo.raum?.breite ?? 0);
+    const hoehePx = GRUNDRISS_RAND.oben + (yMax - geo.belegt.yMin) * k + randUnten;
     // gleiche Breite wie der Schnitt → gleiche x-Lage
     const px = ([x, y]) => [abb.x(x), GRUNDRISS_RAND.oben + (yMax - y) * k];
     zeichneElemente(svg, elemente, px, 1 / k, { breite: abb.breitePx, hoehe: hoehePx });
