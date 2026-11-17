@@ -19,7 +19,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
 - ✅ L-Treppe mit Viertelpodest, links und rechts (Podestregeln siehe `notlar.md`)
 - ✅ U-Treppe mit Halbpodest (Treppenauge 10 cm, Annahme)
-- ✅ Variantenvergleich + Bewertung + Empfehlung (Gewichte noch gemeinsam prüfen)
+- ✅ Variantenvergleich + Bewertung + Empfehlung
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
@@ -79,7 +79,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Drei Karten (`js/variantenkarten.js`) statt der vorläufigen Formwahl: Mini-Grundriss ohne Maße (Raumrechteck rot, wenn es nicht passt), Steigungen je Lauf, s / a, Platzbedarf, Punkte; L mit Drehsinn links | rechts; Ausgeschlossene blass und gestrichelt, Gründe rot; Klick auf eine Karte wechselt Urteil, Kennwerte, Zeichnungen, Normprüfung und Export; Standard = Empfehlung; Druck Seite 1 mit Kurztabelle (Variante, Punkte, Ergebnis); DE/EN/FR
 - ✅ Konsolentests: vier Szenarien (Tabelle im Chat, Bewertung steht aus), 4440 Eingabekombinationen ohne Fehler/NaN; Karten bei 1366, 1024 und 375 px ohne Überlauf (DE/EN/FR)
 
-**Stand 18.11., Teil C (Variantenvergleich) fertig** – gemeinsame Prüfung der Szenarien und der Gewichte steht aus; Sichtprüfung im Browser und echter Druck/PDF durch den Nutzer.
+- ✅ Nach der gemeinsamen Bewertung: Platz-Punkte mit belegter Fläche (`belegteFlaeche()`), Karten auf 250 px (1366 px) verdichtet, Gestaltungsentscheidung 3 in `CLAUDE.md` angepasst („Zuerst Empfehlung und Vergleich, dann die Zeichnung der gewählten Variante“); fünf Szenarien neu gerechnet (Empfehlung: L, L, L, keine – U am nächsten, gerade)
+
+**Stand 18.11., Teil C (Variantenvergleich) fertig und gemeinsam bewertet** – Sichtprüfung im Browser und echter Druck/PDF durch den Nutzer stehen aus.
 
 **Stand 18.11., Teil B (U-Treppe) fertig** – Sichtprüfung im Browser durch den Nutzer steht aus. Nächster Teil: Variantenvergleich.
 
@@ -98,7 +100,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 4. ✅ Teil B: U-Treppe (Knopf, Grundriss, Abwicklung, Normprüfung, Texte, Export) und die drei Notizen aus der Sichtprüfung der L-Treppe (Untertitel je Form, „cm“-Umbruch, Scrollbalken).
    **Offen:** Sichtprüfung der U-Treppe im Browser durch den Nutzer (z. B. 275 cm, Gebäude im Allgemeinen, 100 cm, mit und ohne Raum 400 × 300 bzw. 250 × 180; DE/EN/FR), danach pushen.
 5. ✅ Teil C: Variantenvergleich – `js/bewertung.js` (Gewichte an einer Stelle: Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %; Formeln siehe `notlar.md`), Ausschluss (passt nicht / Norm nicht erfüllt), Stufenzahl je Form (steilere normgerechte Stufung, wenn die bequemste nicht passt), drei Karten (gerade, L mit links/rechts, U) mit Mini-Grundriss, Werten und Punkten, Empfehlung mit Begründungssatz, Ausgeschlossene blass und gestrichelt; danach Szenarien gemeinsam prüfen und Gewichte ggf. anpassen.
-   **Offen:** Szenarien gemeinsam bewerten – U gewinnt in allen vier (Doppelzählung Podest in Sicherheit + Nutzung); L wird beim Platz über das umschließende Rechteck (mit leerer Ecke) benachteiligt; gerade Treppe bei 320 cm / Gebäude im Allgemeinen mit 18 steileren Steigungen normgerecht statt „Podest nötig“. Danach Gewichte/Formeln ggf. anpassen, Druck/PDF mit Kurztabelle prüfen, pushen.
+   ✅ Szenarien gemeinsam bewertet (siehe `notlar.md`): Gewichte bleiben; Platz-Punkte mit der belegten Fläche (Läufe + Podest), Raumprüfung weiter mit dem Rechteck; steilere Stufung für die 18er-Regel bleibt; Karten kompakt (ca. 250 px); Kontrollszenario „schmaler Flur“ (280 cm, Wohngebäude, 80 cm, 450 × 120) → gerade Treppe empfohlen.
+   **Offen:** Sichtprüfung im Browser und Druck/PDF mit Kurztabelle (v. a. lange Treppen, ob Seite 1 reicht), danach pushen.
 
 **Später / offen**
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).

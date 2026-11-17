@@ -143,9 +143,12 @@ function karte(v, vergleich, gewaehlt) {
     for (const g of v.gruende) gruende.appendChild(span("", "✗ " + ausschlussText(g)));
     inhalt.appendChild(gruende);
   } else {
-    inhalt.appendChild(span("karte-punkte", t("vergleich.vonHundert", { punkte: Math.round(v.gesamt) })));
+    // Gesamtpunkte groß, Teilpunkte klein daneben (spart eine Zeile)
+    const bewertungszeile = span("karte-bewertung");
+    bewertungszeile.appendChild(span("karte-punkte", t("vergleich.vonHundert", { punkte: Math.round(v.gesamt) })));
     const teile = Object.keys(GEWICHTE).map((k) => `${t("bewertung." + k)} ${Math.round(v.punkte[k])}`);
-    inhalt.appendChild(span("karte-teilpunkte", teile.join(" · ")));
+    bewertungszeile.appendChild(span("karte-teilpunkte", teile.join(" · ")));
+    inhalt.appendChild(bewertungszeile);
   }
   el.appendChild(knopf);
 

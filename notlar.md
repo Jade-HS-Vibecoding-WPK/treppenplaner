@@ -67,6 +67,12 @@
   - Elenen kartlar soluk + kesikli çerçeve (stil kuralı: sadece siyah, beyaz, kırmızı; gri yok), gerekçe kırmızı.
   - Schnitt: L/U'da **Abwicklung entlang der Lauflinie** (benim fikrim). Gerçek kesit (U'da ikinci kol görünüşte) Could.
   - **Not – ağırlıklar tekrar bakılacak:** Düz merdiven Sicherheit'ta düşük puan alıyor (ör. 16 Steigung → 20), Sicherheit ve Nutzung ikisi de Podest'i ödüllendiriyor. Bu bilinçli bir çift sayım, ama öneri sık sık U çıkabilir. Parça C'den sonra farklı senaryolarla birlikte bakacağız, gerekirse ağırlıkları ayarlayacağız.
+    → Değerlendirildi (18.11.), aşağıya bakın.
+- **Senaryo değerlendirmesi (18.11., kullanıcıyla):**
+  - **Ağırlıklar kalıyor** (Komfort 40, Platz 30, Sicherheit 20, Nutzung 10). Kontrol senaryosu „dar koridor“ (280 cm, Wohngebäude, 80 cm, alan 450 × 120): düz merdiven öneriliyor (L ve U genişliğe sığmıyor). *(Benim kararım.)*
+  - **Platz puanı = gerçekten kaplanan alan** (kollar Länge × Laufbreite + Podest Tiefe × Breite), dış dikdörtgen değil. Gerekçe: L'nin iç köşesi boş kalıyor ve kullanılabiliyor (dolap, kapı, geçiş); dikdörtgenle hesaplamak L'yi U'dan bile kötü gösteriyordu (275 cm: L 280 × 280 = 7,9 m², gerçekte 3,8 m²). **„Passt in den Raum“ kontrolü dış dikdörtgenle kalıyor**, çünkü merdiven yerleştirilirken bu dikdörtgenin tamamı gerekiyor. (`belegteFlaeche()` in `bewertung.js`.) Sonuç: alan verilmemiş veya geniş alanlarda artık L öneriliyor (senaryo 1–3), U değil. *(Benim kararım.)*
+  - **Daha dik n ile 18-Steigungen-Regel'i sağlamak geçerli bir çözüm:** Normun izin verdiği sınırlar içinde kalıyor (320 cm, Allgemein: 18 × 17,8 / 27,4 cm). Bu yüzden düz merdiven orada elenmiyor; Komfort ve Sicherheit puanları düşük olduğu için zaten önerilmiyor. „Podest nötig“ ancak 342 cm'in (18 × 19 cm) üstünde çıkıyor. *(Benim kararım.)*
+  - **Kartlar kompakt (laptopta 250 px):** mini plan 72 px yüksek, toplam puan ve alt puanlar aynı satırda, daha dar boşluklar. CLAUDE.md'deki karar 3 güncellendi: „Zuerst Empfehlung und Vergleich, dann die Zeichnung der gewählten Variante.“ 1024 px'te kartlar dar olduğu için ~290–310 px, telefonda 207–238 px. En sıkışık mini plan: L, 275 cm, alan yok → basamak aralığı ~6,6 px (çizgiler ayrı okunuyor). *(Benim kararım, ölçüler yapay zekâdan.)*
 
 ## Yapay zekânın kararları
 
@@ -104,7 +110,8 @@
   - Kart = büyük bir buton (seçim) + L'de ayrı „Drehsinn: links | rechts“ butonları (buton içinde buton olamaz). Yeniden çizimden sonra odak aynı butona dönüyor (klavye).
   - Laptop 1024–1366 px'te üç kart yan yana (`minmax(11rem, 1fr)`), dar kartta değer etiketin altına kayıyor, sayı+birim bölünmüyor; telefonda alt alta.
   - Yazdırma: kartlar gizli, yerine kısa tablo (Variante | Punkte | Ergebnis) 1. sayfada; „Karte anklicken“ cümlesi sadece ekranda. Gerçek yazdırma önizlemesi test edilmedi (konsolda sadece sıra kontrol edildi).
-  - Bilinen zayıflıklar (kullanıcıyla bakılacak): 4 senaryonun hepsinde U kazanıyor; L'nin Platz'ı boş köşe dahil dikdörtgenle hesaplanıyor; kartlar laptopta ~350 px yer kaplıyor, çizim aşağı kayıyor.
+  - Bilinen zayıflıklar (kullanıcıyla bakılacak): 4 senaryonun hepsinde U kazanıyor; L'nin Platz'ı boş köşe dahil dikdörtgenle hesaplanıyor; kartlar laptopta ~350 px yer kaplıyor, çizim aşağı kayıyor. → Değerlendirme „Benim kararlarım“ altında (Senaryo değerlendirmesi).
+
 
 - CLAUDE.md Almanca yazıldı (proje dili Almanca); Türkçe iletişim kuralı içinde açıkça belirtildi.
 - Dosyalar ayrıldı: `norm.js` (değerler), `berechnung.js` (hesap), `app.js` (arayüz). Script'ler klasik `<script>` olarak yükleniyor (ES module değil), böylece sayfa çift tıklayınca da açılıyor.

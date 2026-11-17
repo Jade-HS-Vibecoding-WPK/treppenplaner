@@ -386,7 +386,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
 .karte-wahl {
   display: block;
   width: 100%;
-  padding: calc(1.5 * var(--r));
+  padding: var(--r) calc(1.5 * var(--r)) calc(0.5 * var(--r));
   border: none;
   background: none;
   text-align: left;
@@ -409,23 +409,24 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   white-space: nowrap;
 }
 
-.karte-skizze { display: block; width: 100%; height: 5rem; margin: var(--r) 0; }
+.karte-skizze { display: block; width: 100%; height: 4.5rem; margin: calc(0.5 * var(--r)) 0; }
 
-.karte-werte { display: block; font-size: var(--klein); font-variant-numeric: tabular-nums; }
-.karte-werte > span { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: var(--r); border-bottom: var(--haarlinie); padding: 0.15rem 0; }
+.karte-werte { display: block; font-size: var(--klein); line-height: 1.35; font-variant-numeric: tabular-nums; }
+.karte-werte > span { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: var(--r); border-bottom: var(--haarlinie); padding: 0.1rem 0; }
 .karte-werte b { margin-left: auto; text-align: right; white-space: nowrap; }
 
-.karte-punkte { display: block; margin-top: var(--r); font-size: 1.375rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.karte-teilpunkte { display: block; font-size: var(--klein); }
+.karte-bewertung { display: flex; align-items: center; gap: var(--r); margin-top: calc(0.5 * var(--r)); }
+.karte-punkte { flex-shrink: 0; font-size: 1.25rem; line-height: 1.2; font-weight: 700; font-variant-numeric: tabular-nums; }
+.karte-teilpunkte { font-size: 0.75rem; line-height: 1.3; }
 
-.karte-gruende { display: block; margin-top: var(--r); color: var(--fehler); font-weight: 700; font-size: var(--klein); }
+.karte-gruende { display: block; margin-top: calc(0.5 * var(--r)); color: var(--fehler); font-weight: 700; font-size: var(--klein); }
 .karte-gruende > span { display: block; }
 
 .karte .richtungwahl {
   display: flex;
   gap: calc(0.75 * var(--r));
   align-items: center;
-  padding: 0 calc(1.5 * var(--r)) calc(1.5 * var(--r));
+  padding: 0 calc(1.5 * var(--r)) var(--r);
   font-size: var(--klein);
 }
 

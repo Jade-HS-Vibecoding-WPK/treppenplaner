@@ -55,19 +55,25 @@ function komfortPunkte(t) {
   return (punkte0bis100(ks) + punkte0bis100(ka)) / 2;
 }
 
-function flaeche(fp) {
-  return fp.laenge * fp.breite;
+/**
+ * Tatsächlich belegte Grundfläche: Läufe (Länge × Laufbreite) + Podest (Tiefe × Breite).
+ * Nicht das umschließende Rechteck (footprint): Die freie Ecke der L-Treppe bleibt nutzbar
+ * und zählt nicht. Das Rechteck gilt weiter für „Passt in den Raum“ (pruefeRaum).
+ */
+function belegteFlaeche(t) {
+  const laeufe = t.laeufe.reduce((summe, l) => summe + l.laenge * t.laufbreite, 0);
+  return laeufe + (t.podest ? t.podest.tiefe * t.podest.breite : 0);
 }
 
 /**
  * Platz: mit Länge und Breite des Raums der freie Anteil der Raumfläche,
- * sonst relativ zur kleinsten Variante (kleinste = 100).
+ * sonst relativ zur kleinsten Variante (kleinste = 100). Beides mit der belegten Fläche.
  */
 function platzPunkte(t, raumVorgabe, kleinsteFlaeche) {
   if (raumVorgabe?.laenge != null && raumVorgabe?.breite != null) {
-    return punkte0bis100(100 * (1 - flaeche(t.footprint) / (raumVorgabe.laenge * raumVorgabe.breite)));
+    return punkte0bis100(100 * (1 - belegteFlaeche(t) / (raumVorgabe.laenge * raumVorgabe.breite)));
   }
-  return punkte0bis100((100 * kleinsteFlaeche) / flaeche(t.footprint));
+  return punkte0bis100((100 * kleinsteFlaeche) / belegteFlaeche(t));
 }
 
 function sicherheitPunkte(t) {
@@ -161,7 +167,7 @@ function vergleicheVarianten(eingabe, richtungL = "links") {
 
   const geeignet = varianten.filter((v) => !v.ausgeschlossen);
   const vergleichsbasis = geeignet.length > 0 ? geeignet : varianten;
-  const kleinsteFlaeche = Math.min(...vergleichsbasis.map((v) => flaeche(v.treppe.footprint)));
+  const kleinsteFlaeche = Math.min(...vergleichsbasis.map((v) => belegteFlaeche(v.treppe)));
 
   for (const v of varianten) {
     const t = v.treppe;
