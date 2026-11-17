@@ -109,7 +109,12 @@
   - Mini Grundriss büyük planla aynı `anordnung()`'u kullanıyor (kollar, Setzstufen, Podest, Lauflinie, Antritt dairesi), ölçüsüz. Alan iki ölçüyle verildiyse kesikli dikdörtgen; sığmıyorsa kırmızı (kırmızı = sorun kuralı).
   - Kart = büyük bir buton (seçim) + L'de ayrı „Drehsinn: links | rechts“ butonları (buton içinde buton olamaz). Yeniden çizimden sonra odak aynı butona dönüyor (klavye).
   - Laptop 1024–1366 px'te üç kart yan yana (`minmax(11rem, 1fr)`), dar kartta değer etiketin altına kayıyor, sayı+birim bölünmüyor; telefonda alt alta.
-  - Yazdırma: kartlar gizli, yerine kısa tablo (Variante | Punkte | Ergebnis) 1. sayfada; „Karte anklicken“ cümlesi sadece ekranda. Gerçek yazdırma önizlemesi test edilmedi (konsolda sadece sıra kontrol edildi).
+  - Yazdırma: kartlar gizli, yerine kısa tablo (Variante | Punkte | Ergebnis) 1. sayfada; „Karte anklicken“ cümlesi sadece ekranda.
+  - **Yazdırma hatası (kullanıcının PDF testi, 18.11.):** 280 cm, Wohngebäude, 100, alan 320 × 220 → 3 sayfa.
+    - Sebep 1: `.varianten { display: grid }` kuralı CSS'te `@media print` bloğundan sonra geliyordu ve yazdırmadaki `display: none`'ı eziyordu (aynı özgüllük, sonraki kural kazanır) → kartlar kâğıtta da görünüyordu. Çözüm: kart/tablo yazdırma kuralları dosyanın sonundaki ayrı bir `@media print` bloğunda.
+    - Sebep 2: Kennwerte şeridi sayfalar arasında bölünüyordu → `break-inside: avoid` (şerit ve tablo satırları).
+    - Sebep 3: kartlar gizlense de 1. sayfa ~250 px taşıyordu → yazdırmada yarım raster, tablolar 9 pt, başlık 18 pt, Kennwerte değerleri 13 pt.
+    - Kontrol (Node ve yazdırma emülasyonu yok): `@media print` kuralları konsolda ekran kuralı olarak eklendi, gövde 180 mm (A4 − 2 × 15 mm), 1. sayfanın sonu 267 mm = 1009 px ile karşılaştırıldı. 219 durumda (6 yükseklik × 2 bina türü × 6 alan, DE/EN/FR) 218'i sığıyor; istisna FR, 600 cm, alan 450 × 120 (44 px fazla). Yaklaşık bir hesap; gerçek PDF kontrolü kullanıcıda.
   - Bilinen zayıflıklar (kullanıcıyla bakılacak): 4 senaryonun hepsinde U kazanıyor; L'nin Platz'ı boş köşe dahil dikdörtgenle hesaplanıyor; kartlar laptopta ~350 px yer kaplıyor, çizim aşağı kayıyor. → Değerlendirme „Benim kararlarım“ altında (Senaryo değerlendirmesi).
 
 

@@ -81,7 +81,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 - ✅ Nach der gemeinsamen Bewertung: Platz-Punkte mit belegter Fläche (`belegteFlaeche()`), Karten auf 250 px (1366 px) verdichtet, Gestaltungsentscheidung 3 in `CLAUDE.md` angepasst („Zuerst Empfehlung und Vergleich, dann die Zeichnung der gewählten Variante“); fünf Szenarien neu gerechnet (Empfehlung: L, L, L, keine – U am nächsten, gerade)
 
-**Stand 18.11., Teil C (Variantenvergleich) fertig und gemeinsam bewertet** – Sichtprüfung im Browser und echter Druck/PDF durch den Nutzer stehen aus.
+- ✅ Druck korrigiert (Test des Nutzers: 280 cm, Wohngebäude, 100 cm, Raum 320 × 220 ergab 3 Seiten): Karten im Druck jetzt wirklich ausgeblendet (die Kartenregel stand nach dem Druckblock und überschrieb ihn), Kennwerte-Leiste und Tabellenzeilen nie geteilt, Seite 1 kompakter (halbes Raster, Tabellen 9 pt, Titel 18 pt); simulierter Druck in 219 Fällen (DE/EN/FR): Seite 1 passt in 218, Ausnahme FR, 600 cm, Raum 450 × 120 (44 px zu lang)
+
+**Stand 18.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
 
 **Stand 18.11., Teil B (U-Treppe) fertig** – Sichtprüfung im Browser durch den Nutzer steht aus. Nächster Teil: Variantenvergleich.
 
@@ -101,7 +103,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
    **Offen:** Sichtprüfung der U-Treppe im Browser durch den Nutzer (z. B. 275 cm, Gebäude im Allgemeinen, 100 cm, mit und ohne Raum 400 × 300 bzw. 250 × 180; DE/EN/FR), danach pushen.
 5. ✅ Teil C: Variantenvergleich – `js/bewertung.js` (Gewichte an einer Stelle: Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %; Formeln siehe `notlar.md`), Ausschluss (passt nicht / Norm nicht erfüllt), Stufenzahl je Form (steilere normgerechte Stufung, wenn die bequemste nicht passt), drei Karten (gerade, L mit links/rechts, U) mit Mini-Grundriss, Werten und Punkten, Empfehlung mit Begründungssatz, Ausgeschlossene blass und gestrichelt; danach Szenarien gemeinsam prüfen und Gewichte ggf. anpassen.
    ✅ Szenarien gemeinsam bewertet (siehe `notlar.md`): Gewichte bleiben; Platz-Punkte mit der belegten Fläche (Läufe + Podest), Raumprüfung weiter mit dem Rechteck; steilere Stufung für die 18er-Regel bleibt; Karten kompakt (ca. 250 px); Kontrollszenario „schmaler Flur“ (280 cm, Wohngebäude, 80 cm, 450 × 120) → gerade Treppe empfohlen.
-   **Offen:** Sichtprüfung im Browser und Druck/PDF mit Kurztabelle (v. a. lange Treppen, ob Seite 1 reicht), danach pushen.
+   ✅ Druck/PDF: Karten ausgeblendet, Kennwerte ungeteilt, Seite 1 kompakt (gepusht).
+   **Offen:** PDF nach der Korrektur erneut prüfen (280 cm, Wohngebäude, 100, 320 × 220 → 2 Seiten erwartet). Bekannt: bei 600 cm passen Abwicklung und Grundriss zusammen nicht auf Seite 2 (Grundriss auf Seite 3).
 
 **Später / offen**
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).

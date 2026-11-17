@@ -329,7 +329,6 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   h1 { font-size: 22pt; }
 
   .sprachwahl,
-  .varianten,
   .nur-bildschirm,
   .block:has(#eingabe),
   .export { display: none; }
@@ -430,8 +429,30 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   font-size: var(--klein);
 }
 
-/* Kurzvergleich als Tabelle nur im Druck (Seite 1) */
+/* Druck: Karten aus, Kurztabelle an. Steht am Dateiende, weil die Kartenregeln oben
+   (.varianten { display: grid }) eine frühere Druckregel sonst überschreiben. */
 .vergleich-druck { display: none; }
 @media print {
+  .varianten { display: none; }
   .vergleich-druck { display: table; margin-bottom: var(--r); }
+  .kennwerte,
+  .vergleich-druck tr,
+  .pruefung tr { break-inside: avoid; } /* Kennwerte-Leiste und Tabellenzeilen nie über zwei Seiten */
+
+  /* Seite 1 kompakt, damit Eingabe, Empfehlung, Kurztabelle, Kennwerte und Normprüfung
+     auf eine Seite passen (Raster halbiert, Tabellen 9 pt) */
+  header { margin-bottom: calc(1.5 * var(--r)); padding-bottom: var(--r); }
+  h1 { font-size: 18pt; }
+  .untertitel { margin-top: calc(0.5 * var(--r)); font-size: 10pt; }
+  footer p { margin: 0; }
+  .druck-eingabe { font-size: 9pt; margin-bottom: calc(1.5 * var(--r)); padding-bottom: var(--r); }
+  h2 { margin-bottom: var(--r); }
+  h3 { margin: calc(2 * var(--r)) 0 calc(0.5 * var(--r)); }
+  .urteil { margin-bottom: var(--r); padding: calc(0.5 * var(--r)) var(--r); }
+  .pruefung { font-size: 9pt; }
+  .pruefung th,
+  .pruefung td { padding: calc(0.5 * var(--r)) var(--r) calc(0.5 * var(--r)) 0; }
+  .kennwerte { margin-top: calc(1.5 * var(--r)); padding: var(--r) 0; gap: var(--r) calc(2 * var(--r)); }
+  .kennwerte dd { margin-top: 0; font-size: 13pt; }
+  .hinweis { font-size: 9pt; }
 }
