@@ -68,30 +68,15 @@
       <p id="gesamturteil" class="urteil"></p>
       <p id="raumurteil" class="urteil" hidden></p>
 
-      <table class="werte">
-        <tbody>
-          <tr><th data-i18n="ergebnis.anzahlSteigungen">Anzahl Steigungen</th><td id="anzahlSteigungen"></td></tr>
-          <tr><th data-i18n="ergebnis.anzahlAuftritte">Anzahl Auftritte</th><td id="anzahlAuftritte"></td></tr>
-          <tr><th data-i18n="kriterium.steigung">Steigung s</th><td id="steigung"></td></tr>
-          <tr><th data-i18n="kriterium.auftritt">Auftritt a</th><td id="auftritt"></td></tr>
-          <tr><th data-i18n="kriterium.schrittmass">Schrittmaß 2s + a</th><td id="schrittmass"></td></tr>
-          <tr><th data-i18n="ergebnis.lauflaenge">Lauflänge (Grundriss)</th><td id="lauflaenge"></td></tr>
-        </tbody>
-      </table>
-
-      <h3 data-i18n="pruefung.titel">Normprüfung</h3>
-      <table class="pruefung">
-        <thead>
-          <tr>
-            <th data-i18n="pruefung.kriterium">Kriterium</th>
-            <th data-i18n="pruefung.wert">Wert</th>
-            <th data-i18n="pruefung.zulaessig">Zulässig</th>
-            <th data-i18n="pruefung.ergebnis">Ergebnis</th>
-          </tr>
-        </thead>
-        <tbody id="pruefungen"></tbody>
-      </table>
-      <p id="raumHinweis" class="hinweis" hidden></p>
+      <!-- Kennwerte als Leiste: Bezeichnung klein, Wert groß -->
+      <dl class="kennwerte">
+        <div><dt data-i18n="ergebnis.anzahlSteigungen">Anzahl Steigungen</dt><dd id="anzahlSteigungen"></dd></div>
+        <div><dt data-i18n="ergebnis.anzahlAuftritte">Anzahl Auftritte</dt><dd id="anzahlAuftritte"></dd></div>
+        <div><dt data-i18n="kriterium.steigung">Steigung s</dt><dd id="steigung"></dd></div>
+        <div><dt data-i18n="kriterium.auftritt">Auftritt a</dt><dd id="auftritt"></dd></div>
+        <div><dt data-i18n="kriterium.schrittmass">Schrittmaß 2s + a</dt><dd id="schrittmass"></dd></div>
+        <div><dt data-i18n="ergebnis.lauflaenge">Lauflänge (Grundriss)</dt><dd id="lauflaenge"></dd></div>
+      </dl>
 
       <!-- Gemeinsamer Scrollbereich: Schnitt und Grundriss bleiben beim Scrollen übereinander. -->
       <div class="zeichnungen">
@@ -112,6 +97,23 @@
           Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)
         </figcaption>
       </figure>
+      </div>
+
+      <!-- Am Bildschirm unter den Zeichnungen; beim Drucken auf Seite 1 (export.js) -->
+      <div class="normpruefung">
+        <h3 data-i18n="pruefung.titel">Normprüfung</h3>
+        <table class="pruefung">
+          <thead>
+            <tr>
+              <th data-i18n="pruefung.kriterium">Kriterium</th>
+              <th data-i18n="pruefung.wert">Wert</th>
+              <th data-i18n="pruefung.zulaessig">Zulässig</th>
+              <th data-i18n="pruefung.ergebnis">Ergebnis</th>
+            </tr>
+          </thead>
+          <tbody id="pruefungen"></tbody>
+        </table>
+        <p id="raumHinweis" class="hinweis" hidden></p>
       </div>
 
       <div class="export">

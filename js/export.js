@@ -75,19 +75,20 @@ function exportiereSvg(ergebnis, zeichnung) {
 }
 
 /*
- * Drucken: Die Fußzeile kommt auf Seite 1 unter die Normprüfung, damit sie nie allein
- * auf einer eigenen Seite landet (Seite 2 ist mit Schnitt und Grundriss oft voll).
- * Nur während des Druckens – am Bildschirm bleibt sie am Seitenende.
+ * Drucken: Seite 1 = Ergebnis, Kennwerte, Normprüfung und Fußzeile; Seite 2 = Zeichnungen.
+ * Am Bildschirm stehen die Zeichnungen vor der Normprüfung (damit man sie sofort sieht)
+ * und die Fußzeile am Seitenende. Beim Drucken werden Normprüfung und Fußzeile vor die
+ * Zeichnungen gestellt, damit die Fußzeile nie allein auf einer eigenen Seite landet.
  * Gilt auch für Strg+P, nicht nur für die Schaltfläche.
  */
-const fusszeile = document.querySelector("footer");
-const fusszeileOriginal = { eltern: fusszeile.parentNode, naechstes: fusszeile.nextSibling };
+const druckUmstellung = [document.querySelector(".normpruefung"), document.querySelector("footer")];
+const bildschirmLage = druckUmstellung.map((el) => ({ el, eltern: el.parentNode, naechstes: el.nextSibling }));
 
 window.addEventListener("beforeprint", () => {
-  document.getElementById("raumHinweis").after(fusszeile);
+  document.querySelector(".zeichnungen").before(...druckUmstellung);
 });
 window.addEventListener("afterprint", () => {
-  fusszeileOriginal.eltern.insertBefore(fusszeile, fusszeileOriginal.naechstes);
+  for (const { el, eltern, naechstes } of bildschirmLage) eltern.insertBefore(el, naechstes);
 });
 
 document.querySelector(".export").addEventListener("click", (ereignis) => {
