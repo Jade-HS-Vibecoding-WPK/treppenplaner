@@ -143,20 +143,41 @@ const TEXTE = {
     "schnitt.titel": "Schnitt",
     "schnitt.aria": "Schnitt der geraden Treppe",
     "schnitt.legende":
-      "Schnitt, ohne Maßstab · Maße in cm · Laufplattendicke angenommen 18 cm · Deckendicke angenommen 20 cm",
+      "Schnitt, ohne Maßstab · Maße in cm · {konstruktion} · Deckendicke angenommen {decke} cm · Schraffur vereinfacht",
     "grundriss.titel": "Grundriss",
     "grundriss.aria": "Grundriss der geraden Treppe",
     "schnitt.titelAbwicklung": "Abwicklung entlang der Lauflinie",
     "schnitt.ariaAbwicklung": "Abwicklung der Treppe entlang der Lauflinie",
     "schnitt.legendeAbwicklung":
-      "Abwicklung entlang der Lauflinie, ohne Maßstab · Maße in cm · Lauf- und Podestplatte angenommen 18 cm · " +
-      "Deckendicke angenommen 20 cm",
+      "Abwicklung entlang der Lauflinie, ohne Maßstab · Maße in cm · {konstruktion} · " +
+      "Deckendicke angenommen {decke} cm · Schraffur vereinfacht",
     "grundriss.ariaPodest": "Grundriss der Treppe mit Podest",
     "grundriss.legende":
-      "Grundriss, ohne Maßstab · Maße in cm · Darstellung ohne Wände/Handlauf · " +
+      "Grundriss, ohne Maßstab · Maße in cm · Material: {material} · Darstellung ohne Wände/Handlauf · " +
       "Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)",
 
     // Beschriftungen in den Zeichnungen (kurz, damit sie an die Maßlinien passen)
+    // Material (material.js): Schalter, Fließtext, Konstruktion in der Legende
+    "material.titel": "Material",
+    "material.stahlbeton": "Stahlbeton",
+    "material.holz": "Holz",
+    "material.stahl": "Stahl",
+    "materialText.stahlbeton": "Stahlbeton",
+    "materialText.holz": "Holz",
+    "materialText.stahl": "Stahl",
+    "konstruktion.laufplatte": "Stahlbeton, Laufplattendicke angenommen {platte} cm",
+    "konstruktion.laufplatteAbwicklung": "Stahlbeton, Lauf- und Podestplatte angenommen {platte} cm",
+    "konstruktion.wange":
+      "{material}-Wangentreppe: Trittstufen {tritt} cm, Wangen {wd} × {wh} cm (Annahmen, keine Normwerte) · " +
+      "offene Stufen, Prüfung offener Stufen nicht enthalten",
+    "konstruktion.wangeAbwicklung":
+      "{material}-Wangentreppe: Trittstufen und Podestbelag {tritt} cm, Wangen {wd} × {wh} cm " +
+      "(Annahmen, keine Normwerte) · offene Stufen, Prüfung offener Stufen nicht enthalten",
+    "grundriss.wangen": "Wangen außerhalb der nutzbaren Laufbreite, in der Raumprüfung nicht berücksichtigt (vereinfacht)",
+    "grundriss.augeVereinfacht": "vereinfacht: bei {material} wäre ein Treppenauge ≥ {min} cm nötig",
+    "druck.material": "Material: {wert}",
+    "zeichnung.material": "Material: {wert} (Maße angenommen, keine Normwerte)",
+
     "zeichnung.lauflaenge": "Lauflänge {wert}",
     "zeichnung.podest": "Podest {wert}",
     "zeichnung.raum": "Raum {wert}",
@@ -298,18 +319,38 @@ const TEXTE = {
     "schnitt.titel": "Section",
     "schnitt.aria": "Section of the straight stair",
     "schnitt.legende":
-      "Section, not to scale · dimensions in cm · waist thickness assumed 18 cm · slab thickness assumed 20 cm",
+      "Section, not to scale · dimensions in cm · {konstruktion} · slab thickness assumed {decke} cm · hatching simplified",
     "grundriss.titel": "Plan",
     "grundriss.aria": "Plan of the straight stair",
     "schnitt.titelAbwicklung": "Development along the walking line",
     "schnitt.ariaAbwicklung": "Development of the stair along the walking line",
     "schnitt.legendeAbwicklung":
-      "Development along the walking line, not to scale · dimensions in cm · waist and landing thickness " +
-      "assumed 18 cm · slab thickness assumed 20 cm",
+      "Development along the walking line, not to scale · dimensions in cm · {konstruktion} · " +
+      "slab thickness assumed {decke} cm · hatching simplified",
     "grundriss.ariaPodest": "Plan of the stair with landing",
     "grundriss.legende":
-      "Plan, not to scale · dimensions in cm · shown without walls/handrail · " +
+      "Plan, not to scale · dimensions in cm · material: {material} · shown without walls/handrail · " +
       "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
+
+    "material.titel": "Material",
+    "material.stahlbeton": "Reinforced concrete",
+    "material.holz": "Timber",
+    "material.stahl": "Steel",
+    "materialText.stahlbeton": "reinforced concrete",
+    "materialText.holz": "timber",
+    "materialText.stahl": "steel",
+    "konstruktion.laufplatte": "reinforced concrete, waist thickness assumed {platte} cm",
+    "konstruktion.laufplatteAbwicklung": "reinforced concrete, waist and landing thickness assumed {platte} cm",
+    "konstruktion.wange":
+      "{material} stringer stair: treads {tritt} cm, stringers {wd} × {wh} cm (assumptions, not values of the standard) · " +
+      "open risers, check of open risers not included",
+    "konstruktion.wangeAbwicklung":
+      "{material} stringer stair: treads and landing deck {tritt} cm, stringers {wd} × {wh} cm " +
+      "(assumptions, not values of the standard) · open risers, check of open risers not included",
+    "grundriss.wangen": "stringers outside the clear width, not included in the space check (simplified)",
+    "grundriss.augeVereinfacht": "simplified: a {material} stair would need a well of at least {min} cm",
+    "druck.material": "Material: {wert}",
+    "zeichnung.material": "Material: {wert} (dimensions assumed, not values of the standard)",
 
     "zeichnung.lauflaenge": "Total going {wert}",
     "zeichnung.podest": "Landing {wert}",
@@ -458,18 +499,38 @@ const TEXTE = {
     "schnitt.titel": "Coupe",
     "schnitt.aria": "Coupe de l'escalier droit",
     "schnitt.legende":
-      "Coupe, sans échelle · cotes en cm · épaisseur de paillasse supposée 18 cm · épaisseur de dalle supposée 20 cm",
+      "Coupe, sans échelle · cotes en cm · {konstruktion} · épaisseur de dalle supposée {decke} cm · hachures simplifiées",
     "grundriss.titel": "Vue en plan",
     "grundriss.aria": "Vue en plan de l'escalier droit",
     "schnitt.titelAbwicklung": "Développement selon la ligne de foulée",
     "schnitt.ariaAbwicklung": "Développement de l’escalier selon la ligne de foulée",
     "schnitt.legendeAbwicklung":
-      "Développement selon la ligne de foulée, sans échelle · cotes en cm · épaisseur de paillasse et de palier " +
-      "supposée 18 cm · épaisseur de dalle supposée 20 cm",
+      "Développement selon la ligne de foulée, sans échelle · cotes en cm · {konstruktion} · " +
+      "épaisseur de dalle supposée {decke} cm · hachures simplifiées",
     "grundriss.ariaPodest": "Vue en plan de l’escalier avec palier",
     "grundriss.legende":
-      "Vue en plan, sans échelle · cotes en cm · représentée sans murs ni main courante · " +
+      "Vue en plan, sans échelle · cotes en cm · matériau : {material} · représentée sans murs ni main courante · " +
       "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",
+
+    "material.titel": "Matériau",
+    "material.stahlbeton": "Béton armé",
+    "material.holz": "Bois",
+    "material.stahl": "Acier",
+    "materialText.stahlbeton": "béton armé",
+    "materialText.holz": "bois",
+    "materialText.stahl": "acier",
+    "konstruktion.laufplatte": "béton armé, épaisseur de paillasse supposée {platte} cm",
+    "konstruktion.laufplatteAbwicklung": "béton armé, épaisseur de paillasse et de palier supposée {platte} cm",
+    "konstruktion.wange":
+      "escalier à limons en {material} : marches {tritt} cm, limons {wd} × {wh} cm (hypothèses, pas des valeurs de la norme) · " +
+      "marches sans contremarches, contrôle des marches ouvertes non inclus",
+    "konstruktion.wangeAbwicklung":
+      "escalier à limons en {material} : marches et platelage du palier {tritt} cm, limons {wd} × {wh} cm " +
+      "(hypothèses, pas des valeurs de la norme) · marches sans contremarches, contrôle des marches ouvertes non inclus",
+    "grundriss.wangen": "limons hors de l’emmarchement, non pris en compte dans le contrôle de l’espace (simplifié)",
+    "grundriss.augeVereinfacht": "simplifié : en {material}, il faudrait un jour d’escalier d’au moins {min} cm",
+    "druck.material": "Matériau : {wert}",
+    "zeichnung.material": "Matériau : {wert} (cotes supposées, pas des valeurs de la norme)",
 
     "zeichnung.lauflaenge": "Reculement {wert}",
     "zeichnung.podest": "Palier {wert}",

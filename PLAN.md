@@ -23,6 +23,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
+- [ ] Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
+- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; eigener Schritt, nutzt die Materiallogik aus `js/material.js`)
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 

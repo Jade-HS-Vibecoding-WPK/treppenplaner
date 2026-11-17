@@ -10,7 +10,7 @@
  */
 
 // Zeichnungsannahmen – keine Normwerte.
-const LAUFPLATTENDICKE = 18; // cm, Annahme (Vorgabe des Nutzers)
+// Laufplattendicke: material.js (Stahlbeton, Annahme)
 const DECKENDICKE = 20;      // cm, Annahme für die Darstellung der Geschossdecken
 const DECKENUEBERSTAND = 60; // cm, sichtbare Decke vor bzw. hinter der Treppe
 
@@ -33,6 +33,7 @@ function schnittGeometrie(ergebnis) {
   const s = H / n;              // exakter Wert, damit die letzte Stufe genau auf OKFF oben trifft
   const a = ergebnis.auftritt;
   const podestLaenge = ergebnis.podest?.lauflinie ?? 0;
+  const LAUFPLATTENDICKE = bauteil(MATERIALIEN.stahlbeton, "laufplatte").dicke;
 
   // Setzstufen entlang der Lauflinie; Fußpunkt (x0) und Höhe (h0) jedes Laufs.
   const setzstufen = [];

@@ -97,12 +97,20 @@
         <div><dt id="lauflaengeTitel" data-i18n="ergebnis.lauflaenge">Lauflänge (Grundriss)</dt><dd id="lauflaenge"></dd></div>
       </dl>
 
+      <!-- Material: ändert nur die Darstellung (Konstruktion, Schraffur), nicht Berechnung und Normprüfung -->
+      <div class="materialwahl richtungwahl" role="group" data-i18n-aria="material.titel" aria-label="Material">
+        <span data-i18n="material.titel">Material</span>
+        <button type="button" data-material="stahlbeton" aria-pressed="true" data-i18n="material.stahlbeton">Stahlbeton</button>
+        <button type="button" data-material="holz" aria-pressed="false" data-i18n="material.holz">Holz</button>
+        <button type="button" data-material="stahl" aria-pressed="false" data-i18n="material.stahl">Stahl</button>
+      </div>
+
       <!-- Gemeinsamer Scrollbereich: Schnitt und Grundriss bleiben beim Scrollen übereinander. -->
       <div class="zeichnungen">
       <h3 id="schnittTitel" data-i18n="schnitt.titel">Schnitt</h3>
       <figure class="zeichnung">
         <svg id="schnitt" role="img" data-i18n-aria="schnitt.aria" aria-label="Schnitt der geraden Treppe"></svg>
-        <figcaption id="schnittLegende" data-i18n="schnitt.legende">
+        <figcaption id="schnittLegende">
           Schnitt, ohne Maßstab · Maße in cm ·
           Laufplattendicke angenommen 18 cm · Deckendicke angenommen 20 cm
         </figcaption>
@@ -111,7 +119,7 @@
       <h3 data-i18n="grundriss.titel">Grundriss</h3>
       <figure class="zeichnung">
         <svg id="grundriss" role="img" data-i18n-aria="grundriss.aria" aria-label="Grundriss der geraden Treppe"></svg>
-        <figcaption data-i18n="grundriss.legende">
+        <figcaption id="grundrissLegende">
           Grundriss, ohne Maßstab · Maße in cm · Darstellung ohne Wände/Handlauf ·
           Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)
         </figcaption>
@@ -169,6 +177,7 @@
   <script src="js/treppenformen.js"></script>
   <script src="js/bewertung.js"></script>
   <script src="js/elemente.js"></script>
+  <script src="js/material.js"></script>
   <script src="js/svg-ausgabe.js"></script>
   <script src="js/zeichnung.js"></script>
   <script src="js/grundriss.js"></script>

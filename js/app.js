@@ -85,6 +85,7 @@ function zeigeErgebnis(e) {
   const platzbedarf = `${zahl(e.footprint.laenge)}${NBSP}× ${cm(e.footprint.breite)}`;
   setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : platzbedarf);
   setzeZeichnungstitel(gerade);
+  setzeLegenden(e, auswahl.material);
   setzeUntertitel(e.form);
 
   const urteil = document.getElementById("gesamturteil");
@@ -104,7 +105,8 @@ function zeigeErgebnis(e) {
   ergebnisBlock.hidden = false;
 
   // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
-  letztesErgebnis = e;
+  // Das Material ändert nur die Zeichnungen (und den Export), nicht Berechnung und Normprüfung.
+  letztesErgebnis = { ...e, material: auswahl.material };
   zeichneZeichnungen();
 }
 
@@ -140,9 +142,46 @@ function setzeUntertitel(form) {
 /** Gerade Treppe: Schnitt; mit Podest: Abwicklung entlang der Lauflinie. */
 function setzeZeichnungstitel(gerade) {
   setzeI18n(document.getElementById("schnittTitel"), gerade ? "schnitt.titel" : "schnitt.titelAbwicklung");
-  setzeI18n(document.getElementById("schnittLegende"), gerade ? "schnitt.legende" : "schnitt.legendeAbwicklung");
   setzeI18n(schnittSvg, gerade ? "schnitt.aria" : "schnitt.ariaAbwicklung", true);
   setzeI18n(grundrissSvg, gerade ? "grundriss.aria" : "grundriss.ariaPodest", true);
+}
+
+/**
+ * Bildunterschriften von Schnitt und Grundriss mit Material und Annahmen (Maße aus material.js).
+ * Wird bei jedem Sprachwechsel neu gesetzt (zeigeAuswahl), daher ohne data-i18n.
+ */
+function setzeLegenden(e, materialSchluessel) {
+  const material = MATERIALIEN[materialSchluessel];
+  const gerade = e.form === "gerade";
+  const materialText = t("materialText." + material.schluessel);
+  const cm = (wert) => zahlFlexibel(wert, 1);
+
+  let konstruktion;
+  if (material.konstruktion === "laufplatte") {
+    konstruktion = t(gerade ? "konstruktion.laufplatte" : "konstruktion.laufplatteAbwicklung", {
+      platte: cm(bauteil(material, "laufplatte").dicke),
+    });
+  } else {
+    const wange = bauteil(material, "wange");
+    konstruktion = t(gerade ? "konstruktion.wange" : "konstruktion.wangeAbwicklung", {
+      material: materialText,
+      tritt: cm(bauteil(material, "trittstufe").dicke),
+      wd: cm(wange.dicke),
+      wh: cm(wange.hoehe),
+    });
+  }
+  document.getElementById("schnittLegende").textContent = t(gerade ? "schnitt.legende" : "schnitt.legendeAbwicklung", {
+    konstruktion, decke: cm(DECKENDICKE),
+  });
+
+  const teile = [t("grundriss.legende", { material: materialText })];
+  if (material.konstruktion === "wange") teile.push(t("grundriss.wangen"));
+  // U: Wangen am Treppenauge stoßen aneinander, wenn zwei Wangendicken breiter sind als das Auge.
+  const augeMin = 2 * wangendicke(material);
+  if (e.form === "U" && augeMin > TREPPENAUGE + RECHENTOLERANZ) {
+    teile.push(t("grundriss.augeVereinfacht", { material: materialText, min: cm(augeMin) }));
+  }
+  document.getElementById("grundrissLegende").textContent = teile.join(" · ");
 }
 
 /** Name der Treppenform, z. B. „L-Treppe (links)“. */
@@ -356,7 +395,7 @@ formular.addEventListener("submit", (ereignis) => {
 // wird die gewählte Karte – nach „Berechnen“ die Empfehlung (oder die, der am wenigsten fehlt).
 let letzteEingabe = null;
 let letzterVergleich = null;
-const auswahl = { form: null, richtungL: "links" };
+const auswahl = { form: null, richtungL: "links", material: STANDARD_MATERIAL };
 
 /** Vergleicht die Varianten neu; bei neuer Eingabe wird die Empfehlung gewählt. */
 function berechneVergleich(neueEingabe) {
@@ -387,6 +426,18 @@ document.getElementById("varianten").addEventListener("click", (ereignis) => {
     ? `.karte[data-form="L"] [data-richtung="${auswahl.richtungL}"]`
     : `.karte[data-form="${auswahl.form}"] .karte-wahl`;
   document.querySelector(ziel)?.focus();
+});
+
+// Materialwahl: zeichnet die gewählte Variante neu (Berechnung und Normprüfung bleiben gleich).
+const materialwahl = document.querySelector(".materialwahl");
+materialwahl.addEventListener("click", (ereignis) => {
+  const knopf = ereignis.target.closest("button[data-material]");
+  if (!knopf || knopf.dataset.material === auswahl.material) return;
+  auswahl.material = knopf.dataset.material;
+  for (const b of materialwahl.querySelectorAll("button")) {
+    b.setAttribute("aria-pressed", String(b === knopf));
+  }
+  if (letzterVergleich) zeigeAuswahl();
 });
 
 // Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),

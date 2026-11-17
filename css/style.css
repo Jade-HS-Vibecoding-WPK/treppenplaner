@@ -118,6 +118,17 @@ h3 {
 .sprachwahl button[aria-pressed="true"],
 .richtungwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
 
+/* Materialwahl über den Zeichnungen (Stil wie die Sprachwahl) */
+.materialwahl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(0.75 * var(--r)) calc(1.5 * var(--r));
+  margin: calc(3 * var(--r)) 0 0;
+  font-size: var(--klein);
+}
+.materialwahl > span { font-weight: 700; }
+
 .block {
   border: var(--linie);
   padding: calc(2.5 * var(--r));
@@ -329,6 +340,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   h1 { font-size: 22pt; }
 
   .sprachwahl,
+  .materialwahl,
   .nur-bildschirm,
   .block:has(#eingabe),
   .export { display: none; }

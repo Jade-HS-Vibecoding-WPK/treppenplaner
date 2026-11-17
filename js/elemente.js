@@ -20,6 +20,11 @@ const EBENE = {
   text: "TEXT",
   lauflinie: "LAUFLINIE",
   raum: "RAUM",
+  // Materialabhängige Bauteile (material.js); Stahlbeton nutzt weiter TREPPE und SCHRAFFUR.
+  trittstufe: "TRITTSTUFE",
+  wange: "WANGE",
+  schraffurHolz: "SCHRAFFUR_HOLZ",
+  schraffurStahl: "SCHRAFFUR_STAHL",
 };
 
 // Strichstärken und Schrift in px (nur SVG; im DXF legt das CAD-Programm sie je Ebene fest).
@@ -43,9 +48,12 @@ function neueZeichenliste(cmProPx) {
     /** Gefüllte Fläche (Pfeilspitze). */
     flaeche: (ebene, punkte, breite) => neu({ typ: "flaeche", ebene, punkte, breite }),
     kreis: (ebene, mitte, radius, breite) => neu({ typ: "kreis", ebene, mitte, radius, breite }),
-    /** 45°-Schraffur innerhalb eines geschlossenen Umrisses (ohne Umrisslinie). */
-    schraffur: (ebene, umriss) => neu({
-      typ: "schraffur", ebene, umriss, winkel: 45, abstand: SCHRAFFUR_ABSTAND * cmProPx, breite: STRICH.schraffur,
+    /**
+     * Linienschraffur innerhalb eines geschlossenen Umrisses (ohne Umrisslinie).
+     * Standard: 45°, Abstand SCHRAFFUR_ABSTAND px; Materialien (material.js) geben winkel/abstandPx vor.
+     */
+    schraffur: (ebene, umriss, { winkel = 45, abstandPx = SCHRAFFUR_ABSTAND } = {}) => neu({
+      typ: "schraffur", ebene, umriss, winkel, abstand: abstandPx * cmProPx, breite: STRICH.schraffur,
     }),
     /** Text; position = Grundlinie, ausrichtung "links" | "mitte" | "rechts", drehung in Grad (gegen den Uhrzeigersinn). */
     text: (position, inhalt, optionen = {}) => neu({
