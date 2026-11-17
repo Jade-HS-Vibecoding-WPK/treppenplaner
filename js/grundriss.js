@@ -241,7 +241,7 @@ function raumMassElemente(z, geo) {
     if (r.fehlt.laenge > 0) {
       hilfslinie(z, [L, yBasis - 4 * m], [L, y - 4 * m], rot);
       horizontalesMass(z, r.laenge, L, y, rot);
-      z.text([(r.laenge + L) / 2, y - 16 * m], t("zeichnung.fehlt", { wert: zahl(r.fehlt.laenge) }), {
+      z.text([(r.laenge + L) / 2, y - 16 * m], t("zeichnung.fehlt", { wert: zahl(fehlmassAufgerundet(r.fehlt.laenge)) }), {
         ausrichtung: "mitte", ...rot,
       });
     }
@@ -259,7 +259,7 @@ function raumMassElemente(z, geo) {
       hilfslinie(z, [xRechts + 4 * m, B], [x + 4 * m, B], rot);
       vertikalesMass(z, x, r.breite, B, rot);
       // rechts neben den Maßstrichen (± 4 px), damit der Text die Hilfslinien nicht berührt
-      z.text([x + 18 * m, (r.breite + B) / 2], t("zeichnung.fehlt", { wert: zahl(r.fehlt.breite) }), {
+      z.text([x + 18 * m, (r.breite + B) / 2], t("zeichnung.fehlt", { wert: zahl(fehlmassAufgerundet(r.fehlt.breite)) }), {
         ausrichtung: "mitte", drehung: 90, ...rot,
       });
     }

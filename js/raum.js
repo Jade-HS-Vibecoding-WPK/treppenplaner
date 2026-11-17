@@ -28,6 +28,16 @@ function pruefeRaum(footprint, vorgabe) {
   return { footprint, vorgabe, fehlt, passt: fehlt.laenge === 0 && fehlt.breite === 0 };
 }
 
+/**
+ * Fehlmaß für die Anzeige, auf 0,1 cm AUFgerundet – einzige Rundungsregel für Fehlmaße
+ * (Meldung, Prüftabelle, Grundriss, DXF/SVG). Aufrunden liegt auf der sicheren Seite:
+ * Ein Fehlmaß erscheint nie kleiner als es ist und ein echter Fehlbetrag nie als „0“.
+ * Die Toleranz verhindert, dass Gleitkommarauschen (5,2000000001) auf 5,3 springt.
+ */
+function fehlmassAufgerundet(wert) {
+  return Math.ceil((wert - RECHENTOLERANZ) * 10) / 10;
+}
+
 /** Fehlendes Maß in cm (0, wenn es passt oder nichts vorgegeben ist). Toleranz gegen Gleitkommafehler. */
 function fehlendesMass(benoetigt, verfuegbar) {
   if (verfuegbar == null) return 0;

@@ -150,9 +150,9 @@ function fuegePruefzeileHinzu(tbody, zellen, ok, klasse = "") {
   tbody.appendChild(zeile);
 }
 
-/** Fehlmaß aufgerundet auf 1 Nachkommastelle, damit ein echter Fehlbetrag nie als „0“ erscheint. */
+/** Fehlmaß als Text, aufgerundet auf 0,1 cm (gleiche Regel wie im Grundriss, siehe raum.js). */
 function fehlmass(wert) {
-  return zahlFlexibel(Math.ceil(wert * 10) / 10, 1) + " cm";
+  return zahlFlexibel(fehlmassAufgerundet(wert), 1) + NBSP + "cm";
 }
 
 /** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ (Satzbau je Sprache in i18n.js) */
