@@ -96,7 +96,8 @@ h3 {
   letter-spacing: 0.12em;
 }
 
-.sprachwahl button {
+.sprachwahl button,
+.formwahl button {
   margin: 0;
   padding: 0.1rem 0.15rem;
   border: none;
@@ -110,9 +111,12 @@ h3 {
 }
 
 .sprachwahl button:hover,
-.sprachwahl button:focus-visible { background: none; color: var(--tinte); border-bottom-color: var(--tinte); }
+.sprachwahl button:focus-visible,
+.formwahl button:hover,
+.formwahl button:focus-visible { background: none; color: var(--tinte); border-bottom-color: var(--tinte); }
 
-.sprachwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
+.sprachwahl button[aria-pressed="true"],
+.formwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
 
 .block {
   border: var(--linie);
@@ -319,6 +323,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   h1 { font-size: 22pt; }
 
   .sprachwahl,
+  .formwahl,
   .block:has(#eingabe),
   .export { display: none; }
 
@@ -346,3 +351,14 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   .block { padding: calc(2 * var(--r)); }
   .pruefung { font-size: 0.85rem; }
 }
+
+/* Wahl der Treppenform (vorläufig, wird zum Variantenvergleich): gerade | L (links / rechts) */
+.formwahl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(0.75 * var(--r));
+  margin: calc(2 * var(--r)) 0;
+}
+.formwahl .richtungwahl { display: inline-flex; gap: calc(0.5 * var(--r)); align-items: center; }
+.formwahl .richtungwahl[hidden] { display: none; }

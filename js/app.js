@@ -282,7 +282,31 @@ formular.addEventListener("submit", (ereignis) => {
     raumVorgabe[schluessel] = wert;
   }
 
-  zeigeErgebnis(berechneTreppe("gerade", null, { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe }));
+  letzteEingabe = { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe };
+  berechneGewaehlteForm();
+});
+
+// Wahl der Treppenform (vorläufig, bis zum Variantenvergleich): gerade | L (links / rechts).
+let letzteEingabe = null;
+const formwahl = { form: "gerade", richtung: "links" };
+
+function berechneGewaehlteForm() {
+  for (const knopf of document.querySelectorAll("[data-form]")) {
+    knopf.setAttribute("aria-pressed", String(knopf.dataset.form === formwahl.form));
+  }
+  for (const knopf of document.querySelectorAll("[data-richtung]")) {
+    knopf.setAttribute("aria-pressed", String(knopf.dataset.richtung === formwahl.richtung));
+  }
+  document.querySelector(".richtungwahl").hidden = formwahl.form !== "L";
+  if (letzteEingabe) zeigeErgebnis(berechneTreppe(formwahl.form, formwahl.richtung, letzteEingabe));
+}
+
+document.querySelector(".formwahl").addEventListener("click", (ereignis) => {
+  const knopf = ereignis.target.closest("button");
+  if (!knopf) return;
+  if (knopf.dataset.form) formwahl.form = knopf.dataset.form;
+  if (knopf.dataset.richtung) formwahl.richtung = knopf.dataset.richtung;
+  berechneGewaehlteForm();
 });
 
 // Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),

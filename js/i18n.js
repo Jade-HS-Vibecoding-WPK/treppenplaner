@@ -52,6 +52,12 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Anzahl Steigungen",
     "ergebnis.anzahlAuftritte": "Anzahl Auftritte",
     "ergebnis.lauflaenge": "Lauflänge (Grundriss)",
+    "formwahl.label": "Treppenform",
+    "form.gerade": "Gerade Treppe",
+    "form.L": "L-Treppe",
+    "form.U": "U-Treppe",
+    "richtung.links": "links",
+    "richtung.rechts": "rechts",
     "urteil.normgerecht": "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065.",
     "urteil.keineLoesung":
       "✗ Für diese Geschosshöhe ist keine normgerechte Stufenfolge möglich. Gezeigt wird die nächstliegende Lösung.",
@@ -110,6 +116,7 @@ const TEXTE = {
 
     // Beschriftungen in den Zeichnungen (kurz, damit sie an die Maßlinien passen)
     "zeichnung.lauflaenge": "Lauflänge {wert}",
+    "zeichnung.podest": "Podest {wert}",
     "zeichnung.raum": "Raum {wert}",
     "zeichnung.fehlt": "fehlt {wert}",
 
@@ -157,6 +164,12 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Number of rises",
     "ergebnis.anzahlAuftritte": "Number of goings",
     "ergebnis.lauflaenge": "Total going (plan)",
+    "formwahl.label": "Stair shape",
+    "form.gerade": "Straight stair",
+    "form.L": "L-shaped stair",
+    "form.U": "U-shaped stair",
+    "richtung.links": "left",
+    "richtung.rechts": "right",
     "urteil.normgerecht": "✓ The stair meets the checked requirements of DIN 18065.",
     "urteil.keineLoesung":
       "✗ No step sequence complying with DIN 18065 is possible for this storey height. The closest solution is shown.",
@@ -213,6 +226,7 @@ const TEXTE = {
       "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
 
     "zeichnung.lauflaenge": "Total going {wert}",
+    "zeichnung.podest": "Landing {wert}",
     "zeichnung.raum": "Space {wert}",
     "zeichnung.fehlt": "missing {wert}",
 
@@ -264,6 +278,12 @@ const TEXTE = {
     "ergebnis.anzahlSteigungen": "Nombre de contremarches",
     "ergebnis.anzahlAuftritte": "Nombre de marches",
     "ergebnis.lauflaenge": "Reculement (vue en plan)",
+    "formwahl.label": "Forme de l’escalier",
+    "form.gerade": "Escalier droit",
+    "form.L": "Escalier en L",
+    "form.U": "Escalier en U",
+    "richtung.links": "à gauche",
+    "richtung.rechts": "à droite",
     "urteil.normgerecht": "✓ L'escalier satisfait aux exigences vérifiées de la DIN 18065.",
     "urteil.keineLoesung":
       "✗ Aucune suite de marches conforme à la DIN 18065 n'est possible pour cette hauteur d'étage. " +
@@ -321,6 +341,7 @@ const TEXTE = {
       "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",
 
     "zeichnung.lauflaenge": "Reculement {wert}",
+    "zeichnung.podest": "Palier {wert}",
     "zeichnung.raum": "Espace {wert}",
     "zeichnung.fehlt": "manque {wert}",
 

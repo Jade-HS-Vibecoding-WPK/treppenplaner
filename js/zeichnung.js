@@ -1,7 +1,9 @@
 /*
- * zeichnung.js – Schnitt einer geraden Treppe.
+ * zeichnung.js – Schnitt einer geraden Treppe bzw. Abwicklung entlang der Lauflinie (L, U).
  *
  * Geometrie in cm (y nach oben, Ursprung = Antritt auf OKFF unten).
+ * Abwicklung: x = Länge entlang der Lauflinie; das Podest erscheint als waagerechtes Stück
+ * (Länge der Lauflinie auf dem Podest), die Podestplatte so dick wie die Laufplatte.
  * schnittElemente() liefert eine Elementliste (elemente.js); zeichneSchnitt() gibt sie
  * als SVG aus. Der Maßstab ergibt sich automatisch aus der verfügbaren Breite;
  * bei Größenänderung wird neu gezeichnet.
@@ -30,32 +32,58 @@ function schnittGeometrie(ergebnis) {
   const n = ergebnis.anzahlSteigungen;
   const s = H / n;              // exakter Wert, damit die letzte Stufe genau auf OKFF oben trifft
   const a = ergebnis.auftritt;
-  const L = (n - 1) * a;
+  const podestLaenge = ergebnis.podest?.lauflinie ?? 0;
 
-  // Stufenprofil: n Steigungen, n − 1 Auftritte
+  // Setzstufen entlang der Lauflinie; Fußpunkt (x0) und Höhe (h0) jedes Laufs.
+  const setzstufen = [];
+  const laufAnfang = [];
+  let x = 0;
+  ergebnis.laeufe.forEach((lauf, i) => {
+    laufAnfang.push({ x0: x, h0: setzstufen.length * s });
+    for (let j = 0; j < lauf.steigungen; j++) setzstufen.push(x + j * a);
+    x += lauf.laenge + (i < ergebnis.laeufe.length - 1 ? podestLaenge : 0);
+  });
+  const L = setzstufen[n - 1]; // Länge der Abwicklung (gerade Treppe: Lauflänge)
+
+  // Stufenprofil: n Steigungen, dazwischen Auftritte bzw. Podeste
   const profil = [[0, 0]];
   for (let i = 0; i < n; i++) {
-    profil.push([i * a, (i + 1) * s]);
-    if (i < n - 1) profil.push([(i + 1) * a, (i + 1) * s]);
+    profil.push([setzstufen[i], (i + 1) * s]);
+    if (i < n - 1) profil.push([setzstufen[i + 1], (i + 1) * s]);
   }
 
-  // Unterseite der Laufplatte: parallel zur Linie durch die Stufenkehlen (y = s/a · x),
-  // senkrecht gemessen um LAUFPLATTENDICKE versetzt.
+  // Unterseite der Laufplatte: je Lauf parallel zur Linie durch die Stufenkehlen
+  // (y = h0 + s/a · (x − x0)), senkrecht gemessen um LAUFPLATTENDICKE versetzt.
   const steigungsVerhaeltnis = s / a;
   const vertikalerVersatz = LAUFPLATTENDICKE * Math.hypot(a, s) / a;
   const xUnterseiteUnten = vertikalerVersatz / steigungsVerhaeltnis;                  // trifft OKFF unten
-  const xUnterseiteOben = (H - DECKENDICKE + vertikalerVersatz) / steigungsVerhaeltnis; // trifft Deckenunterseite oben
+  const letzterLauf = laufAnfang[laufAnfang.length - 1];
+  const xUnterseiteOben =                                                             // trifft Deckenunterseite oben
+    letzterLauf.x0 + (H - DECKENDICKE - letzterLauf.h0 + vertikalerVersatz) / steigungsVerhaeltnis;
 
-  // Ist der verfügbare Raum länger als die Treppe, reicht die Zeichnung bis zum Raumende,
+  // Podestplatten (Dicke = LAUFPLATTENDICKE): Knickpunkte der Unterseite, von oben nach unten.
+  const podestUnterseite = [];
+  for (let i = laufAnfang.length - 1; i > 0; i--) {
+    const oben = laufAnfang[i];
+    const unten = laufAnfang[i - 1];
+    const y = oben.h0 - LAUFPLATTENDICKE;
+    podestUnterseite.push(
+      [oben.x0 + (vertikalerVersatz - LAUFPLATTENDICKE) / steigungsVerhaeltnis, y],
+      [unten.x0 + (y - unten.h0 + vertikalerVersatz) / steigungsVerhaeltnis, y]
+    );
+  }
+  const podeste = laufAnfang.slice(1).map((l) => ({ x1: l.x0 - podestLaenge, x2: l.x0, hoehe: l.h0 }));
+
+  // Ist der verfügbare Raum länger als die gerade Treppe, reicht die Zeichnung bis zum Raumende,
   // damit der Grundriss (gleiche x-Achse) das Raumrechteck vollständig zeigt.
-  const raumLaenge = ergebnis.raum?.vorgabe.laenge ?? 0;
+  const raumLaenge = ergebnis.form === "gerade" ? ergebnis.raum?.vorgabe.laenge ?? 0 : 0;
   const xEnde = Math.max(L + DECKENUEBERSTAND, xUnterseiteOben + 40, raumLaenge);
 
   // Treppe und obere Decke bilden einen geschnittenen Körper (eine Schraffur).
   // Die Umrisslinie wird für die Ebenen in Treppe und Decke geteilt.
-  const umrissTreppe = [[xUnterseiteOben, H - DECKENDICKE], [xUnterseiteUnten, 0], ...profil]; // endet bei [L, H]
+  const umrissTreppe = [[xUnterseiteOben, H - DECKENDICKE], ...podestUnterseite, [xUnterseiteUnten, 0], ...profil]; // endet bei [L, H]
   const umrissObereDecke = [[L, H], [xEnde, H], [xEnde, H - DECKENDICKE], [xUnterseiteOben, H - DECKENDICKE]];
-  const treppeUndDecke = [...profil, ...umrissObereDecke.slice(1), [xUnterseiteUnten, 0]];
+  const treppeUndDecke = [...profil, ...umrissObereDecke.slice(1), ...podestUnterseite, [xUnterseiteUnten, 0]];
 
   const untereDecke = [
     [-DECKENUEBERSTAND, 0],
@@ -65,7 +93,7 @@ function schnittGeometrie(ergebnis) {
   ];
 
   return {
-    H, n, s, a, L, xEnde, treppeUndDecke, umrissTreppe, umrissObereDecke, untereDecke,
+    H, n, s, a, L, xEnde, treppeUndDecke, umrissTreppe, umrissObereDecke, untereDecke, laufAnfang, podeste,
     bereich: { xMin: -DECKENUEBERSTAND, xMax: xEnde, yMin: -DECKENDICKE, yMax: H },
   };
 }
@@ -156,15 +184,40 @@ function schnittElemente(ergebnis, cmProPx) {
 
   // Lauflänge unten, unter der Decke
   const yMassL = -DECKENDICKE - 26 * m;
-  hilfslinie(z, [0, -DECKENDICKE - 4 * m], [0, yMassL - 4 * m]);
-  hilfslinie(z, [L, -DECKENDICKE - 4 * m], [L, yMassL - 4 * m]);
-  horizontalesMass(z, 0, L, yMassL);
-  const wertL = zahl(ergebnis.lauflaenge);
-  z.text([L / 2, yMassL + 4 * m], masstext(z, t("zeichnung.lauflaenge", { wert: wertL }), wertL, L), {
-    ausrichtung: "mitte",
-  });
+  if (geo.podeste.length === 0) {
+    hilfslinie(z, [0, -DECKENDICKE - 4 * m], [0, yMassL - 4 * m]);
+    hilfslinie(z, [L, -DECKENDICKE - 4 * m], [L, yMassL - 4 * m]);
+    horizontalesMass(z, 0, L, yMassL);
+    const wertL = zahl(ergebnis.lauflaenge);
+    z.text([L / 2, yMassL + 4 * m], masstext(z, t("zeichnung.lauflaenge", { wert: wertL }), wertL, L), {
+      ausrichtung: "mitte",
+    });
+  } else {
+    podestSchnittElemente(z, geo, yMassL);
+  }
 
   return z.elemente;
+}
+
+/**
+ * Abwicklung: Maßkette Lauf | Podest | Lauf unten und Höhenkote auf jedem Podest.
+ */
+function podestSchnittElemente(z, geo, yMassL) {
+  const m = z.m;
+  const xKette = [0, ...geo.podeste.flatMap((p) => [p.x1, p.x2]), geo.L];
+  for (const x of xKette) hilfslinie(z, [x, -DECKENDICKE - 4 * m], [x, yMassL - 4 * m]);
+  for (let i = 0; i < xKette.length - 1; i++) {
+    const [x1, x2] = [xKette[i], xKette[i + 1]];
+    if (x2 - x1 <= RECHENTOLERANZ) continue; // Lauf mit nur einer Steigung
+    horizontalesMass(z, x1, x2, yMassL);
+    const wert = zahl(x2 - x1);
+    const lang = t(i % 2 === 0 ? "zeichnung.lauflaenge" : "zeichnung.podest", { wert });
+    z.text([(x1 + x2) / 2, yMassL + 4 * m], masstext(z, lang, wert, x2 - x1), { ausrichtung: "mitte" });
+  }
+
+  for (const p of geo.podeste) {
+    hoehenkote(z, p.x1 + 12 * m, p.hoehe, "+ " + zahl(p.hoehe / 100, 2));
+  }
 }
 
 /**

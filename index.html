@@ -70,6 +70,17 @@
       <p id="gesamturteil" class="urteil"></p>
       <p id="raumurteil" class="urteil" hidden></p>
 
+      <!-- Wahl der Treppenform (vorläufig; wird zum Variantenvergleich mit Karten) -->
+      <div class="formwahl" role="group" data-i18n-aria="formwahl.label" aria-label="Treppenform">
+        <button type="button" data-form="gerade" aria-pressed="true" data-i18n="form.gerade">Gerade Treppe</button>
+        <button type="button" data-form="L" aria-pressed="false" data-i18n="form.L">L-Treppe</button>
+        <span class="richtungwahl" hidden>
+          <button type="button" data-richtung="links" aria-pressed="true" data-i18n="richtung.links">links</button>
+          <span aria-hidden="true">|</span>
+          <button type="button" data-richtung="rechts" aria-pressed="false" data-i18n="richtung.rechts">rechts</button>
+        </span>
+      </div>
+
       <!-- Kennwerte als Leiste: Bezeichnung klein, Wert groß -->
       <dl class="kennwerte">
         <div><dt data-i18n="ergebnis.anzahlSteigungen">Anzahl Steigungen</dt><dd id="anzahlSteigungen"></dd></div>
