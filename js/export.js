@@ -53,7 +53,7 @@ function exportiereSvg(ergebnis, zeichnung) {
 
   const kopie = document.getElementById(zeichnung).cloneNode(true);
   kopie.setAttribute("xmlns", SVG_NS);
-  kopie.setAttribute("font-family", stil.getPropertyValue("--schrift").trim());
+  kopie.setAttribute("font-family", stil.getPropertyValue("--schrift-technisch").trim());
   kopie.removeAttribute("role");
   for (const el of kopie.querySelectorAll("[stroke='currentColor'], [fill='currentColor']")) {
     for (const attribut of ["stroke", "fill"]) {

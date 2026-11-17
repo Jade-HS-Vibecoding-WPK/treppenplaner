@@ -1,21 +1,49 @@
-/* Treppenplaner – schlichte Ästhetik einer architektonischen Zeichnung */
+/*
+ * Treppenplaner – Swiss-inspiriert: strenges Raster, linksbündig, viel Weißraum.
+ * Nur Schwarz, Weiß und Signalrot; Rot bedeutet immer „Problem“ (siehe CLAUDE.md, Gestaltung).
+ */
+
+/* Schriften der Kursvorlage, lokal (SIL Open Font License, siehe fonts/OFL-*.txt) */
+@font-face {
+  font-family: "Bitter";
+  src: url("../fonts/Bitter-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("../fonts/Nunito-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("../fonts/Nunito-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
 
 :root {
-  --tinte: #111;
+  --tinte: #000;
   --papier: #fff;
-  --grau: #777;
+  --fehler: #e2001a;         /* Signalrot – nur für Probleme */
   --linie: 1px solid var(--tinte);
-  --haarlinie: 0.5px solid var(--grau);
-  --ok: #1a7f37;
-  --fehler: #c62828;
-  --schrift: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --haarlinie: 0.5px solid var(--tinte);
+  --schrift: "Nunito", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --schrift-titel: "Bitter", Georgia, serif;
+  /* Zeichnungen (Bildschirm, SVG-Export): schlichte technische Schrift */
+  --schrift-technisch: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --r: 0.5rem;               /* Rastermaß; alle Abstände sind Vielfache davon */
+  --klein: 0.8125rem;        /* Hinweise, Legenden (13 px) */
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0 auto;
-  padding: 2rem 1rem 3rem;
+  padding: calc(4 * var(--r)) calc(2 * var(--r)) calc(6 * var(--r));
   max-width: 64rem;
   background: var(--papier);
   color: var(--tinte);
@@ -24,47 +52,47 @@ body {
   line-height: 1.5;
 }
 
-header {
-  border-bottom: var(--linie);
-  padding-bottom: 0.75rem;
-  margin-bottom: 2rem;
-}
-
-h1 {
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-h2, h3 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin: 0 0 1rem;
-}
-
-h3 { margin-top: 1.75rem; }
-
-.untertitel { margin: 0.25rem 0 0; color: var(--grau); }
-
+/* Kopf: große Überschrift links, Sprachwahl rechts oben */
 header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: calc(2 * var(--r));
+  border-bottom: var(--linie);
+  padding-bottom: calc(2 * var(--r));
+  margin-bottom: calc(4 * var(--r));
 }
 
-/* Sprachwahl DE | EN | FR – rechts oben, wie eine Planbeschriftung */
+h1, h2, h3 { font-family: var(--schrift-titel); font-weight: 700; }
+
+h1 {
+  margin: 0;
+  font-size: 2.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  margin: 0 0 calc(2 * var(--r));
+}
+
+h3 {
+  font-size: 1rem;
+  line-height: 1.2;
+  margin: calc(4 * var(--r)) 0 calc(1.5 * var(--r));
+}
+
+.untertitel { margin: var(--r) 0 0; }
+
+/* Sprachwahl DE | EN | FR */
 .sprachwahl {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: calc(0.75 * var(--r));
   flex-shrink: 0;
-  color: var(--grau);
-  font-size: 0.8rem;
+  font-size: var(--klein);
   letter-spacing: 0.12em;
 }
 
@@ -74,26 +102,22 @@ header {
   border: none;
   border-bottom: 1px solid transparent;
   background: none;
-  color: var(--grau);
+  color: var(--tinte);
   font: inherit;
   letter-spacing: inherit;
+  text-transform: none;
   cursor: pointer;
 }
 
-/* höhere Spezifität als das allgemeine button:hover (invertiert) weiter unten */
 .sprachwahl button:hover,
-.sprachwahl button:focus-visible { background: none; color: var(--tinte); }
+.sprachwahl button:focus-visible { background: none; color: var(--tinte); border-bottom-color: var(--tinte); }
 
-.sprachwahl button[aria-pressed="true"] {
-  color: var(--tinte);
-  font-weight: 600;
-  border-bottom-color: var(--tinte);
-}
+.sprachwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
 
 .block {
   border: var(--linie);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
+  padding: calc(2.5 * var(--r));
+  margin-bottom: calc(3 * var(--r));
 }
 
 /* Formular */
@@ -102,10 +126,11 @@ label { display: block; }
 input[type="number"] {
   display: block;
   width: 10rem;
-  margin: 0.3rem 0 1.25rem;
-  padding: 0.35rem 0.5rem;
+  margin: calc(0.5 * var(--r)) 0 calc(3 * var(--r));
+  padding: calc(0.5 * var(--r)) var(--r);
   border: none;
   border-bottom: var(--linie);
+  border-radius: 0;
   font: inherit;
   font-size: 1.1rem;
   background: transparent;
@@ -115,43 +140,55 @@ input[type="number"]:focus { outline: none; border-bottom-width: 2px; }
 
 input[type="number"].nicht-ok { color: var(--fehler); border-bottom-color: var(--fehler); }
 
-.eingabe-hinweis { margin: -0.9rem 0 1.25rem; }
+fieldset {
+  border: var(--haarlinie);
+  margin: 0 0 calc(3 * var(--r));
+  padding: calc(1.5 * var(--r)) calc(2 * var(--r));
+}
 
-fieldset { border: var(--haarlinie); margin: 0 0 1.25rem; padding: 0.75rem 1rem; }
-legend { padding: 0 0.3rem; }
+legend { padding: 0 calc(0.5 * var(--r)); font-weight: 700; }
 
-.option { margin: 0.35rem 0; cursor: pointer; }
-.option input { accent-color: var(--tinte); margin-right: 0.4rem; }
+.option { margin: calc(0.5 * var(--r)) 0; cursor: pointer; }
+.option input { accent-color: var(--tinte); margin-right: var(--r); }
 
-.hinweis { margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--grau); }
+.hinweis { margin: var(--r) 0 0; font-size: var(--klein); }
 
+/* Hinweis direkt unter einem Eingabefeld: rückt an das Feld, darunter voller Abstand */
+.eingabe-hinweis { margin: calc(-2 * var(--r)) 0 calc(3 * var(--r)); }
+
+/* Schaltflächen: eckig, ohne Schatten. Hauptbutton „Berechnen“ schwarz gefüllt. */
 button {
-  padding: 0.5rem 1.5rem;
+  padding: var(--r) calc(3 * var(--r));
   border: var(--linie);
+  border-radius: 0;
   background: var(--papier);
   color: var(--tinte);
   font: inherit;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   cursor: pointer;
 }
 
 button:hover, button:focus-visible { background: var(--tinte); color: var(--papier); }
 
-.fehler { color: var(--fehler); margin: 0.75rem 0 0; }
+button[type="submit"] { background: var(--tinte); color: var(--papier); }
+button[type="submit"]:hover,
+button[type="submit"]:focus-visible { background: var(--papier); color: var(--tinte); }
+
+.fehler { color: var(--fehler); font-weight: 700; margin: calc(1.5 * var(--r)) 0 0; }
 
 /* Tabellen */
 table { width: 100%; border-collapse: collapse; }
 
 th, td {
   text-align: left;
-  padding: 0.4rem 0.5rem 0.4rem 0;
+  padding: var(--r) var(--r) var(--r) 0;
   border-bottom: var(--haarlinie);
   font-weight: normal;
 }
 
 .werte td { text-align: right; font-variant-numeric: tabular-nums; }
-.pruefung thead th { font-size: 0.8rem; color: var(--grau); border-bottom: var(--linie); }
+.pruefung thead th { font-size: var(--klein); font-weight: 700; border-bottom: var(--linie); }
 .pruefung td { font-variant-numeric: tabular-nums; }
 /* Raumprüfung ist keine Normprüfung – optisch abgesetzt */
 .pruefung .raumzeile td { border-top: var(--linie); }
@@ -159,13 +196,14 @@ th, td {
 /* Fehlmaße im Grundriss (Raum zu klein) */
 .fehlmass { color: var(--fehler); }
 
-.ok { color: var(--ok); font-weight: 600; }
-.nicht-ok { color: var(--fehler); font-weight: 600; }
+/* „erfüllt“ schwarz, „nicht erfüllt“ Signalrot */
+.ok { color: var(--tinte); font-weight: 700; }
+.nicht-ok { color: var(--fehler); font-weight: 700; }
 
 .urteil {
-  margin: 0 0 1rem;
-  padding: 0.5rem 0.75rem;
-  border-left: 3px solid currentColor;
+  margin: 0 0 calc(2 * var(--r));
+  padding: var(--r) calc(1.5 * var(--r));
+  border-left: 4px solid currentColor;
 }
 
 /* Zeichnung */
@@ -185,41 +223,46 @@ th, td {
   display: block;
   background: var(--papier);
   color: var(--tinte);
-  font-family: var(--schrift);
+  font-family: var(--schrift-technisch);
 }
 
 .zeichnung figcaption {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--grau);
+  margin-top: var(--r);
+  font-size: var(--klein);
 }
 
-/* Export: kleine Schaltflächen je Zeichnung */
+/* Export: leise Schaltflächen (nur Rahmen, klein) */
 .export-zeile {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0.4rem 0;
+  gap: var(--r);
+  margin: var(--r) 0;
 }
 
 .export-zeile span { min-width: 7rem; }
 
-.export button { padding: 0.2rem 0.75rem; font-size: 0.8rem; }
+.export button {
+  padding: calc(0.25 * var(--r)) calc(1.5 * var(--r));
+  border: var(--haarlinie);
+  font-size: var(--klein);
+  font-weight: 400;
+}
 
 footer {
   border-top: var(--haarlinie);
-  padding-top: 0.75rem;
-  font-size: 0.8rem;
-  color: var(--grau);
+  padding-top: calc(1.5 * var(--r));
+  font-size: var(--klein);
 }
 
-footer p { margin: 0.2rem 0; }
+footer p { margin: calc(0.5 * var(--r)) 0; }
 
 /* Drucken / PDF: nur Ergebnis und Zeichnungen, auf Seitenbreite verkleinert (ohne Maßstab). */
 @media print {
   @page { margin: 15mm; }
 
   body { max-width: none; padding: 0; font-size: 11pt; }
+
+  h1 { font-size: 22pt; }
 
   .sprachwahl,
   .block:has(#eingabe),
@@ -239,12 +282,13 @@ footer p { margin: 0.2rem 0; }
 
   footer { margin-top: 0.75rem; padding-top: 0.4rem; font-size: 8pt; break-inside: avoid; }
 
-  /* Farben (grün/rot) auch beim Drucken */
+  /* Signalrot auch beim Drucken */
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
 
 @media (max-width: 480px) {
-  body { padding-top: 1.25rem; }
-  .block { padding: 1rem; }
+  body { padding-top: calc(2.5 * var(--r)); }
+  h1 { font-size: 2rem; }
+  .block { padding: calc(2 * var(--r)); }
   .pruefung { font-size: 0.85rem; }
 }
