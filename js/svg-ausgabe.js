@@ -47,7 +47,8 @@ function zeichneElemente(svg, elemente, px, cmProPx, groesse) {
     if (!muster.has(schluessel)) {
       const id = `${svg.id}-schraffur-${muster.size}`;
       const pattern = svgElement(defs, "pattern", {
-        id, patternUnits: "userSpaceOnUse", width: abstandPx, height: abstandPx, patternTransform: `rotate(${el.winkel})`,
+        id, patternUnits: "userSpaceOnUse", width: abstandPx, height: abstandPx, // Musterlinie senkrecht; SVG dreht im Uhrzeigersinn (y nach unten) → Linie im Winkel el.winkel (y nach oben)
+        patternTransform: `rotate(${90 - el.winkel})`,
       });
       svgElement(pattern, "line", {
         x1: 0, y1: 0, x2: 0, y2: abstandPx, stroke: "currentColor", "stroke-width": el.breite,

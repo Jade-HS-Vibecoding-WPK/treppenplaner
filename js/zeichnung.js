@@ -93,10 +93,90 @@ function schnittGeometrie(ergebnis) {
     [-DECKENUEBERSTAND, -DECKENDICKE],
   ];
 
-  return {
+  const geo = {
     H, n, s, a, L, xEnde, treppeUndDecke, umrissTreppe, umrissObereDecke, untereDecke, laufAnfang, podeste,
+    setzstufen,
     bereich: { xMin: -DECKENUEBERSTAND, xMax: xEnde, yMin: -DECKENDICKE, yMax: H },
   };
+  // Wangentreppe (Holz, Stahl): eigene Bauteile statt Laufplatte. Der Bereich (und damit der
+  // Maßstab) bleibt wie bei Stahlbeton, damit ein Materialwechsel die Zeichnung nicht verschiebt.
+  const material = materialVon(ergebnis);
+  if (material.konstruktion === "wange") geo.wangentreppe = wangentreppeGeometrie(geo, material);
+  return geo;
+}
+
+/**
+ * Wangentreppe im Schnitt (Abwicklung) – offene Stufen, keine Laufplatte:
+ *  - Trittstufen und Podestbelag (geschnitten): Rechtecke a × Trittstufendicke unter jeder Trittfläche
+ *  - Wange (in Ansicht hinter der Schnittebene): Band entlang der Stufenvorderkanten, auf dem Podest
+ *    waagerecht; unten auf dem Fußboden abgeschnitten, oben an der Deckenstirn (x = L)
+ *  - obere Decke als eigener Stahlbetonkörper
+ */
+function wangentreppeGeometrie(geo, material) {
+  const { H, s, a, L, xEnde, setzstufen, laufAnfang } = geo;
+  const dicke = bauteil(material, "trittstufe").dicke;
+  const wange = bauteil(material, "wange");
+
+  // Trittflächen zwischen zwei Setzstufen (Podest: längere Fläche), Oberkante bei (i + 1) · s
+  const trittstufen = [];
+  for (let i = 0; i < setzstufen.length - 1; i++) {
+    const [x1, x2, y] = [setzstufen[i], setzstufen[i + 1], (i + 1) * s];
+    trittstufen.push([[x1, y], [x2, y], [x2, y - dicke], [x1, y - dicke]]);
+  }
+
+  // Wangenkanten als Folge von Geraden: je Lauf parallel zur Linie der Stufenvorderkanten
+  // (durch [x0, h0 + s], Neigung s/a), je Podest waagerecht. Abstände senkrecht zur Steigung.
+  const neigung = s / a;
+  const senkrecht = Math.hypot(a, s) / a; // senkrechter Abstand → lotrechter Versatz
+  const geraden = (versatz) => {
+    const liste = [];
+    laufAnfang.forEach((lauf, i) => {
+      if (i > 0) liste.push({ punkt: [0, lauf.h0 + versatz], neigung: 0 }); // Podest davor
+      liste.push({ punkt: [lauf.x0, lauf.h0 + s + versatz * senkrecht], neigung });
+    });
+    return liste;
+  };
+  const oben = kantenzug(geraden(wange.ueberstand), -DECKENUEBERSTAND, xEnde);
+  const unten = kantenzug(geraden(wange.ueberstand - wange.hoehe), -DECKENUEBERSTAND, xEnde);
+  let band = [...oben, ...unten.reverse()];
+  band = schneidePolygon(band, ([, y]) => y);       // nicht unter den Fußboden
+  band = schneidePolygon(band, ([x]) => L - x);     // endet an der Stirn der oberen Decke
+
+  const obereDecke = [[L, H], [xEnde, H], [xEnde, H - DECKENDICKE], [L, H - DECKENDICKE]];
+  return { trittstufen, wange: band, obereDecke };
+}
+
+/** Schnittpunkte aufeinanderfolgender Geraden {punkt, neigung}; Anfang bei x = xAnfang, Ende bei x = xEnde. */
+function kantenzug(geraden, xAnfang, xEnde) {
+  const yAuf = (g, x) => g.punkt[1] + g.neigung * (x - g.punkt[0]);
+  const punkte = [[xAnfang, yAuf(geraden[0], xAnfang)]];
+  for (let i = 0; i < geraden.length - 1; i++) {
+    const [g, h] = [geraden[i], geraden[i + 1]];
+    // g und h sind nie parallel (Lauf – Podest – Lauf)
+    const x = (h.punkt[1] - g.punkt[1] + g.neigung * g.punkt[0] - h.neigung * h.punkt[0]) / (g.neigung - h.neigung);
+    punkte.push([x, yAuf(g, x)]);
+  }
+  const letzte = geraden[geraden.length - 1];
+  punkte.push([xEnde, yAuf(letzte, xEnde)]);
+  return punkte;
+}
+
+/**
+ * Schneidet ein Polygon an einer Halbebene ab (Sutherland–Hodgman).
+ * seite(p) ist linear in p; behalten wird seite(p) ≥ 0.
+ */
+function schneidePolygon(punkte, seite) {
+  const ergebnis = [];
+  punkte.forEach((p, i) => {
+    const q = punkte[(i + 1) % punkte.length];
+    const [sp, sq] = [seite(p), seite(q)];
+    if (sp >= 0) ergebnis.push(p);
+    if ((sp >= 0) !== (sq >= 0)) {
+      const f = sp / (sp - sq);
+      ergebnis.push([p[0] + f * (q[0] - p[0]), p[1] + f * (q[1] - p[1])]);
+    }
+  });
+  return ergebnis;
 }
 
 /** Kleinster Maßstab (px/cm), bei dem Grundriss und Stufennummern lesbar bleiben. */
@@ -146,9 +226,13 @@ function schnittElemente(ergebnis, cmProPx) {
   // Geschnittene Bauteile: Schraffur und Umriss
   z.schraffur(EBENE.schraffur, geo.untereDecke);
   z.polylinie(EBENE.decke, geo.untereDecke, STRICH.schnitt, { geschlossen: true });
-  z.schraffur(EBENE.schraffur, geo.treppeUndDecke);
-  z.polylinie(EBENE.treppe, geo.umrissTreppe, STRICH.schnitt);
-  z.polylinie(EBENE.decke, geo.umrissObereDecke, STRICH.schnitt);
+  if (geo.wangentreppe) {
+    wangentreppeElemente(z, geo.wangentreppe, materialVon(ergebnis));
+  } else {
+    z.schraffur(EBENE.schraffur, geo.treppeUndDecke);
+    z.polylinie(EBENE.treppe, geo.umrissTreppe, STRICH.schnitt);
+    z.polylinie(EBENE.decke, geo.umrissObereDecke, STRICH.schnitt);
+  }
 
   // Fußbodenoberkanten kräftig
   z.linie(EBENE.decke, [geo.bereich.xMin, 0], [xEnde, 0], STRICH.decke);
@@ -200,6 +284,18 @@ function schnittElemente(ergebnis, cmProPx) {
   }
 
   return z.elemente;
+}
+
+/**
+ * Wangentreppe: obere Decke (Stahlbeton, geschnitten), Wange in Ansicht (fein, ohne Schraffur),
+ * darüber die geschnittenen Trittstufen mit Materialschraffur – sie verdecken die Wange nicht,
+ * weil sie ganz innerhalb des Wangenbands liegen.
+ */
+function wangentreppeElemente(z, w, material) {
+  z.schraffur(EBENE.schraffur, w.obereDecke);
+  z.polylinie(EBENE.decke, w.obereDecke, STRICH.schnitt, { geschlossen: true });
+  z.polylinie(EBENE.wange, w.wange, STRICH.mass, { geschlossen: true });
+  for (const stufe of w.trittstufen) geschnittenesBauteil(z, material, EBENE.trittstufe, stufe);
 }
 
 /**

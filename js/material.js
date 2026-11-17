@@ -84,3 +84,9 @@ function materialSchraffur(z, material, umriss) {
     z.schraffur(ebene, umriss, { winkel: s.winkel, abstandPx: s.abstand });
   }
 }
+
+/** Geschnittenes Bauteil (z. B. Trittstufe): Materialschraffur und Umriss in Schnittstrichstärke. */
+function geschnittenesBauteil(z, material, ebene, umriss) {
+  materialSchraffur(z, material, umriss);
+  z.polylinie(ebene, umriss, STRICH.schnitt, { geschlossen: true });
+}
