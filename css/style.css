@@ -287,6 +287,12 @@ th, td {
 
   main > .block { margin-bottom: 0; }
 
+  /* Spalten wachsen mit dem Wert (z. B. „300,4 × 210,0 cm“ beim Platzbedarf), damit er einzeilig bleibt.
+     Reicht der Platz nicht, bricht er nur nach „×“ um (geschützte Leerzeichen in app.js), nie vor „cm“. */
+  .kennwerte { grid-template-columns: repeat(auto-fit, minmax(8.5rem, auto)); }
+  /* Nur die Werte bestimmen die Spaltenbreite; Bezeichnungen (z. B. lange FR-Texte) brechen um. */
+  .kennwerte dt { width: 0; min-width: 100%; }
+
   /* Formular in der schmalen Spalte: Felder volle Breite */
   main > .block:first-child input[type="number"] { width: 100%; }
 }

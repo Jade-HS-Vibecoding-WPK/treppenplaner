@@ -22,6 +22,8 @@ const SPRACHE_SPEICHERSCHLUESSEL = "treppenplaner.sprache";
 const TEXTE = {
   de: {
     "seite.untertitel": "Gerade Treppe – Bemessung nach DIN 18065",
+    "seite.untertitelL": "L-Treppe mit Viertelpodest – Bemessung nach DIN 18065",
+    "seite.untertitelU": "U-Treppe mit Halbpodest – Bemessung nach DIN 18065",
     "sprachwahl.label": "Sprache",
 
     "eingabe.titel": "Eingabe",
@@ -142,6 +144,10 @@ const TEXTE = {
 
   en: {
     "seite.untertitel": "Straight stair – design to DIN 18065 (German standard for stairs in buildings)",
+    "seite.untertitelL":
+      "L-shaped stair with quarter landing – design to DIN 18065 (German standard for stairs in buildings)",
+    "seite.untertitelU":
+      "U-shaped stair with half landing – design to DIN 18065 (German standard for stairs in buildings)",
     "sprachwahl.label": "Language",
 
     "eingabe.titel": "Input",
@@ -263,6 +269,10 @@ const TEXTE = {
   fr: {
     "seite.untertitel":
       "Escalier droit – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
+    "seite.untertitelL":
+      "Escalier en L avec palier – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
+    "seite.untertitelU":
+      "Escalier en U avec palier – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
     "sprachwahl.label": "Langue",
 
     "eingabe.titel": "Saisie",

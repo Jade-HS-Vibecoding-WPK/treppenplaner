@@ -85,6 +85,13 @@
   - Bu bilgisayarda Node yok: regresyon testi tarayıcı konsolunda. Düz merdivenin eleman listeleri (ekran ve export ölçeği, 6 durum) değişiklikten önce `localStorage`'a kaydedildi, sonra karşılaştırıldı: hepsi aynı; SVG de aynı.
   - Yeni davranış: Gebäude im Allgemeinen'de 19+ Steigung'lu düz merdiven artık „nicht erfüllt“ (örn. 320 cm) ve sonuç metni „Podest nötig“ diyor.
 
+- **U-Treppe ve küçük düzeltmeler (18.11., Parça B):**
+  - U'da links/rechts seçimi yok (U her zaman sola dönüyor); ayna görüntüsü Parça C'deki kartlarda da gerekmiyor.
+  - U'da çıkış (Austritt) girişle aynı tarafta: son basamak numarası Antritt'in yanında, üst döşemede (x < 0) duruyor. Alan duvarı x = 0'da olduğu için bu numara alan çizgisinin dışında kalıyor – „ohne Antritts-/Austrittsfläche“ basitleştirmesinin bir sonucu.
+  - Sayfa alt başlığı forma göre değişiyor (`seite.untertitel`, `…L`, `…U`). DE/EN normun terimlerini kullanıyor (Viertel-/Halbpodest, quarter/half landing); FR'de emin olmadığım için sadece „avec palier“ yazıyor.
+  - Kennwerte: sayı ile „cm“ arasında bölünmez boşluk (`NBSP`), Platzbedarf'ta satır sadece „ד'den sonra kırılabiliyor. Laptopta sütunlar değere göre büyüyor (`minmax(8.5rem, auto)`), etiketler (dt) sütun genişliğini belirlemiyor (`width: 0; min-width: 100%`), yoksa uzun FR etiketleri yeri alıyordu. `nowrap` bilerek yok: 1024 px'te değer sütundan taşıyordu.
+  - Yatay kaydırma çubuğunun sebebi alan girişi değil, yuvarlamaydı: `Math.ceil(958,0000001)` = 959 px, kaydırma alanı 958 px. Çözüm: 0,01 px tolerans ve kullanılabilir genişlik aşağı yuvarlanıyor (`clientWidth` 957,6'yı 958'e yuvarlıyordu).
+
 - CLAUDE.md Almanca yazıldı (proje dili Almanca); Türkçe iletişim kuralı içinde açıkça belirtildi.
 - Dosyalar ayrıldı: `norm.js` (değerler), `berechnung.js` (hesap), `app.js` (arayüz). Script'ler klasik `<script>` olarak yükleniyor (ES module değil), böylece sayfa çift tıklayınca da açılıyor.
 - Basamak sayısı seçimi: Normu ihlal etmeyen çözümler arasında 2s + a değeri 63 cm'e ve rıht yüksekliği 17 cm'e en yakın olan seçiliyor. Bunlar norm değeri değil, yaygın kurallar (17/29 merdiven). Rıht hedefi olmadan kod hep en dik çözümü (ör. 20/23) seçiyordu.

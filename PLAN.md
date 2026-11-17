@@ -16,9 +16,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Schnitt und Grundriss vergrößern (breitere Seite, Mindestmaßstab, gemeinsames Scrollen)
 - [ ] Kopfhöhe 2,00 m im Schnitt prüfen
 - ✅ Eingabe der verfügbaren Fläche (Länge × Breite) – gerade Treppe
-- ✅ Raumprüfung für die L-Treppe (gleiche Funktion `pruefeRaum`) – U folgt
+- ✅ Raumprüfung für L- und U-Treppe (gleiche Funktion `pruefeRaum`)
 - ✅ L-Treppe mit Viertelpodest, links und rechts (Podestregeln siehe `notlar.md`)
-- [ ] U-Treppe mit Halbpodest
+- ✅ U-Treppe mit Halbpodest (Treppenauge 10 cm, Annahme)
 - [ ] Variantenvergleich + Bewertung + Empfehlung
 - ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
@@ -70,7 +70,14 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Vorläufige Formwahl im Ergebnis „Gerade Treppe | L-Treppe (links | rechts)“ – wird im Variantenvergleich zu Karten; Kennwerte mit Aufteilung („16 (8 + 8)“) und Platzbedarf Länge × Breite; Export-Dateiname mit Form (`treppe_275_L-links_grundriss.dxf`); Druckzeile nennt die Treppenform; alle Texte DE/EN/FR
 - ✅ Gerade Treppe nach dem Umbau unverändert: Elementlisten (Bildschirm und Export) in 6 Fällen und das SVG im Browser identisch geprüft (Konsole, ohne Node)
 
-**Stand 18.11., Teil A (L-Treppe) fertig.** Nächster Teil: U-Treppe.
+- ✅ U-Treppe (18.11., Teil B): Knopf „U-Treppe“ in der Formwahl (ohne links/rechts); Grundriss mit zwei parallelen Läufen, Halbpodest B × (2B + 10 cm) und Treppenauge 10 cm (Annahme), Lauf 2 läuft zurück, letzte Stufennummer auf der oberen Decke neben dem Antritt; Maßketten Lauf 1 | Podest und Breite B | Auge | B; Abwicklung mit Podest 2B + Auge und Höhenkote; Normprüfung, Raumprüfung (Überstand je Lauf/Podest), DE/EN/FR, Druckzeile und Export (`treppe_275_U_grundriss.dxf`)
+- ✅ Konsolentests U: 275 cm, Gebäude im Allgemeinen, 100 cm → 16 (8 + 8), Platzbedarf 300,4 × 210,0 cm, normgerecht; 320 cm → gerade 19 Steigungen ✗ „Podest nötig“, U 19 (10 + 9) ✓; Raum 400 × 300 → gerade: es fehlen 29,4 cm Länge, U passt; gerade und L nach den Änderungen unverändert (Elementlisten in 18 Fällen identisch)
+- ✅ Notizen aus der Sichtprüfung der L-Treppe erledigt: Untertitel der Seite je nach Form (DE/EN/FR); Kennwerte: Zahl und „cm“ mit geschütztem Leerzeichen, Spalten wachsen am Laptop mit dem Wert (1366 px: „300,4 × 210,0 cm“ einzeilig, schmaler: Umbruch nur nach „×“); Scrollbalken: Zeichnung war durch Rundung 1 px breiter als der Scrollbereich (959 statt 958 px) – behoben
+- Beobachtung: Bei schmalen Läufen (B = 80) und hohen Geschossen (U ab ca. 300 cm, L ab ca. 350 cm) ist die Abwicklung beim Mindestmaßstab breiter als 958 px und scrollt (gewollt, wie bei der geraden Treppe)
+
+**Stand 18.11., Teil B (U-Treppe) fertig** – Sichtprüfung im Browser durch den Nutzer steht aus. Nächster Teil: Variantenvergleich.
+
+**Stand 18.11., Teil A (L-Treppe) fertig.**
 
 **Stand 16.11. abends:** Gerade Treppe vollständig (Berechnung, Normprüfung, Raumprüfung, Schnitt, Grundriss, DE/EN/FR, Export DXF/SVG/PDF). DXF in AutoCAD 2027 erfolgreich getestet; PDF mit zwei Seiten in zwei Fällen (600 cm, Raum 1000 × 1000 und 600 × 600) geprüft. Alles committet und gepusht.
 
@@ -82,11 +89,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 **Mi 18.11.**
 3. ✅ Teil A: L-Treppe (Berechnung, Grundriss, Abwicklung, Export, Texte).
-4. Teil B: U-Treppe – Berechnung ist schon in `treppenformen.js` (ausgewogen, Halbpodest 2B + Auge, Treppenauge 10 cm), Grundriss/Abwicklung sind vorbereitet; noch: Knopf „U-Treppe“ in der Formwahl, Untertitel der Seite, Geometrie im Browser prüfen lassen (Nutzer), Commit.
-   Notizen aus der Sichtprüfung der L-Treppe (18.11., Nutzer: L links/rechts, 275 cm, Gebäude im Allgemeinen, Raum 250 × 250 korrekt):
-   - Untertitel der Seite („Gerade Treppe – Bemessung nach DIN 18065“) je nach gewählter Form ändern.
-   - Kennwerte: Bei „Platzbedarf 300,4 × 300,4 cm“ rutscht „cm“ in die nächste Zeile – Umbruch verhindern.
-   - Mit Raumvorgabe erscheint im Grundriss ein horizontaler Scrollbalken – Breite des Grundrisses prüfen.
+4. ✅ Teil B: U-Treppe (Knopf, Grundriss, Abwicklung, Normprüfung, Texte, Export) und die drei Notizen aus der Sichtprüfung der L-Treppe (Untertitel je Form, „cm“-Umbruch, Scrollbalken).
+   **Offen:** Sichtprüfung der U-Treppe im Browser durch den Nutzer (z. B. 275 cm, Gebäude im Allgemeinen, 100 cm, mit und ohne Raum 400 × 300 bzw. 250 × 180; DE/EN/FR), danach pushen.
 5. Teil C: Variantenvergleich – `js/bewertung.js` (Gewichte an einer Stelle: Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %; Formeln siehe `notlar.md`), Ausschluss (passt nicht / Norm nicht erfüllt), Stufenzahl je Form (steilere normgerechte Stufung, wenn die bequemste nicht passt), drei Karten (gerade, L mit links/rechts, U) mit Mini-Grundriss, Werten und Punkten, Empfehlung mit Begründungssatz, Ausgeschlossene blass und gestrichelt; danach Szenarien gemeinsam prüfen und Gewichte ggf. anpassen.
 
 **Später / offen**

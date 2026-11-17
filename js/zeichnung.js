@@ -124,7 +124,9 @@ function erstelleAbbildung(bereich, breitePx, kMin) {
     k,
     x: (x) => RAND.links + (x - bereich.xMin) * k,
     y: (y) => RAND.oben + (bereich.yMax - y) * k,
-    breitePx: Math.max(breitePx, Math.ceil(RAND.links + breiteCm * k + RAND.rechts)),
+    // − 0,01 px: Gleitkommarauschen (z. B. 958,0000001) darf nicht auf 959 px aufrunden –
+    // sonst ist die Zeichnung 1 px breiter als der Scrollbereich und es erscheint ein Scrollbalken.
+    breitePx: Math.max(breitePx, Math.ceil(RAND.links + breiteCm * k + RAND.rechts - 0.01)),
     hoehePx: RAND.oben + hoeheCm * k + RAND.unten,
   };
 }

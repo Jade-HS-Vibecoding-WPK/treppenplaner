@@ -7,6 +7,9 @@ const GESCHOSSHOEHE_MAX = 600; // Plausibilitätsgrenze der Eingabe (kein Normwe
 const LAUFBREITE_MIN = 30;     // Plausibilitätsgrenze der Eingabe (kein Normwert)
 const LAUFBREITE_MAX = 400;    // Plausibilitätsgrenze der Eingabe (kein Normwert)
 
+// Geschütztes Leerzeichen: Zahl und Einheit nie getrennt umbrechen.
+const NBSP = " ";
+
 const formular = document.getElementById("eingabe");
 const fehlerAnzeige = document.getElementById("fehler");
 const ergebnisBlock = document.getElementById("ergebnis");
@@ -16,7 +19,7 @@ const ergebnisBlock = document.getElementById("ergebnis");
  * maxStellen = 2 in der Normprüfung, damit z. B. 19,04 cm nicht als „19,0“ erscheint.
  */
 function cm(wert, maxStellen = 1) {
-  return zahlFlexibel(wert, maxStellen, 1) + " cm";
+  return zahlFlexibel(wert, maxStellen, 1) + NBSP + "cm";
 }
 
 /**
@@ -76,8 +79,11 @@ function zeigeErgebnis(e) {
   // Gerade Treppe: Lauflänge; mit Podest: Platzbedarf Länge × Breite
   const gerade = e.form === "gerade";
   setzeI18n(document.getElementById("lauflaengeTitel"), gerade ? "ergebnis.lauflaenge" : "ergebnis.platzbedarf");
-  setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : `${zahl(e.footprint.laenge)} × ${zahl(e.footprint.breite)} cm`);
+  // Umbruch höchstens nach „×“, nie vor „cm“
+  const platzbedarf = `${zahl(e.footprint.laenge)}${NBSP}× ${cm(e.footprint.breite)}`;
+  setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : platzbedarf);
   setzeZeichnungstitel(gerade);
+  setzeUntertitel(e.form);
 
   const urteil = document.getElementById("gesamturteil");
   urteil.textContent = urteilText(e);
@@ -109,6 +115,12 @@ function setzeI18n(el, schluessel, aria = false) {
     el.dataset.i18n = schluessel;
     el.textContent = t(schluessel);
   }
+}
+
+/** Untertitel der Seite je nach gewählter Form (gerade | L | U). */
+function setzeUntertitel(form) {
+  const schluessel = form === "gerade" ? "seite.untertitel" : "seite.untertitel" + form;
+  setzeI18n(document.querySelector(".untertitel"), schluessel);
 }
 
 /** Gerade Treppe: Schnitt; mit Podest: Abwicklung entlang der Lauflinie. */
@@ -210,7 +222,9 @@ function zeigeDruckEingabe(e) {
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
 function zeichneZeichnungen() {
   // Sichtbare Breite des Scrollbereichs, nicht der Abbildung (die wächst mit der Zeichnung).
-  const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, zeichenflaeche.clientWidth);
+  // Abgerundet: clientWidth rundet z. B. 957,6 px auf 958 – die Zeichnung wäre dann zu breit.
+  const breite = Math.floor(zeichenflaeche.getBoundingClientRect().width);
+  const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, breite);
   zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
 }
 
