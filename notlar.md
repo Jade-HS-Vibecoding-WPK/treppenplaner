@@ -113,6 +113,15 @@
   - Dosya adında ondalık nokta yerine tire: 282,5 cm → `treppe_282-5_schnitt.dxf`.
   - SVG export: ekrandaki SVG'nin kopyası, renkler ve yazı tipi doğrudan niteliklerde (sayfanın CSS'i dışarıda yok). SVG'de katman grupları yok.
 
+- **Gestaltung – teknik kararlar (17.11.):**
+  - Sinyal kırmızısı `#e2001a`. Gri tonlar kaldırıldı; ipuçları siyah ve küçük (13 px).
+  - Tüm aralıklar 0,5 rem'lik bir rasterin katları (`--r`).
+  - Değerler tablosu yerine bir „Kennwerte“ şeridi (`<dl>`): küçük etiket, büyük değer.
+  - İki sütun 64rem'den itibaren; sol sütun 18rem. 1366 px'te çizim alanı 958 px, 250–350 cm (Laufbreite 80–120) kaydırmasız ölçüldü.
+  - Yazdırma sırası JavaScript ile (`beforeprint`/`afterprint`): Normprüfung ve footer çizimlerin önüne alınıyor; ekranda sıra değişmiyor.
+  - Plan, sağ kenar: alan genişliği ölçüsü `L + a + 30 px`'te (son basamak numarasının arkasında); „fehlt“ yazısı ölçü çizgilerinden 18 px uzakta.
+  - Ölçü yazısı (ör. „Total going 59.3“) yardımcı çizgilerin arasına sığmazsa sadece sayı yazılıyor. Liste DOM bilmediği için genişlik tahmin ediliyor: karakter sayısı × 0,55 × yazı boyutu (Helvetica için yaklaşık değer). DXF'te (1:50) kısa merdivenlerde de bu yüzden sadece sayı çıkabiliyor.
+
 ## Fachbegriffe DE / EN / FR
 
 Kaynak: yapay zekânın önerisi, kullanıcı tarafından kontrol edildi ve düzeltildi (16.11.). DIN 18065'in resmi EN/FR çevirisi görülmedi. ⚠ = emin değil.
