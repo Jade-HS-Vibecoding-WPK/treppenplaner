@@ -83,6 +83,10 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 **Mi 18.11.**
 3. ✅ Teil A: L-Treppe (Berechnung, Grundriss, Abwicklung, Export, Texte).
 4. Teil B: U-Treppe – Berechnung ist schon in `treppenformen.js` (ausgewogen, Halbpodest 2B + Auge, Treppenauge 10 cm), Grundriss/Abwicklung sind vorbereitet; noch: Knopf „U-Treppe“ in der Formwahl, Untertitel der Seite, Geometrie im Browser prüfen lassen (Nutzer), Commit.
+   Notizen aus der Sichtprüfung der L-Treppe (18.11., Nutzer: L links/rechts, 275 cm, Gebäude im Allgemeinen, Raum 250 × 250 korrekt):
+   - Untertitel der Seite („Gerade Treppe – Bemessung nach DIN 18065“) je nach gewählter Form ändern.
+   - Kennwerte: Bei „Platzbedarf 300,4 × 300,4 cm“ rutscht „cm“ in die nächste Zeile – Umbruch verhindern.
+   - Mit Raumvorgabe erscheint im Grundriss ein horizontaler Scrollbalken – Breite des Grundrisses prüfen.
 5. Teil C: Variantenvergleich – `js/bewertung.js` (Gewichte an einer Stelle: Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %; Formeln siehe `notlar.md`), Ausschluss (passt nicht / Norm nicht erfüllt), Stufenzahl je Form (steilere normgerechte Stufung, wenn die bequemste nicht passt), drei Karten (gerade, L mit links/rechts, U) mit Mini-Grundriss, Werten und Punkten, Empfehlung mit Begründungssatz, Ausgeschlossene blass und gestrichelt; danach Szenarien gemeinsam prüfen und Gewichte ggf. anpassen.
 
 **Später / offen**
