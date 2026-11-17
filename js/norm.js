@@ -10,7 +10,8 @@
 
 const DIN18065 = Object.freeze({
   // Schrittmaßregel: 59 cm ≤ 2s + a ≤ 65 cm
-  // Quelle: DIN 18065:2020-08, Tabelle 1 (zitiert nach WEKA-Fachportal, Original nicht eingesehen)
+  // Quelle: DIN 18065 – nicht an einer Quelle geprüft (WEKA bestätigt nur s, a und Laufbreite)
+  // TODO: Quelle prüfen
   schrittmass: Object.freeze({
     min: 59,
     max: 65,
@@ -47,7 +48,8 @@ const DIN18065 = Object.freeze({
       laufbreiteMin: 80,
 
       // Lichte Durchgangshöhe: ≥ 200 cm
-      // Quelle: DIN 18065:2020-08 (zitiert nach WEKA-Fachportal, Original nicht eingesehen)
+      // Quelle: DIN 18065 – nicht an einer Quelle geprüft (im Tool noch nicht verwendet)
+      // TODO: Quelle prüfen
       durchgangshoeheMin: 200,
 
       // Podest spätestens nach 18 Steigungen: gilt hier nicht (Ausnahme für Wohngebäude
@@ -73,7 +75,8 @@ const DIN18065 = Object.freeze({
       laufbreiteMin: 100,
 
       // Lichte Durchgangshöhe: ≥ 200 cm
-      // Quelle: DIN 18065:2020-08 (zitiert nach WEKA-Fachportal, Original nicht eingesehen)
+      // Quelle: DIN 18065 – nicht an einer Quelle geprüft (im Tool noch nicht verwendet)
+      // TODO: Quelle prüfen
       durchgangshoeheMin: 200,
 
       // Podest spätestens nach 18 Steigungen (höchstens 18 Steigungen je Lauf).

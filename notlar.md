@@ -22,7 +22,7 @@
 - Şimdilik sadece DIN 18065 esas alınıyor. Eyalet yönetmeliği için sayfanın altında uyarı var.
 - Kesitte Höhenkoten (üçgen sembol, „± 0,00“ / „+ 2,75“) gösteriliyor.
 - Laufplatte çiziliyor, kalınlığı 18 cm varsayıldı. Kesilen döşeme ve plak ince tarama (Schraffur) ile gösteriliyor.
-- Uzun kollarda ara sahanlık (Podest) kontrolü. Örneğin 600 cm'de tek kolda 35 rıht çıkıyor. **18.11.'de uygulamaya eklendi** (`norm.js`, `treppenformen.js`).
+- Uzun kollarda ara sahanlık (Podest) kontrolü. Örneğin 600 cm'de tek kolda 35 rıht çıkıyor. **17.11.'de uygulamaya eklendi** (`norm.js`, `treppenformen.js`).
   - **Doğrulandı (sekundär):** Kaynak: Baunetz Wissen (DIN 18065'e atıfla), Original nicht eingesehen.
     - Notwendige Treppen'de en geç 18 Steigung'dan sonra bir Podest gerekir. Wohngebäude mit bis zu zwei Wohnungen bunun dışında.
     - Bir Treppenlauf en az 3 Stufe'den oluşur.
@@ -51,7 +51,7 @@
   - **DXF in AutoCAD 2027 erfolgreich getestet (Layer, Maße, Texte korrekt).** Kullanıcı testi, 16.11.: kesit ve plan açılıyor; yazılar, çizimler, katmanlar, ölçüler, tarama, kotlar, kesikli çizgiler ve „±“ doğru. ArchiCAD/Revit testi hâlâ açık.
   - PDF: kesit ve plan her zaman 2. sayfada başlıyor (`break-before: page`), başlık çizimden ayrılmıyor (`break-after: avoid`). 1. sayfa sonuçlar ve tablolar, 2. sayfa çizimler. Footer yazdırırken 1. sayfaya, Normprüfung'ün altına taşınıyor (`beforeprint`/`afterprint`, ekranda yeri değişmiyor); 600 cm, alan 600 × 600'de footer tek başına 3. sayfaya düşüyordu. *(Benim kararım.)*
 
-- **L-/U-Treppe ve Variantenvergleich (18.11.):**
+- **L-/U-Treppe ve Variantenvergleich (17.11.):**
   - Sadece Podest'li çözümler, gewendelte Stufen yok. L: iki kol + Viertelpodest, sola ve sağa dönüş. U: iki paralel kol + Halbpodest.
   - „Ein Lauf mindestens 3 Stufen“ **3 Steigung** olarak sayılıyor (`TODO: Quelle prüfen`).
   - 18-Steigungen-Regel sadece „Gebäude im Allgemeinen“de; Wohngebäude bunun dışında.
@@ -67,18 +67,18 @@
   - Elenen kartlar soluk + kesikli çerçeve (stil kuralı: sadece siyah, beyaz, kırmızı; gri yok), gerekçe kırmızı.
   - Schnitt: L/U'da **Abwicklung entlang der Lauflinie** (benim fikrim). Gerçek kesit (U'da ikinci kol görünüşte) Could.
   - **Not – ağırlıklar tekrar bakılacak:** Düz merdiven Sicherheit'ta düşük puan alıyor (ör. 16 Steigung → 20), Sicherheit ve Nutzung ikisi de Podest'i ödüllendiriyor. Bu bilinçli bir çift sayım, ama öneri sık sık U çıkabilir. Parça C'den sonra farklı senaryolarla birlikte bakacağız, gerekirse ağırlıkları ayarlayacağız.
-    → Değerlendirildi (18.11.), aşağıya bakın.
-- **Senaryo değerlendirmesi (18.11., kullanıcıyla):**
+    → Değerlendirildi (17.11.), aşağıya bakın.
+- **Senaryo değerlendirmesi (17.11., kullanıcıyla):**
   - **Ağırlıklar kalıyor** (Komfort 40, Platz 30, Sicherheit 20, Nutzung 10). Kontrol senaryosu „dar koridor“ (280 cm, Wohngebäude, 80 cm, alan 450 × 120): düz merdiven öneriliyor (L ve U genişliğe sığmıyor). *(Benim kararım.)*
   - **Platz puanı = gerçekten kaplanan alan** (kollar Länge × Laufbreite + Podest Tiefe × Breite), dış dikdörtgen değil. Gerekçe: L'nin iç köşesi boş kalıyor ve kullanılabiliyor (dolap, kapı, geçiş); dikdörtgenle hesaplamak L'yi U'dan bile kötü gösteriyordu (275 cm: L 280 × 280 = 7,9 m², gerçekte 3,8 m²). **„Passt in den Raum“ kontrolü dış dikdörtgenle kalıyor**, çünkü merdiven yerleştirilirken bu dikdörtgenin tamamı gerekiyor. (`belegteFlaeche()` in `bewertung.js`.) Sonuç: alan verilmemiş veya geniş alanlarda artık L öneriliyor (senaryo 1–3), U değil. *(Benim kararım.)*
   - **Daha dik n ile 18-Steigungen-Regel'i sağlamak geçerli bir çözüm:** Normun izin verdiği sınırlar içinde kalıyor (320 cm, Allgemein: 18 × 17,8 / 27,4 cm). Bu yüzden düz merdiven orada elenmiyor; Komfort ve Sicherheit puanları düşük olduğu için zaten önerilmiyor. „Podest nötig“ ancak 342 cm'in (18 × 19 cm) üstünde çıkıyor. *(Benim kararım.)*
   - **Kartlar kompakt (laptopta 250 px):** mini plan 72 px yüksek, toplam puan ve alt puanlar aynı satırda, daha dar boşluklar. CLAUDE.md'deki karar 3 güncellendi: „Zuerst Empfehlung und Vergleich, dann die Zeichnung der gewählten Variante.“ 1024 px'te kartlar dar olduğu için ~290–310 px, telefonda 207–238 px. En sıkışık mini plan: L, 275 cm, alan yok → basamak aralığı ~6,6 px (çizgiler ayrı okunuyor). *(Benim kararım, ölçüler yapay zekâdan.)*
-- **„sehr steil“ uyarısı (18.11., Could):** s ≥ 19 cm **veya** a ≤ 24 cm olan varyantlarda kartta ve Kennwerte şeridinde „sehr steil“ / „very steep“ / „très raide“. Sınırlar `js/bewertung.js`'de tek yerde (`SEHR_STEIL`), „eigene Annahme, kein Normwert“ notuyla. **Siyah**, kırmızı değil: bu bir norm ihlali değil, sadece bir uyarı (kırmızı = sorun kuralı). Eleme, puan veya Normprüfung'ü etkilemiyor. Sadece kartlarda ve Kennwerte'de. *(Benim kararım.)*
+- **„sehr steil“ uyarısı (17.11., Could):** s ≥ 19 cm **veya** a ≤ 24 cm olan varyantlarda kartta ve Kennwerte şeridinde „sehr steil“ / „very steep“ / „très raide“. Sınırlar `js/bewertung.js`'de tek yerde (`SEHR_STEIL`), „eigene Annahme, kein Normwert“ notuyla. **Siyah**, kırmızı değil: bu bir norm ihlali değil, sadece bir uyarı (kırmızı = sorun kuralı). Eleme, puan veya Normprüfung'ü etkilemiyor. Sadece kartlarda ve Kennwerte'de. *(Benim kararım.)*
   - Görünüm (yapay zekâ): kartta başlık satırında siyah çerçeveli, dolgusuz etiket (Empfehlung etiketi siyah dolgulu, karışmasın diye); Kennwerte'de uyarıyı tetikleyen değerin (s ve/veya a) altında küçük çerçeveli bir not. EN'de not değerin yanına sığmıyordu, tutarlı olsun diye her dilde ayrı satırda. Kartın yüksekliği değişmiyor (1366 px: 239 px), Kennwerte şeridi uyarı varken 88 → 111 px.
 
 ## Yapay zekânın kararları
 
-- **Treppenformen – teknik (18.11., Parça A):**
+- **Treppenformen – teknik (17.11., Parça A):**
   - s ve a forma bağlı değil (`stufenKandidaten()` en iyi Stufung'u veriyor); form sadece kollara bölüyor. Lauf i: nᵢ Steigung, nᵢ − 1 Auftritt; Podest bir Auftritt'in yerine geçiyor.
   - L bölmesi: tüm bölmeler deneniyor (her kol ≥ 3). Sıra: kollar normgerecht → alana sığıyor / en küçük eksik ölçü → en dengeli (tek sayıda uzun kol önce). U her zaman dengeli (en kısa çözüm).
   - Footprint: L = (n₁−1)a + B × B + (n₂−1)a, U = (n₁−1)a + B × 2B + Auge. Viertelpodest B × B, Halbpodest B × (2B + Auge).
@@ -93,7 +93,7 @@
   - Bu bilgisayarda Node yok: regresyon testi tarayıcı konsolunda. Düz merdivenin eleman listeleri (ekran ve export ölçeği, 6 durum) değişiklikten önce `localStorage`'a kaydedildi, sonra karşılaştırıldı: hepsi aynı; SVG de aynı.
   - Yeni davranış: Gebäude im Allgemeinen'de 19+ Steigung'lu düz merdiven artık „nicht erfüllt“ (örn. 320 cm) ve sonuç metni „Podest nötig“ diyor.
 
-- **U-Treppe ve küçük düzeltmeler (18.11., Parça B):**
+- **U-Treppe ve küçük düzeltmeler (17.11., Parça B):**
   - U'da links/rechts seçimi yok (U her zaman sola dönüyor); ayna görüntüsü Parça C'deki kartlarda da gerekmiyor.
   - U'da çıkış (Austritt) girişle aynı tarafta: son basamak numarası Antritt'in yanında, üst döşemede (x < 0) duruyor. Alan duvarı x = 0'da olduğu için bu numara alan çizgisinin dışında kalıyor – „ohne Antritts-/Austrittsfläche“ basitleştirmesinin bir sonucu.
   - Sayfa alt başlığı forma göre değişiyor (`seite.untertitel`, `…L`, `…U`). DE/EN normun terimlerini kullanıyor (Viertel-/Halbpodest, quarter/half landing); FR'de emin olmadığım için sadece „avec palier“ yazıyor.
@@ -101,7 +101,7 @@
   - **Eksik ölçülerde tek yuvarlama kuralı: 0,1 cm'e yukarı** (`fehlmassAufgerundet()` in `raum.js`; mesaj, tablo, plan, DXF/SVG aynı fonksiyonu kullanıyor). Hata (kullanıcı, 320 cm, Wohngebäude, B = 100, L rechts, alan 400 × 300): gerçek eksik 5,21 cm, mesaj/tablo „5,3“ (yukarı), planda „5,2“ (en yakına). Gerekçe: güvenli tarafta kalmak – eksik ölçü hiçbir zaman gerçekte olduğundan küçük görünmemeli ve gerçek bir eksik hiçbir zaman „0“ görünmemeli; 0,1 cm fazla göstermenin bedeli yok, az göstermenin bedeli var (planlanan alan yine yetmez). Kayan nokta gürültüsü için tolerans var (5,2000000001 → 5,2, 5,3 değil). Kontrol: 3052 durumda (tüm formlar, iki bina türü, çeşitli alanlar) mesaj, plan ve DXF'teki sayılar aynı. *(Kullanıcının önerisi, yapay zekâ onayladı.)*
   - Yatay kaydırma çubuğunun sebebi alan girişi değil, yuvarlamaydı: `Math.ceil(958,0000001)` = 959 px, kaydırma alanı 958 px. Çözüm: 0,01 px tolerans ve kullanılabilir genişlik aşağı yuvarlanıyor (`clientWidth` 957,6'yı 958'e yuvarlıyordu).
 
-- **Variantenvergleich (18.11., Parça C):**
+- **Variantenvergleich (17.11., Parça C):**
   - Hesap `js/bewertung.js`'de (`vergleicheVarianten()`), görünüm `js/variantenkarten.js`'de; `app.js` sadece seçimi tutuyor (`auswahl.form`, `auswahl.richtungL`). `berechneTreppe()` isteğe bağlı bir Stufung alıyor; verilmezse eskisi gibi en konforlusu.
   - Forma göre Stufung: Stufen-Kandidaten konfor sırasıyla deneniyor; normgerecht **ve** sığan ilk Stufung seçiliyor. Yoksa: normgerecht olanlardan en küçük eksik ölçülü; hiçbiri normgerecht değilse en konforlusu. Yani „daha dik n“ sadece alan için değil, **18-Steigungen-Regel için de** deneniyor: 320 cm / Gebäude im Allgemeinen'de düz merdiven 18 Steigung (s = 17,8) ile normgerecht, „Podest nötig“ değil. „Podest nötig“ ancak 18 × 19 = 342 cm'in üstünde. *(Kullanıcıyla değerlendirilecek.)*
   - Elenen varyantın puanı hesaplanıyor ama gösterilmiyor (kartta „–“ yerine kırmızı gerekçeler). Platz puanı göreli hesapta en küçük Footprint'i sadece **elenmeyenler** arasında arıyor (hepsi elendiyse hepsi arasında).
@@ -112,7 +112,7 @@
   - Kart = büyük bir buton (seçim) + L'de ayrı „Drehsinn: links | rechts“ butonları (buton içinde buton olamaz). Yeniden çizimden sonra odak aynı butona dönüyor (klavye).
   - Laptop 1024–1366 px'te üç kart yan yana (`minmax(11rem, 1fr)`), dar kartta değer etiketin altına kayıyor, sayı+birim bölünmüyor; telefonda alt alta.
   - Yazdırma: kartlar gizli, yerine kısa tablo (Variante | Punkte | Ergebnis) 1. sayfada; „Karte anklicken“ cümlesi sadece ekranda.
-  - **Yazdırma hatası (kullanıcının PDF testi, 18.11.):** 280 cm, Wohngebäude, 100, alan 320 × 220 → 3 sayfa.
+  - **Yazdırma hatası (kullanıcının PDF testi, 17.11.):** 280 cm, Wohngebäude, 100, alan 320 × 220 → 3 sayfa.
     - Sebep 1: `.varianten { display: grid }` kuralı CSS'te `@media print` bloğundan sonra geliyordu ve yazdırmadaki `display: none`'ı eziyordu (aynı özgüllük, sonraki kural kazanır) → kartlar kâğıtta da görünüyordu. Çözüm: kart/tablo yazdırma kuralları dosyanın sonundaki ayrı bir `@media print` bloğunda.
     - Sebep 2: Kennwerte şeridi sayfalar arasında bölünüyordu → `break-inside: avoid` (şerit ve tablo satırları).
     - Sebep 3: kartlar gizlense de 1. sayfa ~250 px taşıyordu → yazdırmada yarım raster, tablolar 9 pt, başlık 18 pt, Kennwerte değerleri 13 pt.

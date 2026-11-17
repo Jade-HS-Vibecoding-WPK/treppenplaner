@@ -15,7 +15,7 @@
  */
 
 // Lichter Abstand zwischen den beiden Läufen der U-Treppe.
-// Annahme, kein Normwert (Festlegung des Nutzers, 18.11.).
+// Annahme, kein Normwert (Festlegung des Nutzers, 17.11.).
 const TREPPENAUGE = 10; // cm
 
 const TREPPENFORMEN = Object.freeze(["gerade", "L", "U"]);

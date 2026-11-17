@@ -78,8 +78,11 @@ und dann http://localhost:8000 im Browser öffnen.
 
 ## Quellen und Lizenzen
 
-- **DIN 18065:2020-08** „Gebäudetreppen“, Tabelle 1 (Steigung, Auftritt, Schrittmaßregel, nutzbare Laufbreite, Durchgangshöhe) – zitiert nach WEKA-Fachportal, **Original nicht eingesehen**.
-- **Baunetz Wissen**, Beiträge zu Podest und Treppenlauf (mit Verweis auf DIN 18065): mindestens 3 Steigungen je Lauf, Podest spätestens nach 18 Steigungen, Podestlänge ≥ Laufbreite – Original der Norm nicht eingesehen.
+- **DIN 18065:2020-08** „Gebäudetreppen“, Tabelle 1 (Steigung, Auftritt, nutzbare Laufbreite) – zitiert nach [WEKA-Fachportal](https://www.weka.de/architekten-ingenieure/din-18065/), **Original nicht eingesehen**.
+- **Schrittmaßregel 59–65 cm** nach DIN 18065 – **nicht an einer Quelle geprüft**.
+- **Baunetz Wissen** (mit Verweis auf DIN 18065, Original der Norm nicht eingesehen): mindestens 3 Steigungen je Lauf, Podest spätestens nach 18 Steigungen, Podestlänge ≥ Laufbreite.
+  - [Podest](https://www.baunetzwissen.de/glossar/p/podest-3468141)
+  - [Treppenlauf](https://www.baunetzwissen.de/treppen/fachwissen/treppenelemente/treppenlauf-3354185)
 - **Schriften:** Bitter und Nunito, SIL Open Font License 1.1, lokal in `fonts/` (`OFL-Bitter.txt`, `OFL-Nunito.txt`).
 - **Code:** MIT-Lizenz (siehe `LICENSE`).
 
@@ -91,7 +94,7 @@ und dann http://localhost:8000 im Browser öffnen.
 
 - **Code:** mit Claude Code (Claude Opus 5.5).
 - **Planung und Normrecherche:** mit Claude (Chat).
-- **Zeitraum:** 16.–17.11.2026.
+- **Zeitraum:** 16.–20.11.2026.
 
 **Wer hat was entschieden?**
 

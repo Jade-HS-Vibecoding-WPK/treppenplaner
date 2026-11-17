@@ -10,7 +10,7 @@
  *   4. Empfehlung = höchste Gesamtpunktzahl unter den nicht ausgeschlossenen Varianten.
  *
  * Die Gewichte und Bewertungsformeln sind KEINE Normwerte, sondern eine Festlegung
- * des Nutzers (18.11., siehe notlar.md). Ohne Texte: Schlüssel und Zahlen, Texte baut app.js.
+ * des Nutzers (17.11., siehe notlar.md). Ohne Texte: Schlüssel und Zahlen, Texte baut app.js.
  */
 
 // Gewichte in Prozent (Summe 100). Festlegung des Nutzers, kein Normwert.
