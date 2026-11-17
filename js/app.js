@@ -242,3 +242,7 @@ formular.addEventListener("submit", (ereignis) => {
 
   zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgabe));
 });
+
+// Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),
+// damit rechts gleich eine Beispieltreppe zu sehen ist. Ein Sprachwechsel zeichnet sie neu.
+formular.requestSubmit();

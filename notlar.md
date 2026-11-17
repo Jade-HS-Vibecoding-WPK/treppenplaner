@@ -6,6 +6,7 @@
 
 ## Benim kararlarım
 
+- Beim Öffnen wird sofort mit den Standardwerten gerechnet, damit man die Zeichnung als Erstes sieht (UX-Regel: Was sieht man zuerst?).
 - Keine externe API nötig (Rücksprache mit Lehrenden, 17.11.). Datenquelle: DIN 18065 mit Quellenangabe.
 - **Gestaltung (17.11., UI-Design dersi):** Dersten iki kural: bir stil seç, en az bir bilinçli tasarım kararını CLAUDE.md'ye yaz.
   - Stil-Prompt: „Swiss-inspiriert: strenges Raster, linksbündig, große Überschrift, viel Weißraum. Nur Schwarz, Weiß und ein Signalrot. Keine Schatten, keine runden Ecken. Schrift: Bitter für Überschriften, Nunito für Text.“
