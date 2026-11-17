@@ -270,6 +270,7 @@ function zeigeDruckEingabe(e) {
   }
 
   teile.push(t("druck.form", { wert: formText(e) })); // Formwahl ist im Druck ausgeblendet
+  teile.push(t("druck.material", { wert: t("material." + auswahl.material) })); // Materialwahl ebenso
 
   const zeile = document.getElementById("druckEingabe");
   const titel = document.createElement("strong");

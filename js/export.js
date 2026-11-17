@@ -39,8 +39,21 @@ function ladeHerunter(daten, dateiname, typ) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** Beschriftung „Material: Holz (Maße angenommen …)“ für DXF und SVG (am Bildschirm steht sie in der Legende). */
+function materialBeschriftung(ergebnis) {
+  return t("zeichnung.material", { wert: t("material." + materialVon(ergebnis).schluessel) });
+}
+
+/** Hängt die Materialzeile links unter die Zeichnung an (Ebene TEXT). */
+function mitMaterialzeile(elemente, ergebnis, cmProPx) {
+  const { min } = dxfAusdehnung(elemente);
+  const z = neueZeichenliste(cmProPx);
+  z.text([min[0], min[1] - 2 * SCHRIFTGROESSE * cmProPx], materialBeschriftung(ergebnis));
+  return [...elemente, ...z.elemente];
+}
+
 function exportiereDxf(ergebnis, zeichnung) {
-  const elemente = ZEICHNUNGEN[zeichnung](ergebnis, EXPORT_CM_PRO_PX);
+  const elemente = mitMaterialzeile(ZEICHNUNGEN[zeichnung](ergebnis, EXPORT_CM_PRO_PX), ergebnis, EXPORT_CM_PRO_PX);
   const strichelung = SVG_STRICHELUNG.split(" ").map((px) => Number(px) * EXPORT_CM_PRO_PX);
   const dxf = erzeugeDxf(elemente, strichelung);
   ladeHerunter(alsWindows1252(dxf), exportDateiname(ergebnis, zeichnung, "dxf"), "application/dxf");
@@ -73,6 +86,19 @@ function exportiereSvg(ergebnis, zeichnung) {
   const hintergrund = document.createElementNS(SVG_NS, "rect");
   for (const [name, wert] of [["width", "100%"], ["height", "100%"], ["fill", "#fff"]]) hintergrund.setAttribute(name, wert);
   kopie.prepend(hintergrund);
+
+  // Materialzeile unter der Zeichnung (am Bildschirm steht das Material in der Legende)
+  const hoehe = Number(kopie.getAttribute("height")) + 2 * SCHRIFTGROESSE;
+  const text = materialBeschriftung(ergebnis);
+  // schmale Grundrisse (L/U): Zeichenfläche so breit, dass die Zeile hineinpasst (geschätzte Textbreite)
+  const breite = Math.max(Number(kopie.getAttribute("width")), Math.ceil(16 + text.length * ZEICHENBREITE * SCHRIFTGROESSE));
+  kopie.setAttribute("width", breite);
+  kopie.setAttribute("height", hoehe);
+  kopie.setAttribute("viewBox", `0 0 ${breite} ${hoehe}`);
+  const zeile = document.createElementNS(SVG_NS, "text");
+  for (const [name, wert] of [["x", 8], ["y", hoehe - 8], ["fill", tinte], ["font-size", SCHRIFTGROESSE]]) zeile.setAttribute(name, wert);
+  zeile.textContent = text;
+  kopie.append(zeile);
 
   const svg = '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(kopie);
   ladeHerunter(svg, exportDateiname(ergebnis, zeichnung, "svg"), "image/svg+xml");

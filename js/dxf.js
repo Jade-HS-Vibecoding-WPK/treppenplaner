@@ -14,7 +14,9 @@ const DXF_MM_PRO_CM = 10;
 const DXF_NEUE_ZEILE = "\r\n";
 const DXF_LINIENTYP_GESTRICHELT = "GESTRICHELT";
 const DXF_FARBE = { standard: 7, fehlmass: 1 }; // AutoCAD-Farbindex: 7 = schwarz/weiß, 1 = rot
-const DXF_EBENEN = Object.values(EBENE);
+// Grundebenen stehen immer in der Ebenentabelle; Materialebenen (WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ …)
+// nur, wenn sie benutzt werden – Stahlbeton-Dateien bleiben wie bisher.
+const DXF_GRUNDEBENEN = [EBENE.treppe, EBENE.decke, EBENE.schraffur, EBENE.mass, EBENE.text, EBENE.lauflinie, EBENE.raum];
 
 // Verhältnis Versalhöhe : Schriftgrad (Helvetica ca. 0,72). Die DXF-Texthöhe ist die Versalhöhe,
 // der SVG-Schriftgrad die Kegelhöhe – so wirken beide Texte gleich groß. Typografischer Näherungswert.
@@ -155,7 +157,7 @@ function dxfKopf(s, ausdehnung) {
 }
 
 /** Tabellen: Linientypen, Ebenen, Textstil. strichelung = [Strich, Lücke] in cm. */
-function dxfTabellen(s, strichelung) {
+function dxfTabellen(s, strichelung, elemente) {
   s.paar(0, "SECTION").paar(2, "TABLES");
 
   const [strich, luecke] = strichelung.map((w) => w * DXF_MM_PRO_CM);
@@ -167,7 +169,8 @@ function dxfTabellen(s, strichelung) {
     .paar(49, dxfZahl(strich)).paar(49, dxfZahl(-luecke));
   s.paar(0, "ENDTAB");
 
-  const ebenen = ["0", ...DXF_EBENEN];
+  const benutzt = elemente.map((el) => el.ebene).filter((name) => !DXF_GRUNDEBENEN.includes(name));
+  const ebenen = ["0", ...DXF_GRUNDEBENEN, ...new Set(benutzt)];
   s.paar(0, "TABLE").paar(2, "LAYER").paar(70, ebenen.length);
   for (const name of ebenen) {
     s.paar(0, "LAYER").paar(2, name).paar(70, 0).paar(62, DXF_FARBE.standard).paar(6, "CONTINUOUS");
@@ -190,7 +193,7 @@ function dxfTabellen(s, strichelung) {
 function erzeugeDxf(elemente, strichelung) {
   const s = neuerDxfSchreiber();
   dxfKopf(s, dxfAusdehnung(elemente));
-  dxfTabellen(s, strichelung);
+  dxfTabellen(s, strichelung, elemente);
 
   s.paar(0, "SECTION").paar(2, "ENTITIES");
   for (const el of elemente) {
