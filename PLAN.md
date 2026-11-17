@@ -24,7 +24,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - [ ] Veröffentlichung auf GitHub Pages
-- [ ] README auf Deutsch
+- ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
 ### Could
 - [ ] Maßstabsfigur (menschliche Silhouette)
@@ -114,7 +114,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 7. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
 8. Antritts-/Austrittsfläche: in DIN 18065 bisher keine Regel gefunden (siehe `notlar.md`) – Original prüfen, falls zugänglich.
 9. Quelle für die Schnitthöhe ca. 1 m prüfen (vermutlich DIN 1356-1).
-10. README (Do): Hinweis „DXF: beim Import Einheit mm wählen“ aufnehmen (siehe `notlar.md`).
+10. ✅ README: Hinweis „DXF: beim Import Einheit mm wählen“ aufgenommen. Offen: README nach Freigabe durch den Nutzer pushen.
 
 ## Gestaltung (Di) – erledigt 17.11.
 

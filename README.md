@@ -1,2 +1,114 @@
-# treppenplaner
-Web-App zur Berechnung und Auswahl von Treppen nach DIN 18065
+# Treppenplaner
+
+Web-App für Architekturstudierende: Aus Geschosshöhe, Gebäudeart und verfügbarem Raum berechnet der Treppenplaner eine gerade, eine L- und eine U-Treppe, prüft sie nach DIN 18065 und empfiehlt die passendste. Jede Variante wird als Abwicklung und Grundriss gezeichnet und lässt sich als DXF, SVG oder PDF exportieren.
+
+**Live:** https://jade-hs-vibecoding-wpk.github.io/treppenplaner/
+
+![Treppenplaner: Eingabe links, Empfehlung und drei Variantenkarten rechts](docs/screenshot.png)
+
+*WPK Vibecoding KI-Werkstatt · Jade Hochschule · November 2026*
+
+## Funktionen
+
+| Funktion | Beschreibung |
+|---|---|
+| Treppenformen | Gerade Treppe, L-Treppe mit Viertelpodest (links/rechts), U-Treppe mit Halbpodest |
+| Normprüfung DIN 18065 | Steigung, Auftritt, Schrittmaßregel, nutzbare Laufbreite, Stufen je Lauf, Podestlänge – jede Zeile ✓ oder ✗ |
+| Raumprüfung | Passt die Treppe in die verfügbare Länge × Breite? Wenn nicht: Fehlmaß in cm, Überstand im Grundriss schraffiert |
+| Variantenvergleich | Drei Karten mit Mini-Grundriss, Punkten und Empfehlung mit Begründungssatz |
+| Hinweis „sehr steil“ | Bei s ≥ 19 cm oder a ≤ 24 cm (Hinweis, kein Normverstoß) |
+| Zeichnungen | Schnitt bzw. Abwicklung entlang der Lauflinie und Grundriss mit Stufennummern, Lauflinie und Maßketten |
+| Export | DXF (Schnitt und Grundriss getrennt), SVG, PDF über den Druckdialog |
+| Sprachen | Deutsch, Englisch, Französisch |
+
+## Wie rechnet der Treppenplaner?
+
+1. **Steigungszahl:** Für jede mögliche Anzahl Steigungen n gilt s = Geschosshöhe ÷ n. Der Auftritt folgt aus der Schrittmaßregel **2s + a = 63 cm** (Faustregel; zulässig sind 59–65 cm) und wird auf die Normgrenzen der Gebäudeart begrenzt. Bevorzugt wird die bequemste normgerechte Stufung (nahe 17/29 cm).
+2. **Aufteilung auf Läufe:** L- und U-Treppe teilen die Steigungen auf zwei Läufe auf; das Podest ersetzt einen Auftritt. Geprüft werden alle Aufteilungen, gewählt wird die normgerechte, die in den Raum passt und möglichst ausgewogen ist.
+3. **Podest-Regeln:** mindestens 3 Steigungen je Lauf; Podestlänge mindestens so groß wie die nutzbare Laufbreite; bei „Gebäude im Allgemeinen“ höchstens 18 Steigungen je Lauf (in Wohngebäuden mit bis zu zwei Wohnungen gilt diese Grenze nicht).
+4. **Ausschluss:** Eine Variante, die nicht in den Raum passt oder die Norm nicht erfüllt, wird vor der Bewertung ausgeschlossen. Passt die bequemste Stufung nicht, wird zuerst eine steilere, noch normgerechte versucht.
+5. **Bewertung:** Punkte 0–100 je Kriterium, gewichtet: **Komfort 40 %, Platz 30 %, Sicherheit 20 %, Nutzung 10 %.** Diese Gewichtung ist eine eigene Festlegung, **keine Normvorgabe**.
+   - Komfort: Abstand von s = 17 cm und a = 29 cm
+   - Platz: tatsächlich belegte Fläche (Läufe + Podest)
+   - Sicherheit: längste Folge von Steigungen ohne Podest (≤ 8 → 100, ≥ 18 → 0)
+   - Nutzung: Podest als Ruhepunkt (nur bei „Gebäude im Allgemeinen“)
+6. **Empfehlung:** die Variante mit der höchsten Punktzahl. Ist keine geeignet, zeigt das Tool „Keine Variante passt“ und die Variante, der am wenigsten fehlt.
+
+## So benutzt du das Tool
+
+1. **Werte eingeben:** Geschosshöhe, Gebäudeart, nutzbare Laufbreite und optional den verfügbaren Raum (Länge × Breite). Dann **Berechnen**.
+2. **Karten vergleichen:** Empfehlung, Punkte und Ausschlussgründe der drei Varianten lesen.
+3. **Variante anklicken:** Kennwerte, Zeichnungen und Normprüfung wechseln zur gewählten Variante (bei der L-Treppe Drehsinn links/rechts wählbar).
+4. **Exportieren:** DXF oder SVG für Schnitt und Grundriss, PDF über „Drucken“.
+
+**DXF-Import:** Einheit **mm**, Maßstab **1:1**. Die Beschriftung ist für 1:50 bemessen. In AutoCAD 2027 getestet (Ebenen, Maße, Texte, Schraffur, Höhenkoten); ArchiCAD und Revit noch nicht getestet.
+
+## Datenschutz
+
+Der Treppenplaner läuft vollständig im Browser. Es gibt keinen Server, keine Anmeldung, keine API-Schlüssel und keine Daten, die nach außen gesendet werden. Auch die Schriften liegen lokal im Projekt. Gespeichert wird nur die Sprachwahl (`localStorage` im eigenen Browser).
+
+## Technik
+
+Reines HTML, CSS und JavaScript, ohne Frameworks, ohne Build-Schritt und ohne Installation. Veröffentlicht über GitHub Pages.
+
+| Datei | Aufgabe |
+|---|---|
+| `js/norm.js` | Alle Grenzwerte der DIN 18065 an einer Stelle, jeder Wert mit Quelle. |
+| `js/berechnung.js` | Steigung, Auftritt und Schrittmaß für eine Stufenzahl; Wahl der besten Stufung. |
+| `js/treppenformen.js` | Aufteilung der Steigungen auf Läufe und Podest (gerade, L, U) und Normprüfung je Form. |
+| `js/raum.js` | Prüft, ob ein rechteckiger Platzbedarf in den verfügbaren Raum passt, und berechnet das Fehlmaß. |
+| `js/bewertung.js` | Variantenvergleich: Ausschluss, Punkte, Gewichte, Empfehlung und Hinweis „sehr steil“. |
+| `js/variantenkarten.js` | Zeigt Empfehlung, die drei Karten mit Mini-Grundriss und die Kurztabelle für den Druck. |
+| `js/elemente.js` | Gemeinsame Geometrieliste (Linie, Fläche, Text …) für Bildschirm und Export. |
+| `js/zeichnung.js` | Schnitt der geraden Treppe bzw. Abwicklung entlang der Lauflinie. |
+| `js/grundriss.js` | Grundriss mit Läufen, Podest, Stufennummern, Lauflinie, Raum und Maßketten. |
+| `js/svg-ausgabe.js` | Gibt eine Geometrieliste als SVG aus. |
+| `js/dxf.js` | Schreibt eine Geometrieliste als DXF R12 (mm, Ebenen, Windows-1252). |
+| `js/export.js` | Download von DXF und SVG, Drucken als PDF. |
+| `js/i18n.js` | Alle Texte auf Deutsch, Englisch und Französisch; Zahlenformat je Sprache. |
+| `js/app.js` | Verbindet Formular, Berechnung, Vergleich und Anzeige. |
+
+**Lokal testen:** Im Projektordner einen einfachen Webserver starten, z. B.
+
+```bash
+python -m http.server 8000
+```
+
+und dann http://localhost:8000 im Browser öffnen.
+
+## Quellen und Lizenzen
+
+- **DIN 18065:2020-08** „Gebäudetreppen“, Tabelle 1 (Steigung, Auftritt, Schrittmaßregel, nutzbare Laufbreite, Durchgangshöhe) – zitiert nach WEKA-Fachportal, **Original nicht eingesehen**.
+- **Baunetz Wissen**, Beiträge zu Podest und Treppenlauf (mit Verweis auf DIN 18065): mindestens 3 Steigungen je Lauf, Podest spätestens nach 18 Steigungen, Podestlänge ≥ Laufbreite – Original der Norm nicht eingesehen.
+- **Schriften:** Bitter und Nunito, SIL Open Font License 1.1, lokal in `fonts/` (`OFL-Bitter.txt`, `OFL-Nunito.txt`).
+- **Code:** MIT-Lizenz (siehe `LICENSE`).
+
+**Eigene Annahmen (keine Normwerte):** Laufplatte 18 cm, Geschossdecke 20 cm, Treppenauge der U-Treppe 10 cm, Grenzen für „sehr steil“ (s ≥ 19 cm oder a ≤ 24 cm), Zielwerte 17/29 cm und die Gewichtung der Bewertung. Platzbedarf vereinfacht: Laufbreite = nutzbare Laufbreite, ohne Wangen, Wandabstand sowie Antritts- und Austrittsfläche.
+
+> **Hinweis:** Der Treppenplaner ist eine Orientierungshilfe für Entwurf und Studium. Er ersetzt keine Prüfung nach der jeweiligen Landesbauordnung und keine Fachplanung.
+
+## Einsatz von KI
+
+- **Code:** mit Claude Code (Claude Opus 5.5).
+- **Planung und Normrecherche:** mit Claude (Chat).
+- **Zeitraum:** 16.–17.11.2026.
+
+**Wer hat was entschieden?**
+
+- **Von mir:** die Idee, die Gestaltungsentscheidungen (Swiss-Stil, Rot nur für Probleme, Layout, Schriften), die Gewichtung der Bewertung (von der KI vorgeschlagen, von mir geprüft und übernommen) sowie das Prüfen der Normwerte und der Ergebnisse von Hand – dabei habe ich u. a. einen Rundungsfehler gefunden.
+- **Von der KI:** die Programmierung und Vorschläge zu Umsetzung, Darstellung und Struktur.
+
+Der Arbeitsprozess ist nachvollziehbar in [`PLAN.md`](PLAN.md) (Plan und Stand), [`CLAUDE.md`](CLAUDE.md) (Regeln für die KI) und [`notlar.md`](notlar.md) (Entscheidungen, Recherche, auf Türkisch).
+
+## Ausblick
+
+- Kopfhöhe / lichte Durchgangshöhe (2,00 m) im Schnitt prüfen und darstellen
+- Maßstabsfigur (menschliche Silhouette) in Schnitt und Grundriss
+- Maßstäbliches Drucken (A4 quer, 1:50)
+- Gewendelte Stufen statt Podest
+- IFC-/3D-Export
+- Gewichtung der Kriterien durch den Nutzer
+
+## Autor und Lizenz
+
+**Osman Atıf Yıldız** · Lizenz: [MIT](LICENSE)
