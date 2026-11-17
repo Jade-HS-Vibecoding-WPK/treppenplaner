@@ -19,11 +19,32 @@ function cm(wert, maxStellen = 1) {
   return zahlFlexibel(wert, maxStellen, 1) + " cm";
 }
 
-/** Zulässiger Bereich als Text: {min, max} → „14–20 cm“, {min} → „≥ 80 cm“. */
-function grenzeText(grenze) {
-  return grenze.max != null
-    ? `${zahlFlexibel(grenze.min, 1)}–${zahlFlexibel(grenze.max, 1)} cm`
-    : `≥ ${zahlFlexibel(grenze.min, 1)} cm`;
+/**
+ * Zulässiger Bereich als Text: {min, max} → „14–20 cm“, {min} → „≥ 80 cm“, {max} → „≤ 18“.
+ * einheit "anzahl" (z. B. Steigungen je Lauf) ohne „cm“.
+ */
+function grenzeText(grenze, einheit = "cm") {
+  const z = (wert) => zahlFlexibel(wert, 1);
+  const suffix = einheit === "anzahl" ? "" : " cm";
+  if (grenze.min != null && grenze.max != null) return `${z(grenze.min)}–${z(grenze.max)}${suffix}`;
+  if (grenze.min != null) return `≥ ${z(grenze.min)}${suffix}`;
+  return `≤ ${z(grenze.max)}${suffix}`;
+}
+
+/** Wert einer Prüfzeile: Längen mit bis zu 2 Nachkommastellen, Anzahlen ganzzahlig. */
+function pruefwertText(p) {
+  return p.einheit === "anzahl" ? String(p.wert) : cm(p.wert, 2);
+}
+
+/** Gesamturteil: erst die Stufen, dann die Laufbreite, dann die Aufteilung auf Läufe. */
+function urteilText(e) {
+  if (e.normgerecht) return t("urteil.normgerecht");
+  if (!e.stufenNormgerecht) return t("urteil.keineLoesung");
+  if (!e.laufbreiteNormgerecht) return t("urteil.laufbreite");
+  if (e.form === "gerade") {
+    return t("urteil.podestNoetig", { max: DIN18065.gebaeudearten[e.gebaeudeart].maxSteigungenJeLauf });
+  }
+  return t("urteil.laeufe");
 }
 
 // Letzte Fehlermeldung als Schlüssel, damit sie beim Sprachwechsel neu übersetzt werden kann.
@@ -53,20 +74,14 @@ function zeigeErgebnis(e) {
   setzeText("lauflaenge", cm(e.lauflaenge));
 
   const urteil = document.getElementById("gesamturteil");
-  if (e.normgerecht) {
-    urteil.textContent = t("urteil.normgerecht");
-  } else if (!e.stufenNormgerecht) {
-    urteil.textContent = t("urteil.keineLoesung");
-  } else {
-    urteil.textContent = t("urteil.laufbreite");
-  }
+  urteil.textContent = urteilText(e);
   urteil.className = "urteil " + (e.normgerecht ? "ok" : "nicht-ok");
 
   const tbody = document.getElementById("pruefungen");
   tbody.replaceChildren();
   for (const p of e.pruefungen) {
     const ergebnis = p.ok ? t("pruefung.erfuellt") : t("pruefung.nichtErfuellt");
-    fuegePruefzeileHinzu(tbody, [t("kriterium." + p.kriterium), cm(p.wert, 2), grenzeText(p.grenze), ergebnis], p.ok);
+    fuegePruefzeileHinzu(tbody, [t("kriterium." + p.kriterium), pruefwertText(p), grenzeText(p.grenze, p.einheit), ergebnis], p.ok);
   }
 
   zeigeRaumpruefung(tbody, e.raum);
@@ -267,7 +282,7 @@ formular.addEventListener("submit", (ereignis) => {
     raumVorgabe[schluessel] = wert;
   }
 
-  zeigeErgebnis(berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgabe));
+  zeigeErgebnis(berechneTreppe("gerade", null, { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe }));
 });
 
 // Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),

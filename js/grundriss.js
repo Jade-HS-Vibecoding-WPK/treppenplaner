@@ -225,7 +225,7 @@ function grundrissMassElemente(z, geo) {
 
 /**
  * Elementliste des Grundrisses in cm.
- * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {object} ergebnis Rückgabe von berechneTreppe()
  * @param {number} cmProPx Umrechnung der Beschriftungsgrößen (px) in cm
  */
 function grundrissElemente(ergebnis, cmProPx) {
@@ -253,7 +253,7 @@ function grundrissElemente(ergebnis, cmProPx) {
 /**
  * Zeichnet den Grundriss der berechneten Treppe.
  * @param {SVGSVGElement} svg
- * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {object} ergebnis Rückgabe von berechneTreppe()
  * @param {object} abb Abbildung des Schnitts (Rückgabe von zeichneSchnitt())
  */
 function zeichneGrundriss(svg, ergebnis, abb) {

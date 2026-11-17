@@ -16,6 +16,19 @@ const DIN18065 = Object.freeze({
     max: 65,
   }),
 
+  // Treppenlauf: mindestens 3 Stufen, gezählt als Steigungen.
+  // Quelle: Baunetz Wissen „Treppen“ (mit Verweis auf DIN 18065), Original nicht eingesehen
+  // TODO: Quelle prüfen (zählt die Norm Steigungen oder Auftritte?)
+  treppenlauf: Object.freeze({
+    minSteigungen: 3,
+  }),
+
+  // Podestlänge ≥ nutzbare Laufbreite (Faktor 1 × Laufbreite).
+  // Quelle: Baunetz Wissen „Treppen“ (mit Verweis auf DIN 18065), Original nicht eingesehen
+  podest: Object.freeze({
+    minLaengeJeLaufbreite: 1,
+  }),
+
   gebaeudearten: Object.freeze({
     wohngebaeude: Object.freeze({
       // Normbegriff (deutsch). Angezeigt wird der Text aus i18n.js („gebaeudeart.wohngebaeude“).
@@ -36,6 +49,11 @@ const DIN18065 = Object.freeze({
       // Lichte Durchgangshöhe: ≥ 200 cm
       // Quelle: DIN 18065:2020-08 (zitiert nach WEKA-Fachportal, Original nicht eingesehen)
       durchgangshoeheMin: 200,
+
+      // Podest spätestens nach 18 Steigungen: gilt hier nicht (Ausnahme für Wohngebäude
+      // mit bis zu zwei Wohnungen). null = keine Begrenzung.
+      // Quelle: Baunetz Wissen „Treppen“ (mit Verweis auf DIN 18065), Original nicht eingesehen
+      maxSteigungenJeLauf: null,
     }),
 
     allgemein: Object.freeze({
@@ -57,6 +75,10 @@ const DIN18065 = Object.freeze({
       // Lichte Durchgangshöhe: ≥ 200 cm
       // Quelle: DIN 18065:2020-08 (zitiert nach WEKA-Fachportal, Original nicht eingesehen)
       durchgangshoeheMin: 200,
+
+      // Podest spätestens nach 18 Steigungen (höchstens 18 Steigungen je Lauf).
+      // Quelle: Baunetz Wissen „Treppen“ (mit Verweis auf DIN 18065), Original nicht eingesehen
+      maxSteigungenJeLauf: 18,
     }),
   }),
 });

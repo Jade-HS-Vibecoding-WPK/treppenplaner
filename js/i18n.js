@@ -54,13 +54,19 @@ const TEXTE = {
     "ergebnis.lauflaenge": "Lauflänge (Grundriss)",
     "urteil.normgerecht": "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065.",
     "urteil.keineLoesung":
-      "✗ Für diese Geschosshöhe ist keine normgerechte gerade Treppe möglich. Gezeigt wird die nächstliegende Lösung.",
+      "✗ Für diese Geschosshöhe ist keine normgerechte Stufenfolge möglich. Gezeigt wird die nächstliegende Lösung.",
     "urteil.laufbreite": "✗ Die nutzbare Laufbreite unterschreitet das Mindestmaß nach DIN 18065.",
+    "urteil.podestNoetig":
+      "✗ Mehr als {max} Steigungen ohne Podest – für Gebäude im Allgemeinen ist ein Podest nötig (L- oder U-Treppe).",
+    "urteil.laeufe": "✗ Die Aufteilung auf die Läufe erfüllt die Anforderungen nicht (siehe Normprüfung).",
 
     "kriterium.steigung": "Steigung s",
     "kriterium.auftritt": "Auftritt a",
     "kriterium.schrittmass": "Schrittmaß 2s + a",
     "kriterium.laufbreite": "Nutzbare Laufbreite",
+    "kriterium.laufMin": "Steigungen je Lauf (mind.)",
+    "kriterium.laufMax": "Steigungen je Lauf ohne Podest",
+    "kriterium.podestlaenge": "Podestlänge",
 
     "pruefung.titel": "Normprüfung",
     "pruefung.kriterium": "Kriterium",
@@ -153,13 +159,19 @@ const TEXTE = {
     "ergebnis.lauflaenge": "Total going (plan)",
     "urteil.normgerecht": "✓ The stair meets the checked requirements of DIN 18065.",
     "urteil.keineLoesung":
-      "✗ No straight stair complying with DIN 18065 is possible for this storey height. The closest solution is shown.",
+      "✗ No step sequence complying with DIN 18065 is possible for this storey height. The closest solution is shown.",
     "urteil.laufbreite": "✗ The clear width is below the minimum required by DIN 18065.",
+    "urteil.podestNoetig":
+      "✗ More than {max} risers without a landing – buildings in general need a landing (L- or U-shaped stair).",
+    "urteil.laeufe": "✗ The division into flights does not meet the requirements (see standard check).",
 
     "kriterium.steigung": "Rise s",
     "kriterium.auftritt": "Going a",
     "kriterium.schrittmass": "2R + G rule (2s + a)",
     "kriterium.laufbreite": "Clear width",
+    "kriterium.laufMin": "Risers per flight (min.)",
+    "kriterium.laufMax": "Risers per flight without landing",
+    "kriterium.podestlaenge": "Landing length",
 
     "pruefung.titel": "Check against DIN 18065",
     "pruefung.kriterium": "Criterion",
@@ -254,14 +266,20 @@ const TEXTE = {
     "ergebnis.lauflaenge": "Reculement (vue en plan)",
     "urteil.normgerecht": "✓ L'escalier satisfait aux exigences vérifiées de la DIN 18065.",
     "urteil.keineLoesung":
-      "✗ Aucun escalier droit conforme à la DIN 18065 n'est possible pour cette hauteur d'étage. " +
+      "✗ Aucune suite de marches conforme à la DIN 18065 n'est possible pour cette hauteur d'étage. " +
       "La solution la plus proche est affichée.",
     "urteil.laufbreite": "✗ L'emmarchement est inférieur au minimum exigé par la DIN 18065.",
+    "urteil.podestNoetig":
+      "✗ Plus de {max} marches sans palier – les bâtiments en général exigent un palier (escalier en L ou en U).",
+    "urteil.laeufe": "✗ La répartition en volées ne satisfait pas aux exigences (voir vérification).",
 
     "kriterium.steigung": "Hauteur de marche s",
     "kriterium.auftritt": "Giron a",
     "kriterium.schrittmass": "Formule de Blondel (2s + a)",
     "kriterium.laufbreite": "Emmarchement (largeur utile)",
+    "kriterium.laufMin": "Marches par volée (min.)",
+    "kriterium.laufMax": "Marches par volée sans palier",
+    "kriterium.podestlaenge": "Longueur du palier",
 
     "pruefung.titel": "Vérification selon la DIN 18065",
     "pruefung.kriterium": "Critère",

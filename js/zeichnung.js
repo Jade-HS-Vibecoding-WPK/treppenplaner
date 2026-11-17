@@ -103,7 +103,7 @@ function erstelleAbbildung(bereich, breitePx, kMin) {
 
 /**
  * Elementliste des Schnitts in cm.
- * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {object} ergebnis Rückgabe von berechneTreppe()
  * @param {number} cmProPx Umrechnung der Beschriftungsgrößen (px) in cm
  */
 function schnittElemente(ergebnis, cmProPx) {
@@ -170,7 +170,7 @@ function schnittElemente(ergebnis, cmProPx) {
 /**
  * Zeichnet den Schnitt der berechneten Treppe in das übergebene SVG-Element.
  * @param {SVGSVGElement} svg
- * @param {object} ergebnis Rückgabe von berechneGeradeTreppe()
+ * @param {object} ergebnis Rückgabe von berechneTreppe()
  * @param {number} breitePx sichtbare Breite der Zeichenfläche
  * @returns Abbildung (Maßstab, x-Lage) – der Grundriss liegt mit gleichem Maßstab darunter.
  */

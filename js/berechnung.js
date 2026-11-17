@@ -1,5 +1,5 @@
 /*
- * berechnung.js – Berechnung und Normprüfung einer geraden Treppe.
+ * berechnung.js – Steigung, Auftritt und Normprüfung der Stufen (für alle Treppenformen).
  * Unabhängig von der Oberfläche; liest Grenzwerte nur aus DIN18065 (norm.js).
  *
  * Alle Werte werden exakt (ungerundet) berechnet und geprüft.
@@ -97,45 +97,20 @@ function pruefeLaufbreite(laufbreite, grenzen) {
 }
 
 /**
- * Hauptfunktion: findet die beste gerade Treppe für eine Geschosshöhe.
+ * Alle sinnvollen Stufenzahlen für eine Geschosshöhe, die beste zuerst
+ * (eine mehr als die flachste zulässige). Unabhängig von der Treppenform:
+ * Die Form teilt die Steigungen nur auf Läufe auf (treppenformen.js).
  * @param {number} geschosshoehe in cm
- * @param {string} gebaeudeart Schlüssel aus DIN18065.gebaeudearten
- * @param {number} laufbreite nutzbare Laufbreite in cm (Eingabe des Nutzers)
- * @param {{laenge: number|null, breite: number|null}} [raumVorgabe] verfügbare Fläche (optional)
+ * @param {object} grenzen Grenzwerte der Gebäudeart (DIN18065.gebaeudearten[…])
  */
-function berechneGeradeTreppe(geschosshoehe, gebaeudeart, laufbreite, raumVorgabe = null) {
-  const grenzen = DIN18065.gebaeudearten[gebaeudeart];
-
-  // Alle sinnvollen Stufenzahlen durchprobieren (eine mehr als die flachste zulässige).
+function stufenKandidaten(geschosshoehe, grenzen) {
   const maxN = Math.ceil(geschosshoehe / grenzen.steigung.min) + 1;
-  let beste = null;
+  const kandidaten = [];
   for (let n = 1; n <= maxN; n++) {
     const variante = varianteFuerStufenzahl(geschosshoehe, n, grenzen);
     variante.punkte = bewertung(variante, grenzen);
-    if (!beste || variante.punkte < beste.punkte) beste = variante;
+    kandidaten.push(variante);
   }
-
-  const anzahlAuftritte = beste.anzahlSteigungen - 1; // gerade Treppe: n − 1 Auftritte
-  const stufenPruefungen = pruefeVariante(beste, grenzen);
-  const pruefungen = [...stufenPruefungen, pruefeLaufbreite(laufbreite, grenzen)];
-  const lauflaenge = anzahlAuftritte * beste.auftritt;
-
-  // Footprint der geraden Treppe, vereinfacht: Breite = nutzbare Laufbreite.
-  const raum = pruefeRaum({ laenge: lauflaenge, breite: laufbreite }, raumVorgabe);
-
-  return {
-    gebaeudeart, // Eingabe, für die Druckzeile „Eingabe“
-    geschosshoehe,
-    laufbreite,
-    anzahlSteigungen: beste.anzahlSteigungen,
-    anzahlAuftritte,
-    steigung: beste.steigung,
-    auftritt: beste.auftritt,
-    schrittmass: beste.schrittmass,
-    lauflaenge,
-    pruefungen,
-    raum, // null ohne Raumvorgabe; keine Normprüfung, fließt nicht in „normgerecht“ ein
-    stufenNormgerecht: stufenPruefungen.every((p) => p.ok),
-    normgerecht: pruefungen.every((p) => p.ok),
-  };
+  // stabil sortiert: bei Gleichstand bleibt die kleinere Stufenzahl vorn (wie bisher)
+  return kandidaten.sort((p, q) => p.punkte - q.punkte);
 }
