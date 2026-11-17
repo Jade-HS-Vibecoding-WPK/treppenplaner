@@ -83,6 +83,8 @@
   - U'da Holz Wange'leri Auge'nin içinde birbirine değiyor. Lejantta „vereinfacht: bei Holz wäre ein Treppenauge ≥ 12 cm nötig“ notu var. Malzemeye göre Auge: README Ausblick'te.
   - Taramalar vereinfacht, notu da var: Stahlbeton 45°, Holz lif yönünde (Trittstufe boyunca), Stahl tam siyah. DIN 1356-1 / DIN ISO 128'deki tam gösterim doğrulanmadı.
   - Spindeltreppe yarın ayrı bir adımda yapılacak ve aynı malzeme mantığını kullanacak.
+  - Holz'da Treppenauge çakışması (2×6 > 10 cm) bilerek düzeltilmedi, notta belirtildi; zaman nedeniyle Spindeltreppe öncelikli (17.11.).
+  - Görsel kontrolden sonra (17.11.): Holz kesitinde Trittstufe'ler boş kutu gibi görünüyordu → tarama daha sık ve kalın (2 px, 0,6 px), kontur 1,5 px; Stahl ve Stahlbeton değişmedi. Grundriss'te Schnittlinie'nin üstündeki Wange çizgileri her yerde kesik olmalı.
 
 ## Yapay zekânın kararları
 
@@ -96,6 +98,7 @@
   - DXF: yeni katmanlar sadece kullanılıyorsa tabloda; Stahlbeton dosyaları aynı katmanlarla kalıyor. Çelik dolgu `SOLID` (4 köşe). DXF ve SVG'de çizimin altında „Material: … (Maße angenommen, keine Normwerte)“ satırı var (ekranda bu bilgi lejantta).
   - Hata bulundu: SVG'de tarama açısı sadece 45°'de doğruydu (desen dikey + `rotate(winkel)`). Düzeltme `rotate(90 − winkel)`; 45° aynı kaldığı için Stahlbeton değişmedi.
   - Lejantlardaki 18 / 20 cm artık `material.js` ve `DECKENDICKE`'den geliyor (sözlükte sabit sayı yok).
+  - Düzeltme (17.11., kullanıcının kontrolü): Grundriss'te Wange kenarları üst üste biniyordu. (a) U/Holz'da iki kolun Auge'deki Wange'leri aynı çizgiyi paylaşıyor; iki ayrı kesik çizgi üst üste binince düz görünüyordu. Başka bir kenarın üstüne düşen kenar artık çizilmiyor, alt kolun kenarı kalıyor. (b) L/U iç köşesinde kısa Podest parçası Wange mesafesinden kısaydı, paralel çizgi köşeyi 6 cm geçip geri dönüyordu. Lauflinie'nin aynı doğrultudaki parçaları artık birleştiriliyor; birleşen parça kolun pfadIndex'ini alıyor. Kontrol: 2808 durumda üst üste binen kenar yok, 24.636 kenarın düz/kesik durumu Schnittlinie'ye göre doğru.
 
 - **Treppenformen – teknik (17.11., Parça A):**
   - s ve a forma bağlı değil (`stufenKandidaten()` en iyi Stufung'u veriyor); form sadece kollara bölüyor. Lauf i: nᵢ Steigung, nᵢ − 1 Auftritt; Podest bir Auftritt'in yerine geçiyor.

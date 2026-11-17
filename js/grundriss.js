@@ -361,6 +361,22 @@ function lauflinienPfad(laeufe, podest) {
   const anhaengen = (p, pfadIndex) => {
     const letzter = punkte[punkte.length - 1];
     if (Math.hypot(p[0] - letzter[0], p[1] - letzter[1]) <= RECHENTOLERANZ) return;
+    // Geradeaus weiter (z. B. Lauf → Podest): Abschnitte zusammenfassen. Sonst wäre der kurze
+    // Podestabschnitt an der Innenecke kürzer als der Wangenabstand und die Parallele liefe
+    // über die Ecke hinaus und zurück. Der Abschnitt behält den Pfadindex des Laufs (gerade Zahl),
+    // damit er an der Schnittlinie richtig geteilt wird.
+    const k = punkte.length - 1;
+    if (k > 0) {
+      const vorher = punkte[k - 1];
+      const kreuz = (letzter[0] - vorher[0]) * (p[1] - letzter[1]) - (letzter[1] - vorher[1]) * (p[0] - letzter[0]);
+      const skalar = (letzter[0] - vorher[0]) * (p[0] - letzter[0]) + (letzter[1] - vorher[1]) * (p[1] - letzter[1]);
+      const laengen = Math.hypot(letzter[0] - vorher[0], letzter[1] - vorher[1]) * Math.hypot(p[0] - letzter[0], p[1] - letzter[1]);
+      if (Math.abs(kreuz) <= 1e-9 * laengen && skalar > 0) {
+        punkte[k] = p;
+        if (pfadIndex % 2 === 0) index[k - 1] = pfadIndex;
+        return;
+      }
+    }
     punkte.push(p);
     index.push(pfadIndex);
   };
@@ -406,8 +422,27 @@ function wangenGeometrie(form, laeufe, podest, B, material) {
     const aussen = parallelePfad(pfad.punkte, seite * (B / 2 + d));
     const kanten = [[innen[0], aussen[0], pfad.index[0]], [innen[letzte], aussen[letzte], pfad.index[letzte - 1]]];
     for (let k = 0; k < letzte; k++) kanten.push([aussen[k], aussen[k + 1], pfad.index[k]]);
-    return kanten.filter(([p, q]) => Math.hypot(q[0] - p[0], q[1] - p[1]) > RECHENTOLERANZ);
+    // Kanten, die ganz auf einer früheren liegen, entfallen: z. B. stoßen bei der Holz-U-Treppe die
+    // Wangen am Treppenauge aneinander – sonst überlagern sich die Strichelungen beider Läufe und
+    // die Kante wirkt über der Schnittebene durchgezogen. Es bleibt die Kante des unteren Laufs.
+    const behalten = [];
+    for (const k of kanten) {
+      const [p, q] = k;
+      if (Math.hypot(q[0] - p[0], q[1] - p[1]) <= RECHENTOLERANZ) continue;
+      if (behalten.some(([a, b]) => liegtAufStrecke(p, a, b) && liegtAufStrecke(q, a, b))) continue;
+      behalten.push(k);
+    }
+    return behalten;
   });
+}
+
+/** Liegt Punkt p auf der Strecke a–b (Toleranz 0,01 mm)? */
+function liegtAufStrecke(p, a, b) {
+  const laenge = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const abstand = Math.abs((b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])) / laenge;
+  const anteil = ((p[0] - a[0]) * (b[0] - a[0]) + (p[1] - a[1]) * (b[1] - a[1])) / (laenge * laenge);
+  const tol = 1e-3;
+  return abstand <= tol && anteil >= -tol / laenge && anteil <= 1 + tol / laenge;
 }
 
 /** Wangen: fein wie die Treppenkanten, über der Schnittebene gestrichelt. */

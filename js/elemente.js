@@ -50,10 +50,10 @@ function neueZeichenliste(cmProPx) {
     kreis: (ebene, mitte, radius, breite) => neu({ typ: "kreis", ebene, mitte, radius, breite }),
     /**
      * Linienschraffur innerhalb eines geschlossenen Umrisses (ohne Umrisslinie).
-     * Standard: 45°, Abstand SCHRAFFUR_ABSTAND px; Materialien (material.js) geben winkel/abstandPx vor.
+     * Standard: 45°, Abstand SCHRAFFUR_ABSTAND px; Materialien (material.js) geben winkel/abstandPx/breite vor.
      */
-    schraffur: (ebene, umriss, { winkel = 45, abstandPx = SCHRAFFUR_ABSTAND } = {}) => neu({
-      typ: "schraffur", ebene, umriss, winkel, abstand: abstandPx * cmProPx, breite: STRICH.schraffur,
+    schraffur: (ebene, umriss, { winkel = 45, abstandPx = SCHRAFFUR_ABSTAND, breite = STRICH.schraffur } = {}) => neu({
+      typ: "schraffur", ebene, umriss, winkel, abstand: abstandPx * cmProPx, breite,
     }),
     /** Text; position = Grundlinie, ausrichtung "links" | "mitte" | "rechts", drehung in Grad (gegen den Uhrzeigersinn). */
     text: (position, inhalt, optionen = {}) => neu({

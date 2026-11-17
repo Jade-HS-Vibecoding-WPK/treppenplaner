@@ -90,7 +90,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Materialwahl (17.11., Wunsch der Betreuung): `js/material.js` (Konstruktion, Bauteilmaße als Annahmen, Schraffur; Zugriff nur über `materialVon()`, `bauteil()`, `materialSchraffur()`, `geschnittenesBauteil()` – für die Spindeltreppe wiederverwendbar); Schalter „Material: Stahlbeton | Holz | Stahl“ über den Zeichnungen (Standard Stahlbeton, im Druck ausgeblendet); Holz/Stahl als Wangentreppe: offene Trittstufen 5 / 4 cm geschnitten (Holz Linien längs, Stahl voll), Wange 6 × 30 / 1,5 × 25 cm in Ansicht als Band, Podestbelag wie Trittstufen, obere Decke Stahlbeton; Grundriss: Wangen außerhalb der Laufbreite (Gehrung, U: am Auge aneinanderstoßend bei Holz); Legenden aus `material.js` (DE/EN/FR) mit „Annahmen“, „Schraffur vereinfacht“, „Prüfung offener Stufen nicht enthalten“; DXF-Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ, SCHRAFFUR_STAHL (nur wenn benutzt), Materialzeile in DXF/SVG, Druckzeile mit Material; Normprüfung, Raumprüfung und Bewertung unverändert
 - ✅ Konsolentests Material: Stahlbeton-Elementlisten in 96 Fällen identisch; 2592 Schnitte und 5616 Grundrisse (Holz/Stahl) ohne NaN, alle Trittstufen innerhalb der Wange; DXF in 18 Fällen (Ebenen, SOLID, Materialzeile); Schalter bei 375 px in DE/EN/FR ohne Überlauf. Nebenbei korrigiert: SVG-Schraffurwinkel (bisher nur 45° richtig)
 
-**Stand 17.11., Materialwahl fertig** – Sichtprüfung durch den Nutzer steht aus (Holz/Stahl, gerade/L/U, DXF in AutoCAD).
+- ✅ Nach der Sichtprüfung (Nutzer, U 275 / Wohngebäude / 80): Holz-Trittstufen deutlicher (Schraffur 2 px / 0,6 px, Kontur 1,5 px, auch DXF SCHRAFFUR_HOLZ); Wangen im Grundriss über der Schnittebene überall gestrichelt (überlagerte Kanten am Treppenauge entfernt, Innenecke L/U korrigiert). Treppenauge 10 cm bei Holz bewusst nicht geändert (Hinweis in Legende und README-Ausblick).
+
+**Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
 
@@ -117,7 +119,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 **Do 18.11.**
 - Spindeltreppe als 4. Variante (eigener Schritt, Plan vorher abstimmen; nutzt `js/material.js`, je Material ein Eintrag `spindel` ergänzen)
-- Sichtprüfung Materialwahl (Nutzer)
+- ✅ Sichtprüfung Materialwahl (Nutzer)
+- DXF mit Holz/Stahl in AutoCAD prüfen (Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ/STAHL, SOLID)
 
 **Später / offen**
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).

@@ -34,8 +34,10 @@ const MATERIALIEN = {
       wange: { dicke: 6, hoehe: 30, ueberstand: 5 }, // cm – Annahme (Nutzer, 17.11.), kein Normwert;
       // ueberstand = Oberkante Wange über der Linie der Stufenvorderkanten (senkrecht zur Steigung)
     },
-    // Linien parallel zur Faser (längs der Trittstufe) – vereinfacht, Darstellung nicht normgeprüft
-    schraffur: { art: "linien", winkel: 0, abstand: 3 },
+    // Linien parallel zur Faser (längs der Trittstufe), dicht und etwas kräftiger, damit die dünne
+    // Trittstufe als geschnitten lesbar ist – vereinfacht, Darstellung nicht normgeprüft
+    schraffur: { art: "linien", winkel: 0, abstand: 2, breite: 0.6 },
+    schnittkontur: 1.5, // px, kräftiger als STRICH.schnitt (Darstellung, kein Normwert)
   },
   stahl: {
     schluessel: "stahl",
@@ -81,12 +83,12 @@ function materialSchraffur(z, material, umriss) {
   if (s.art === "voll") {
     z.flaeche(ebene, umriss, STRICH.schraffur);
   } else {
-    z.schraffur(ebene, umriss, { winkel: s.winkel, abstandPx: s.abstand });
+    z.schraffur(ebene, umriss, { winkel: s.winkel, abstandPx: s.abstand, breite: s.breite });
   }
 }
 
-/** Geschnittenes Bauteil (z. B. Trittstufe): Materialschraffur und Umriss in Schnittstrichstärke. */
+/** Geschnittenes Bauteil (z. B. Trittstufe): Materialschraffur und Umriss (Schnittstrich, bei Holz kräftiger). */
 function geschnittenesBauteil(z, material, ebene, umriss) {
   materialSchraffur(z, material, umriss);
-  z.polylinie(ebene, umriss, STRICH.schnitt, { geschlossen: true });
+  z.polylinie(ebene, umriss, material.schnittkontur ?? STRICH.schnitt, { geschlossen: true });
 }
