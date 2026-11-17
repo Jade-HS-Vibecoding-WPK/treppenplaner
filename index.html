@@ -67,20 +67,25 @@
       <!-- Nur im Druck sichtbar: dort ist das Formular ausgeblendet (Inhalt aus app.js) -->
       <p id="druckEingabe" class="druck-eingabe"></p>
       <h2 data-i18n="ergebnis.titel">Ergebnis</h2>
+
+      <!-- Variantenvergleich: Empfehlung, drei Karten (Bildschirm) bzw. Tabelle (Druck); Inhalt aus app.js -->
+      <p id="empfehlung" class="urteil empfehlung"></p>
+      <div id="varianten" class="varianten" role="group" data-i18n-aria="formwahl.label" aria-label="Treppenform"></div>
+      <table id="vergleichDruck" class="pruefung vergleich-druck">
+        <thead>
+          <tr>
+            <th data-i18n="vergleich.variante">Variante</th>
+            <th data-i18n="vergleich.punkte">Punkte</th>
+            <th data-i18n="vergleich.ergebnis">Ergebnis</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="gewichteHinweis" class="hinweis"></p>
+
+      <!-- Urteil und Kennwerte der gewählten Variante -->
       <p id="gesamturteil" class="urteil"></p>
       <p id="raumurteil" class="urteil" hidden></p>
-
-      <!-- Wahl der Treppenform (vorläufig; wird zum Variantenvergleich mit Karten) -->
-      <div class="formwahl" role="group" data-i18n-aria="formwahl.label" aria-label="Treppenform">
-        <button type="button" data-form="gerade" aria-pressed="true" data-i18n="form.gerade">Gerade Treppe</button>
-        <button type="button" data-form="L" aria-pressed="false" data-i18n="form.L">L-Treppe</button>
-        <span class="richtungwahl" hidden>
-          <button type="button" data-richtung="links" aria-pressed="true" data-i18n="richtung.links">links</button>
-          <span aria-hidden="true">|</span>
-          <button type="button" data-richtung="rechts" aria-pressed="false" data-i18n="richtung.rechts">rechts</button>
-        </span>
-        <button type="button" data-form="U" aria-pressed="false" data-i18n="form.U">U-Treppe</button>
-      </div>
 
       <!-- Kennwerte als Leiste: Bezeichnung klein, Wert groß -->
       <dl class="kennwerte">
@@ -162,10 +167,12 @@
   <script src="js/berechnung.js"></script>
   <script src="js/raum.js"></script>
   <script src="js/treppenformen.js"></script>
+  <script src="js/bewertung.js"></script>
   <script src="js/elemente.js"></script>
   <script src="js/svg-ausgabe.js"></script>
   <script src="js/zeichnung.js"></script>
   <script src="js/grundriss.js"></script>
+  <script src="js/variantenkarten.js"></script>
   <script src="js/app.js"></script>
   <script src="js/dxf.js"></script>
   <script src="js/export.js"></script>

@@ -59,6 +59,7 @@ function zeigeFehler(schluessel, werte = {}) {
   fehlerAnzeige.hidden = false;
   ergebnisBlock.hidden = true;
   letztesErgebnis = null;
+  letzterVergleich = null;
 }
 
 function setzeText(id, text) {
@@ -155,12 +156,17 @@ function fehlmass(wert) {
   return zahlFlexibel(fehlmassAufgerundet(wert), 1) + NBSP + "cm";
 }
 
-/** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ (Satzbau je Sprache in i18n.js) */
-function fehltText(fehlt) {
+/** Fehlmaße als Aufzählung, z. B. „84 cm Länge und 10 cm Breite“ (Satzbau je Sprache in i18n.js). */
+function fehltTeile(fehlt) {
   const teile = [];
   if (fehlt.laenge > 0) teile.push(t("raum.fehltLaenge", { wert: fehlmass(fehlt.laenge) }));
   if (fehlt.breite > 0) teile.push(t("raum.fehltBreite", { wert: fehlmass(fehlt.breite) }));
-  return t("raum.fehlt", { teile: teile.join(t("raum.und")) });
+  return teile.join(t("raum.und"));
+}
+
+/** Text wie „Es fehlen 84 cm Länge und 10 cm Breite.“ */
+function fehltText(fehlt) {
+  return t("raum.fehlt", { teile: fehltTeile(fehlt) });
 }
 
 /** Zeile „Passt in den Raum“ und Raumurteil – getrennt von der Normprüfung. */
@@ -281,8 +287,8 @@ document.addEventListener("sprachwechsel", () => {
   aktualisiereLaufbreiteHinweis();
   if (letzterFehler) {
     fehlerAnzeige.textContent = t(letzterFehler.schluessel, letzterFehler.werte);
-  } else if (letztesErgebnis) {
-    zeigeErgebnis(letztesErgebnis);
+  } else if (letzterVergleich) {
+    zeigeAuswahl();
   }
 });
 
@@ -330,30 +336,44 @@ formular.addEventListener("submit", (ereignis) => {
   }
 
   letzteEingabe = { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe };
-  berechneGewaehlteForm();
+  berechneVergleich(true);
 });
 
-// Wahl der Treppenform (vorläufig, bis zum Variantenvergleich): gerade | L (links / rechts).
+// Variantenvergleich (bewertung.js): alle drei Formen; gezeichnet, geprüft und exportiert
+// wird die gewählte Karte – nach „Berechnen“ die Empfehlung (oder die, der am wenigsten fehlt).
 let letzteEingabe = null;
-const formwahl = { form: "gerade", richtung: "links" };
+let letzterVergleich = null;
+const auswahl = { form: null, richtungL: "links" };
 
-function berechneGewaehlteForm() {
-  for (const knopf of document.querySelectorAll("[data-form]")) {
-    knopf.setAttribute("aria-pressed", String(knopf.dataset.form === formwahl.form));
-  }
-  for (const knopf of document.querySelectorAll("[data-richtung]")) {
-    knopf.setAttribute("aria-pressed", String(knopf.dataset.richtung === formwahl.richtung));
-  }
-  document.querySelector(".richtungwahl").hidden = formwahl.form !== "L";
-  if (letzteEingabe) zeigeErgebnis(berechneTreppe(formwahl.form, formwahl.richtung, letzteEingabe));
+/** Vergleicht die Varianten neu; bei neuer Eingabe wird die Empfehlung gewählt. */
+function berechneVergleich(neueEingabe) {
+  letzterVergleich = vergleicheVarianten(letzteEingabe, auswahl.richtungL);
+  if (neueEingabe) auswahl.form = letzterVergleich.empfehlung ?? letzterVergleich.naechste;
+  zeigeAuswahl();
 }
 
-document.querySelector(".formwahl").addEventListener("click", (ereignis) => {
-  const knopf = ereignis.target.closest("button");
-  if (!knopf) return;
-  if (knopf.dataset.form) formwahl.form = knopf.dataset.form;
-  if (knopf.dataset.richtung) formwahl.richtung = knopf.dataset.richtung;
-  berechneGewaehlteForm();
+/** Karten, Urteil, Kennwerte, Zeichnungen und Normprüfung der gewählten Variante. */
+function zeigeAuswahl() {
+  zeigeVergleich(letzterVergleich, auswahl.form);
+  zeigeErgebnis(letzterVergleich.varianten.find((v) => v.form === auswahl.form).treppe);
+}
+
+document.getElementById("varianten").addEventListener("click", (ereignis) => {
+  const richtungKnopf = ereignis.target.closest("[data-richtung]");
+  const karte = ereignis.target.closest(".karte");
+  if (!karte) return;
+  auswahl.form = karte.dataset.form;
+  if (richtungKnopf) {
+    auswahl.richtungL = richtungKnopf.dataset.richtung;
+    berechneVergleich(false);
+  } else {
+    zeigeAuswahl();
+  }
+  // Die Karten werden neu aufgebaut: Fokus auf dieselbe Schaltfläche zurücksetzen.
+  const ziel = richtungKnopf
+    ? `.karte[data-form="L"] [data-richtung="${auswahl.richtungL}"]`
+    : `.karte[data-form="${auswahl.form}"] .karte-wahl`;
+  document.querySelector(ziel)?.focus();
 });
 
 // Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),

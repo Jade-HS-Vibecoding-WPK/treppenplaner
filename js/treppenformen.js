@@ -120,14 +120,16 @@ function waehleAufteilung(form, stufung, grenzen, laufbreite, raumVorgabe) {
  * Hauptfunktion: berechnet eine Treppe der gewünschten Form.
  * @param {"gerade"|"L"|"U"} form
  * @param {"links"|"rechts"|null} richtung nur für L (Drehsinn beim Hinaufgehen)
+ * @param {object|null} stufungVorgabe Stufung aus stufenKandidaten() (null = die bequemste)
  * @param {{geschosshoehe: number, gebaeudeart: string, laufbreite: number,
  *          raumVorgabe: {laenge: number|null, breite: number|null}|null}} eingabe
  */
-function berechneTreppe(form, richtung, eingabe) {
+function berechneTreppe(form, richtung, eingabe, stufungVorgabe = null) {
   const { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe = null } = eingabe;
   const grenzen = DIN18065.gebaeudearten[gebaeudeart];
 
-  const stufung = stufenKandidaten(geschosshoehe, grenzen)[0];
+  // Ohne Vorgabe die bequemste Stufung; bewertung.js gibt je Form ggf. eine steilere vor.
+  const stufung = stufungVorgabe ?? stufenKandidaten(geschosshoehe, grenzen)[0];
   const wahl = waehleAufteilung(form, stufung, grenzen, laufbreite, raumVorgabe);
 
   const stufenPruefungen = pruefeVariante(stufung, grenzen);

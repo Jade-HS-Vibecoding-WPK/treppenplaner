@@ -97,7 +97,7 @@ h3 {
 }
 
 .sprachwahl button,
-.formwahl button {
+.richtungwahl button {
   margin: 0;
   padding: 0.1rem 0.15rem;
   border: none;
@@ -112,11 +112,11 @@ h3 {
 
 .sprachwahl button:hover,
 .sprachwahl button:focus-visible,
-.formwahl button:hover,
-.formwahl button:focus-visible { background: none; color: var(--tinte); border-bottom-color: var(--tinte); }
+.richtungwahl button:hover,
+.richtungwahl button:focus-visible { background: none; color: var(--tinte); border-bottom-color: var(--tinte); }
 
 .sprachwahl button[aria-pressed="true"],
-.formwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
+.richtungwahl button[aria-pressed="true"] { font-weight: 700; border-bottom-color: var(--tinte); }
 
 .block {
   border: var(--linie);
@@ -329,7 +329,8 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   h1 { font-size: 22pt; }
 
   .sprachwahl,
-  .formwahl,
+  .varianten,
+  .nur-bildschirm,
   .block:has(#eingabe),
   .export { display: none; }
 
@@ -358,13 +359,78 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   .pruefung { font-size: 0.85rem; }
 }
 
-/* Wahl der Treppenform (vorläufig, wird zum Variantenvergleich): gerade | L (links / rechts) */
-.formwahl {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: calc(0.75 * var(--r));
-  margin: calc(2 * var(--r)) 0;
+/* Variantenvergleich: drei Karten im Raster (gerade, L, U); am Handy untereinander */
+.empfehlung { font-weight: 700; }
+
+.varianten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: calc(2 * var(--r));
+  margin: 0 0 var(--r);
 }
-.formwahl .richtungwahl { display: inline-flex; gap: calc(0.5 * var(--r)); align-items: center; }
-.formwahl .richtungwahl[hidden] { display: none; }
+
+.karte {
+  display: flex;
+  flex-direction: column;
+  border: var(--linie);
+  cursor: pointer;
+}
+/* Gewählte Variante: kräftiger Rahmen */
+.karte.gewaehlt { outline: 2px solid var(--tinte); outline-offset: -1px; }
+/* Ausgeschlossen: gestrichelter Rahmen, Inhalt blass – Begründung bleibt kräftig rot */
+.karte.ausgeschlossen { border-style: dashed; }
+.karte.ausgeschlossen.gewaehlt { outline-style: dashed; }
+.karte.ausgeschlossen .karte-inhalt > :not(.karte-gruende) { opacity: 0.45; }
+
+/* Der ganze obere Teil ist eine Schaltfläche (Variante wählen) */
+.karte-wahl {
+  display: block;
+  width: 100%;
+  padding: calc(1.5 * var(--r));
+  border: none;
+  background: none;
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: normal;
+}
+.karte-wahl:hover,
+.karte-wahl:focus-visible { background: none; color: var(--tinte); }
+.karte-wahl:focus-visible { outline: 2px solid var(--tinte); outline-offset: -4px; }
+.karte-inhalt { display: block; }
+
+.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: var(--r); }
+.karte-titel { font-family: var(--schrift-titel); font-weight: 700; font-size: 1rem; }
+.karte-marke {
+  font-size: var(--klein);
+  font-weight: 700;
+  padding: 0 calc(0.5 * var(--r));
+  background: var(--tinte);
+  color: var(--papier);
+  white-space: nowrap;
+}
+
+.karte-skizze { display: block; width: 100%; height: 5rem; margin: var(--r) 0; }
+
+.karte-werte { display: block; font-size: var(--klein); font-variant-numeric: tabular-nums; }
+.karte-werte > span { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: var(--r); border-bottom: var(--haarlinie); padding: 0.15rem 0; }
+.karte-werte b { margin-left: auto; text-align: right; white-space: nowrap; }
+
+.karte-punkte { display: block; margin-top: var(--r); font-size: 1.375rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.karte-teilpunkte { display: block; font-size: var(--klein); }
+
+.karte-gruende { display: block; margin-top: var(--r); color: var(--fehler); font-weight: 700; font-size: var(--klein); }
+.karte-gruende > span { display: block; }
+
+.karte .richtungwahl {
+  display: flex;
+  gap: calc(0.75 * var(--r));
+  align-items: center;
+  padding: 0 calc(1.5 * var(--r)) calc(1.5 * var(--r));
+  font-size: var(--klein);
+}
+
+/* Kurzvergleich als Tabelle nur im Druck (Seite 1) */
+.vergleich-druck { display: none; }
+@media print {
+  .vergleich-druck { display: table; margin-bottom: var(--r); }
+}
