@@ -6,6 +6,13 @@
 
 ## Benim kararlarım
 
+- Keine externe API nötig (Rücksprache mit Lehrenden, 17.11.). Datenquelle: DIN 18065 mit Quellenangabe.
+- **Gestaltung (17.11., UI-Design dersi):** Dersten iki kural: bir stil seç, en az bir bilinçli tasarım kararını CLAUDE.md'ye yaz.
+  - Stil-Prompt: „Swiss-inspiriert: strenges Raster, linksbündig, große Überschrift, viel Weißraum. Nur Schwarz, Weiß und ein Signalrot. Keine Schatten, keine runden Ecken. Schrift: Bitter für Überschriften, Nunito für Text.“
+  - Font kurs şablonundan: başlıklar Bitter Bold, metin Nunito Regular/Bold. Böylece araç ve poster bir bütün oluyor. Dosyalar `fonts/` klasöründe, yerelden yükleniyor (SIL Open Font License, `OFL-Bitter.txt`, `OFL-Nunito.txt`). Çizimlerdeki ölçü yazıları sade teknik bir fontta kalıyor.
+  - Kırmızı her zaman „sorun“ demek: sinyal kırmızısı sadece hatalar, sağlanmayan kontroller ve eksik ölçüler için. „Erfüllt“ yeşil değil **siyah** (✓). Gerekçe: kırmızı = sorun kuralı tek bir karşıtlıkla okunuyor ve kırmızı-yeşil renk körlüğünde de anlaşılıyor.
+  - Laptopta solda giriş, sağda sonuç ve çizimler, böylece çizim hemen görünüyor. Sağdaki sıra (A): sonuç kutusu → değer şeridi → çizimler → Normprüfung → export. Telefonda alt alta. Yazdırmada tek sütun, Normprüfung 1. sayfada, çizimler 2. sayfada.
+  - Tek ana buton „Berechnen“; export butonları daha sade.
 - Sadece HTML, CSS ve JavaScript; kurulum yok, GitHub Pages'te çalışacak.
 - Uygulama dili Almanca, benimle iletişim Türkçe.
 - DIN 18065 değerleri tek bir yerde, kaynaklarıyla birlikte tutulacak.

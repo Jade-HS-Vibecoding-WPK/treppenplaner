@@ -25,8 +25,16 @@
 
 ## Gestaltung
 
-- Schlicht, Ästhetik einer architektonischen Zeichnung.
-- Überwiegend schwarz-weiß, feine Linien, klare Typografie.
+- Schlicht, Ästhetik einer architektonischen Zeichnung; feine Linien, klare Typografie.
+
+**Stil-Prompt (UI-Design-Kurs, 17.11.):**
+> Swiss-inspiriert: strenges Raster, linksbündig, große Überschrift, viel Weißraum. Nur Schwarz, Weiß und ein Signalrot. Keine Schatten, keine runden Ecken. Schrift: Bitter für Überschriften, Nunito für Text.
+
+**Bewusste Gestaltungsentscheidungen:**
+1. **Schrift aus der Kursvorlage** (Bitter Bold für Überschriften, Nunito Regular/Bold für Text), damit Tool und Poster eine Einheit bilden. Die Dateien liegen lokal in `fonts/` (SIL Open Font License, `OFL-Bitter.txt`, `OFL-Nunito.txt`) – kein Laden von Google-Servern. Maßzahlen und Beschriftungen in den Zeichnungen (Bildschirm, SVG, DXF) bleiben in einer schlichten technischen Schrift.
+2. **Rot bedeutet immer „Problem“:** Signalrot nur für Fehler, nicht erfüllte Prüfungen und Fehlmaße. „Erfüllt“ ist schwarz (✓), nicht grün – eindeutig auch bei Rot-Grün-Sehschwäche.
+3. **Laptop: links Eingabe, rechts Ergebnis und Zeichnungen**, damit man die Zeichnung sofort sieht (Reihenfolge rechts: Urteil → Kennwerte → Zeichnungen → Normprüfung → Export). Handy: untereinander. Druck: einspaltig, Seite 1 Ergebnis und Tabellen, Seite 2 Zeichnungen.
+4. **Ein Hauptbutton „Berechnen“** (schwarz gefüllt); Export-Schaltflächen leiser.
 
 ## Sprache
 
