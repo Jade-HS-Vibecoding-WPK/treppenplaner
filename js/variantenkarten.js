@@ -127,6 +127,8 @@ function karte(v, vergleich, gewaehlt) {
   kopf.appendChild(span("karte-titel", t("form." + v.form)));
   if (vergleich.empfehlung === v.form) kopf.appendChild(span("karte-marke", t("vergleich.empfehlung")));
   if (vergleich.naechste === v.form) kopf.appendChild(span("karte-marke", t("vergleich.naechste")));
+  // Hinweis, kein Normverstoß: schwarz umrandet statt rot (Rot nur für Probleme)
+  if (steilheit(tr).sehrSteil) kopf.appendChild(span("karte-marke steil", t("hinweis.sehrSteil")));
   inhalt.append(kopf, miniGrundriss(tr));
 
   const jeLauf = tr.laeufe.length > 1 ? ` (${tr.laeufe.map((l) => l.steigungen).join(" + ")})` : "";

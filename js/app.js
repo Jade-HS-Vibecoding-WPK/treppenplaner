@@ -76,6 +76,7 @@ function zeigeErgebnis(e) {
   setzeText("anzahlAuftritte", e.anzahlAuftritte + jeLauf((l) => l.auftritte));
   setzeText("steigung", cm(e.steigung));
   setzeText("auftritt", cm(e.auftritt));
+  zeigeSteilHinweis(e);
   setzeText("schrittmass", cm(e.schrittmass));
   // Gerade Treppe: Lauflänge; mit Podest: Platzbedarf Länge × Breite
   const gerade = e.form === "gerade";
@@ -105,6 +106,18 @@ function zeigeErgebnis(e) {
   // Zeichnung erst nach dem Einblenden, damit die verfügbare Breite bekannt ist.
   letztesErgebnis = e;
   zeichneZeichnungen();
+}
+
+/** „sehr steil“ hinter dem Wert, der den Hinweis auslöst (s und/oder a); schwarz, kein Normverstoß. */
+function zeigeSteilHinweis(e) {
+  const steil = steilheit(e);
+  for (const id of ["steigung", "auftritt"]) {
+    if (!steil[id]) continue;
+    const hinweis = document.createElement("span");
+    hinweis.className = "steil-hinweis";
+    hinweis.textContent = t("hinweis.sehrSteil");
+    document.getElementById(id).append(" ", hinweis); // Leerzeichen für Screenreader
+  }
 }
 
 /** Setzt einen Wörterbuchschlüssel (Text oder aria-label), damit ein Sprachwechsel ihn mit übersetzt. */

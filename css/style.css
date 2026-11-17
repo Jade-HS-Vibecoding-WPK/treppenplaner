@@ -456,3 +456,15 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   .kennwerte dd { margin-top: 0; font-size: 13pt; }
   .hinweis { font-size: 9pt; }
 }
+
+/* Hinweis „sehr steil“ (Karten, Kennwerte): schwarz, nur umrandet – kein Normverstoß, daher nicht rot */
+.karte-marke.steil { background: none; color: var(--tinte); border: var(--linie); }
+.steil-hinweis {
+  display: table; /* eigene Zeile unter dem Wert, so breit wie der Text – in allen Sprachen gleich */
+  font-size: var(--klein);
+  font-weight: 700;
+  padding: 0 calc(0.5 * var(--r));
+  border: var(--linie);
+  margin-top: calc(0.25 * var(--r));
+  white-space: nowrap;
+}

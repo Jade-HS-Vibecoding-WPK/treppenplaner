@@ -32,6 +32,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - [ ] Materialvergleich (mit externen Daten)
 - [ ] IFC-/3D-Export (PDF-Export ist nach „Should“ gewandert)
 - [ ] Maßstäbliches Drucken (A4 quer, 1:50; bisher auf Seitenbreite verkleinert, ohne Maßstab)
+- ✅ Hinweis „sehr steil“ auf den Karten und in den Kennwerten (s ≥ 19 cm oder a ≤ 24 cm; eigene Annahme, kein Normwert)
 
 ## Etappen
 
@@ -82,6 +83,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Nach der gemeinsamen Bewertung: Platz-Punkte mit belegter Fläche (`belegteFlaeche()`), Karten auf 250 px (1366 px) verdichtet, Gestaltungsentscheidung 3 in `CLAUDE.md` angepasst („Zuerst Empfehlung und Vergleich, dann die Zeichnung der gewählten Variante“); fünf Szenarien neu gerechnet (Empfehlung: L, L, L, keine – U am nächsten, gerade)
 
 - ✅ Druck korrigiert (Test des Nutzers: 280 cm, Wohngebäude, 100 cm, Raum 320 × 220 ergab 3 Seiten): Karten im Druck jetzt wirklich ausgeblendet (die Kartenregel stand nach dem Druckblock und überschrieb ihn), Kennwerte-Leiste und Tabellenzeilen nie geteilt, Seite 1 kompakter (halbes Raster, Tabellen 9 pt, Titel 18 pt); simulierter Druck in 219 Fällen (DE/EN/FR): Seite 1 passt in 218, Ausnahme FR, 600 cm, Raum 450 × 120 (44 px zu lang)
+- ✅ Hinweis „sehr steil“ / „very steep“ / „très raide“ (Could): Grenzen `SEHR_STEIL` in `js/bewertung.js` (s ≥ 19 cm oder a ≤ 24 cm, eigene Annahme, kein Normwert), Funktion `steilheit()`; auf der Karte schwarz umrandete Marke im Kopf, in den Kennwerten unter dem auslösenden Wert (s und/oder a); schwarz, nicht rot (Hinweis, kein Normverstoß); kein Einfluss auf Ausschluss, Punkte oder Normprüfung; Sweep: 918 Karten korrekt markiert
 
 **Stand 18.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
 

@@ -44,6 +44,20 @@ const NUTZUNG = Object.freeze({
   podest: 50,
 });
 
+// Hinweis „sehr steil“ (Karten und Kennwerte): ab dieser Steigung ODER bis zu diesem Auftritt.
+// Eigene Annahme, kein Normwert – nur ein Hinweis, kein Ausschluss und keine Normprüfung.
+const SEHR_STEIL = Object.freeze({
+  steigungAb: 19, // cm
+  auftrittBis: 24, // cm
+});
+
+/** Welche Werte lösen den Hinweis „sehr steil“ aus? (Toleranz gegen Gleitkommafehler) */
+function steilheit(t) {
+  const steigung = t.steigung >= SEHR_STEIL.steigungAb - RECHENTOLERANZ;
+  const auftritt = t.auftritt <= SEHR_STEIL.auftrittBis + RECHENTOLERANZ;
+  return { steigung, auftritt, sehrSteil: steigung || auftritt };
+}
+
 /** Begrenzt auf 0 … 100. */
 function punkte0bis100(wert) {
   return Math.min(Math.max(wert, 0), 100);
