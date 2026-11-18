@@ -308,3 +308,12 @@ Kaynak: yapay zekânın önerisi, kullanıcı tarafından kontrol edildi ve düz
 | Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen | residential buildings with no more than two dwellings / within dwellings ⚠ | bâtiments d'habitation d'au plus deux logements / à l'intérieur des logements ⚠ | kendi çevirimiz |
 | Gebäude im Allgemeinen | buildings in general ⚠ | bâtiments en général ⚠ | kendi çevirimiz |
 | Notwendige Treppe | required stair ⚠ | escalier nécessaire ⚠ | Alman yönetmelik kavramı |
+| Spindeltreppe | spiral staircase | escalier à vis ⚠ | FR: „escalier hélicoïdal“ çoğunlukla Treppenauge'li Wendeltreppe için; „escalier à vis / en colimaçon“ merkez dikmeli – doğrulanmadı |
+| Spindel | newel | noyau ⚠ | doğrulanmadı |
+| Gehbereich | walking zone ⚠ | zone de marche ⚠ | kendi çevirimiz |
+| Teilung (Stufen je 360°) | steps per full turn ⚠ | marches par tour ⚠ | açıklayıcı ifade, terim değil |
+| Lichte Durchgangshöhe | headroom | échappée | |
+| Kragstufe | cantilevered step ⚠ | marche en console ⚠ | doğrulanmadı |
+| Geländer | balustrade | garde-corps | |
+| Austritt (Planbeschriftung) | top of stair | arrivée | |
+| Abwicklung | development | développée / développement ⚠ | |

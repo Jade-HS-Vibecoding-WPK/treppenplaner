@@ -188,7 +188,7 @@ function setzeLegenden(e, materialSchluessel) {
     konstruktion, decke: cm(DECKENDICKE),
   });
 
-  const teile = [t("grundriss.legende", { material: materialText })];
+  const teile = [t(e.form === "spindel" ? "grundriss.legendeSpindel" : "grundriss.legende", { material: materialText })];
   if (e.form === "spindel") {
     const masse = spindelMasse(material);
     teile.push(t("grundriss.spindel", {

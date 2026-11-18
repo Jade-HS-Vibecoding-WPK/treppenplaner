@@ -168,6 +168,9 @@ const TEXTE = {
     "grundriss.legende":
       "Grundriss, ohne Maßstab · Maße in cm · Material: {material} · Darstellung ohne Wände/Handlauf · " +
       "Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)",
+    "grundriss.legendeSpindel":
+      "Grundriss, ohne Maßstab · Maße in cm · Material: {material} · Darstellung ohne Wände, Geländer vereinfacht als Kreislinie · " +
+      "Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)",
 
     // Beschriftungen in den Zeichnungen (kurz, damit sie an die Maßlinien passen)
     // Material (material.js): Schalter, Fließtext, Konstruktion in der Legende
@@ -365,6 +368,9 @@ const TEXTE = {
     "grundriss.ariaSpindel": "Plan of the spiral staircase",
     "grundriss.legende":
       "Plan, not to scale · dimensions in cm · material: {material} · shown without walls/handrail · " +
+      "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
+    "grundriss.legendeSpindel":
+      "Plan, not to scale · dimensions in cm · material: {material} · shown without walls, balustrade simplified as a circle · " +
       "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
 
     "material.titel": "Material",
@@ -567,6 +573,9 @@ const TEXTE = {
     "grundriss.ariaSpindel": "Vue en plan de l’escalier à vis",
     "grundriss.legende":
       "Vue en plan, sans échelle · cotes en cm · matériau : {material} · représentée sans murs ni main courante · " +
+      "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",
+    "grundriss.legendeSpindel":
+      "Vue en plan, sans échelle · cotes en cm · matériau : {material} · représentée sans murs, garde-corps simplifié en cercle · " +
       "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",
 
     "material.titel": "Matériau",

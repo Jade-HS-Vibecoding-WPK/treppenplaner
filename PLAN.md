@@ -24,7 +24,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
-- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · ✅ 2 Karte + Punkte · ✅ 3 Grundriss · ✅ 4 Abwicklung · [ ] 5 DXF, Texte, README
+- ✅ Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt und umgesetzt 18.11. in 5 Schritten: Berechnung + Normprüfung, Karte + Punkte, Grundriss, Abwicklung, Texte + README) – offen: DXF in AutoCAD/Viewer öffnen, Kopfhöhe an der Deckenkante
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
@@ -105,6 +105,10 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Spindeltreppe, Schritt 4 (18.11.): Abwicklung entlang der Lauflinie – n − 1 Kragstufen (Stahlbeton 8 cm, Holz 5 cm, Stahl 4 cm) mit Materialschraffur, ohne Setzstufen, Laufplatte und Wangen; obere/untere Decke, Höhenkoten, s, a, Geschosshöhe, Lauflänge (abgewickelt); gestrichelt die Stufe eine Umdrehung höher über der ersten Stufe mit Maß „lichte Durchgangshöhe“ (275 cm: 232,6 cm = Rechnung); Legende mit Hinweis „Stahlbeton vereinfacht: meist monolithische Wendelplatte“. Schnitt-Export aktiv (`treppe_275_spindel-links_schnitt.dxf`); Grundriss hat jetzt den Maßstab der Abwicklung. Radius der Lauflinie steht in der Legende, im Plan nur, wenn er zwischen Spindel und innerem Nummernring Platz hat. Ab der dritten Umdrehung steht die letzte Nummer anstelle der Nummer eine Umdrehung tiefer.
 - ✅ Konsolentest Schritt 4: 1368 Bildschirmfälle (DE/EN/FR, 150–600 cm, links/rechts, drei Materialien, mit/ohne Raum) – keine überlappenden Texte (gedrehte Rechtecke geprüft), nichts außerhalb der Zeichenfläche; DXF Schnitt und Grundriss in drei Materialien: AC1009, Gruppencodes ganzzahlig, keine NaN, SOLID mit vier Punkten. Ab ca. 400 cm scrollt die Abwicklung horizontal (wie bei der geraden Treppe).
 
+- ✅ Spindeltreppe, Schritt 5 (18.11.): Grundriss-Legende der Spindeltreppe ohne „Handlauf“ (Geländer vereinfacht als Kreislinie), README ergänzt, Fachbegriffe in `notlar.md`. Kurzkontrolle 275 / Wohngebäude / 80 und 300 / Gebäude im Allgemeinen / 100.
+
+**Stand 18.11., Spindeltreppe abgeschlossen (nicht gepusht).** Offen: DXF-Test in AutoCAD/Viewer, Kopfhöhe an der Deckenkante.
+
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
@@ -136,7 +140,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
   2. ✅ Karte + Punkte (Komfort C), Szenarien a–e, Hinweis „notwendige Treppe“, Druck Seite 1 geprüft – offen: Szenario d (L statt Spindel) und Druck-Ausnahme FR 600 cm mit dem Nutzer besprechen
   3. ✅ Grundriss (Bogen-Element, DXF ARC/CIRCLE, Ebenen SPINDEL und GELAENDER)
   4. ✅ Abwicklung (Kragstufen, Durchgangshöhe als Maß), Schnitt-Export aktiv
-  5. DXF-Dateiname, Fachbegriffe DE/EN/FR, README (Eigene Annahmen: Kragstufen bei Stahlbeton vereinfacht, Deckenöffnung = Kreis D, Kopfhöhe am Rand nicht geprüft)
+  5. ✅ Legende (Geländer), README (Funktionen, Berechnung, Annahmen, Quellen, Entscheidungen, DXF-Ebenen), Fachbegriffe DE/EN/FR in `notlar.md`
+  **Offen:** DXF der Spindeltreppe (Schnitt und Grundriss, ARC/CIRCLE, Ebenen SPINDEL/GELAENDER) in AutoCAD oder einem DXF-Viewer öffnen; Kopfhöhe an der Deckenkante (Deckenöffnung Ø D) wird nicht geprüft.
 - ✅ Sichtprüfung Materialwahl (Nutzer)
 - DXF mit Holz/Stahl in AutoCAD prüfen (Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ/STAHL, SOLID)
 
