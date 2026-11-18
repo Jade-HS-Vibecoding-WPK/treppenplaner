@@ -150,6 +150,7 @@
   - Grundriss artık Abwicklung'un ölçeğini kullanıyor (geçici `spindelGrundrissMassstab()` kaldırıldı). Ölçek küçüldüğü için Lauflinie yarıçapı ölçüsü çoğu zaman planda yer bulamıyor → değeri her zaman lejantta („Lauflinie r = 64,3 cm“), planda sadece sığarsa.
   - 3. tur (≥ ~500 cm): son numara iç halkada, bir tur alttaki numaranın yerine (aynı yerde iki numara sığmıyordu).
   - Kontrol: 1368 ekran durumu çakışmasız; DXF kesit ve plan, üç malzeme, R12 uyumlu.
+- **Son küçük işler (18.11., kullanıcının görsel kontrolü):** „Austritt“ yazısı planda sığmazsa (ör. 275 cm, DE) lejanta „dicke Strichlinie = Austritt (Deckenkante)“ ekleniyor; çizimden sonra kontrol ediliyor (`ergaenzeAustrittLegende()`), çünkü ölçek pencere genişliğine bağlı. Kesit lejantında „Maße wie auf der Lauflinie gemessen“. README Ausblick: Vertikalschnitt durch die Spindelachse. *(Kullanıcının isteği.)*
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.

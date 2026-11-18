@@ -107,6 +107,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 - ✅ Spindeltreppe, Schritt 5 (18.11.): Grundriss-Legende der Spindeltreppe ohne „Handlauf“ (Geländer vereinfacht als Kreislinie), README ergänzt, Fachbegriffe in `notlar.md`. Kurzkontrolle 275 / Wohngebäude / 80 und 300 / Gebäude im Allgemeinen / 100.
 
+- ✅ Nach der Sichtprüfung (18.11.): passt die Beschriftung „Austritt“ nicht in den Grundriss, erklärt die Legende „dicke Strichlinie = Austritt (Deckenkante)“; Abwicklungs-Legende „Maße wie auf der Lauflinie gemessen“; README-Ausblick: Vertikalschnitt durch die Spindelachse.
+
 **Stand 18.11., Spindeltreppe abgeschlossen (nicht gepusht).** Offen: DXF-Test in AutoCAD/Viewer, Kopfhöhe an der Deckenkante.
 
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.

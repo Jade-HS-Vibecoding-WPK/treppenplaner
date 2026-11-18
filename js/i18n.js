@@ -187,6 +187,8 @@ const TEXTE = {
       "Spindeltreppe mit Kragstufen ({material}) {tritt} cm, ohne Setzstufen (Annahmen, keine Normwerte) · " +
       "gestrichelt: Stufe eine Umdrehung höher (lichte Durchgangshöhe)",
     "konstruktion.spindelStahlbeton": "vereinfacht: Stahlbeton-Spindeltreppen sind meist eine monolithische Wendelplatte",
+    "schnitt.spindelMasse": "Maße wie auf der Lauflinie gemessen",
+    "grundriss.austrittLegende": "dicke Strichlinie = Austritt (Deckenkante)",
     "zeichnung.durchgangshoehe": "lichte Durchgangshöhe {wert}",
     "konstruktion.wange":
       "{material}-Wangentreppe: Trittstufen {tritt} cm, Wangen {wd} × {wh} cm (Annahmen, keine Normwerte) · " +
@@ -386,6 +388,8 @@ const TEXTE = {
       "spiral staircase with cantilevered steps ({material}) {tritt} cm, no risers (assumptions, not values of the standard) · " +
       "dashed: step one turn higher (headroom)",
     "konstruktion.spindelStahlbeton": "simplified: reinforced concrete spiral stairs are usually a monolithic helical slab",
+    "schnitt.spindelMasse": "dimensions as measured on the walking line",
+    "grundriss.austrittLegende": "thick dashed line = top of stair (slab edge)",
     "zeichnung.durchgangshoehe": "headroom {wert}",
     "konstruktion.wange":
       "{material} stringer stair: treads {tritt} cm, stringers {wd} × {wh} cm (assumptions, not values of the standard) · " +
@@ -591,6 +595,8 @@ const TEXTE = {
       "escalier à vis à marches en console ({material}) {tritt} cm, sans contremarches (hypothèses, pas des valeurs de la norme) · " +
       "en tirets : marche un tour plus haut (échappée)",
     "konstruktion.spindelStahlbeton": "simplifié : les escaliers à vis en béton armé sont le plus souvent une dalle hélicoïdale monolithique",
+    "schnitt.spindelMasse": "cotes mesurées sur la ligne de foulée",
+    "grundriss.austrittLegende": "trait épais en tirets = arrivée (bord de dalle)",
     "zeichnung.durchgangshoehe": "échappée {wert}",
     "konstruktion.wange":
       "escalier à limons en {material} : marches {tritt} cm, limons {wd} × {wh} cm (hypothèses, pas des valeurs de la norme) · " +

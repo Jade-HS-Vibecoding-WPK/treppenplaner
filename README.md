@@ -126,6 +126,7 @@ Der Arbeitsprozess ist nachvollziehbar in [`PLAN.md`](PLAN.md) (Plan und Stand),
 
 ## Ausblick
 
+- Vertikalschnitt durch die Spindelachse (zusätzlich zur Abwicklung)
 - Kopfhöhe / lichte Durchgangshöhe (2,00 m) an der Deckenkante prüfen und darstellen (bei der Spindeltreppe zwischen den Umdrehungen bereits geprüft)
 - Maßstabsfigur (menschliche Silhouette) in Schnitt und Grundriss
 - Maßstäbliches Drucken (A4 quer, 1:50)

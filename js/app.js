@@ -171,6 +171,7 @@ function setzeLegenden(e, materialSchluessel) {
   if (e.form === "spindel") {
     konstruktion = t("konstruktion.spindel", { material: materialText, tritt: cm(spindelMasse(material).stufendicke) });
     if (material.konstruktion === "laufplatte") konstruktion += " · " + t("konstruktion.spindelStahlbeton");
+    konstruktion += " · " + t("schnitt.spindelMasse");
   } else if (material.konstruktion === "laufplatte") {
     konstruktion = t(gerade ? "konstruktion.laufplatte" : "konstruktion.laufplatteAbwicklung", {
       platte: cm(bauteil(material, "laufplatte").dicke),
@@ -202,7 +203,22 @@ function setzeLegenden(e, materialSchluessel) {
   if (e.form === "U" && augeMin > TREPPENAUGE + RECHENTOLERANZ) {
     teile.push(t("grundriss.augeVereinfacht", { material: materialText, min: cm(augeMin) }));
   }
-  document.getElementById("grundrissLegende").textContent = teile.join(" · ");
+  const legende = document.getElementById("grundrissLegende");
+  legende.textContent = teile.join(" · ");
+  legende.dataset.basis = legende.textContent; // Ergänzung nach dem Zeichnen: ergaenzeAustrittLegende()
+}
+
+/**
+ * Spindeltreppe: Passt die Beschriftung „Austritt“ beim aktuellen Maßstab nicht in den Grundriss
+ * (spindelgrundriss.js lässt sie dann weg), erklärt die Legende die kräftige Strichlinie.
+ * Nach jedem Zeichnen aufgerufen, weil der Maßstab von der Fensterbreite abhängt.
+ */
+function ergaenzeAustrittLegende() {
+  const legende = document.getElementById("grundrissLegende");
+  const basis = legende.dataset.basis ?? legende.textContent;
+  const beschriftet = [...grundrissSvg.querySelectorAll("text")].some((n) => n.textContent === t("zeichnung.austritt"));
+  const fehlt = letztesErgebnis.form === "spindel" && !beschriftet;
+  legende.textContent = fehlt ? `${basis} · ${t("grundriss.austrittLegende")}` : basis;
 }
 
 /** Name der Treppenform, z. B. „L-Treppe (links)“. */
@@ -306,6 +322,7 @@ function zeichneZeichnungen() {
   const breite = Math.floor(zeichenflaeche.getBoundingClientRect().width);
   const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, breite);
   zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
+  ergaenzeAustrittLegende();
 }
 
 // Bei Größenänderung des Fensters neu zeichnen (nur wenn sich die Breite ändert).
