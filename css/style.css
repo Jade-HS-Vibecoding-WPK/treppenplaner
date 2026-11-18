@@ -239,6 +239,11 @@ th, td {
   padding: var(--r) calc(1.5 * var(--r));
   border-left: 4px solid currentColor;
 }
+/* Hinweis direkt unter der Empfehlung (Alternative, notwendige Treppe): schwarz, eingerückt wie der Text */
+.empfehlung-hinweis {
+  margin: calc(-1.5 * var(--r)) 0 calc(2 * var(--r));
+  padding-left: calc(1.5 * var(--r) + 4px);
+}
 
 /* Zeichnung */
 /* Reicht die Breite für den Mindestmaßstab nicht, scrollen beide Zeichnungen gemeinsam. */
@@ -335,7 +340,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
     border-bottom: var(--haarlinie);
   }
   .druck-eingabe strong { margin-right: var(--r); }
-  .kennwerte { grid-template-columns: repeat(3, 1fr); }
+  .kennwerte { grid-template-columns: repeat(4, 1fr); } /* 4 statt 3: Spindeltreppe (7 Werte) in zwei Zeilen */
 
   h1 { font-size: 22pt; }
 
@@ -469,6 +474,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   .kennwerte { margin-top: calc(1.5 * var(--r)); padding: var(--r) 0; gap: var(--r) calc(2 * var(--r)); }
   .kennwerte dd { margin-top: 0; font-size: 13pt; }
   .hinweis { font-size: 9pt; }
+  .empfehlung-hinweis { margin: calc(-0.5 * var(--r)) 0 var(--r); padding-left: calc(var(--r) + 4px); }
 }
 
 /* Hinweis „sehr steil“ (Karten, Kennwerte): schwarz, nur umrandet – kein Normverstoß, daher nicht rot */

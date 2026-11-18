@@ -93,6 +93,9 @@ function zeigeErgebnis(e) {
   const spindelHinweis = document.getElementById("spindelHinweis");
   spindelHinweis.hidden = !spindel;
   spindelHinweis.textContent = spindel ? t("hinweis.notwendigeTreppe") : "";
+  // Ist die Spindeltreppe auch die Empfehlung, steht der Hinweis schon unter der Empfehlung –
+  // im Druck nicht doppelt (Platz auf Seite 1).
+  spindelHinweis.classList.toggle("nur-bildschirm", letzterVergleich?.empfehlung === "spindel");
   setzeZeichnungstitel(gerade);
   if (spindel) setzeI18n(grundrissSvg, "grundriss.ariaSpindel", true);
   setzeLegenden(e, auswahl.material);

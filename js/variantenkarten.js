@@ -130,6 +130,30 @@ function empfehlungText(vergleich) {
   return t("empfehlung.satz", { ...werte, grund: t("empfehlung.grund." + vergleich.begruendung.kriterium) });
 }
 
+/**
+ * Hinweis unter der Empfehlung (schwarz, keine Bewertung):
+ *  - Ist die Empfehlung die einzige passende Variante, die ausgeschlossene Variante mit dem
+ *    kleinsten Fehlmaß als Alternative (nur Varianten, die allein am Raum scheitern).
+ *  - Ist die Spindeltreppe empfohlen, zusätzlich der Hinweis zur notwendigen Treppe.
+ * Leer = kein Hinweis.
+ */
+function empfehlungHinweisText(vergleich) {
+  const teile = [];
+  if (vergleich.begruendung?.art === "einzige") {
+    const nurRaum = (v) => v.ausgeschlossen && v.gruende.every((g) => g.grund === "raum");
+    const alternative = vergleich.varianten
+      .filter(nurRaum)
+      .sort((p, q) => fehltSumme(p.treppe) - fehltSumme(q.treppe))[0];
+    if (alternative) {
+      teile.push(t("empfehlung.alternative", {
+        form: t("form." + alternative.form), teile: fehltTeile(alternative.treppe.raum.fehlt),
+      }));
+    }
+  }
+  if (vergleich.empfehlung === "spindel") teile.push(t("hinweis.notwendigeTreppe"));
+  return teile.join(" ");
+}
+
 /** Kleines Inline-Element mit Klasse und Text (Inhalt der Kartenschaltfläche: nur Phrasing-Elemente). */
 function span(klasse, text = "") {
   const el = document.createElement("span");
@@ -238,6 +262,9 @@ function zeigeVergleich(vergleich, gewaehlteForm) {
   const satz = document.getElementById("empfehlung");
   satz.textContent = empfehlungText(vergleich);
   satz.className = "urteil empfehlung " + (vergleich.empfehlung ? "ok" : "nicht-ok");
+  const hinweis = document.getElementById("empfehlungHinweis");
+  hinweis.textContent = empfehlungHinweisText(vergleich);
+  hinweis.hidden = hinweis.textContent === "";
 
   document.getElementById("varianten").replaceChildren(
     ...vergleich.varianten.map((v) => karte(v, vergleich, v.form === gewaehlteForm)),

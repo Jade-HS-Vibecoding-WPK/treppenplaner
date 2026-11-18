@@ -151,6 +151,9 @@
   - 3. tur (≥ ~500 cm): son numara iç halkada, bir tur alttaki numaranın yerine (aynı yerde iki numara sığmıyordu).
   - Kontrol: 1368 ekran durumu çakışmasız; DXF kesit ve plan, üç malzeme, R12 uyumlu.
 - **Son küçük işler (18.11., kullanıcının görsel kontrolü):** „Austritt“ yazısı planda sığmazsa (ör. 275 cm, DE) lejanta „dicke Strichlinie = Austritt (Deckenkante)“ ekleniyor; çizimden sonra kontrol ediliyor (`ergaenzeAustrittLegende()`), çünkü ölçek pencere genişliğine bağlı. Kesit lejantında „Maße wie auf der Lauflinie gemessen“. README Ausblick: Vertikalschnitt durch die Spindelachse. *(Kullanıcının isteği.)*
+- **Alternative-Hinweis (18.11., kullanıcının isteği):** Gerekçe „einzige passende Variante“ olduğunda öneri satırının altında siyah bir not: sadece odaya sığmadığı için elenen varyantlardan toplam Fehlmaß'ı en küçük olanı („Alternative: U-Treppe – es fehlen 2,3 cm Länge.“). Spindel önerildiyse notwendige-Treppe uyarısı da bu satırda. Puanlama değişmedi.
+  - Yazdırma kontrolünde bulundu: Spindel seçiliyken ve oda verildiğinde 1. sayfa Adım 4'ten beri taşıyordu (fark edilmemişti). Üç küçük düzeltme *(yapay zekâ)*: uyarı yazdırmada Kennwerte altında tekrar edilmiyor; Kennwerte yazdırmada 4 sütun (Spindel'in 7 değeri iki satıra); „Lauflinie im Gehbereich“ etiketi kısaltıldı (FR'de bütün tablo satırları iki satıra kırılıyordu).
+  - Kalan taşma (simülasyon, Spindel seçili + oda): DE 9: +21 px, EN 5: +28, EN 9: +55, FR 5: +60, FR 9: +87, FR 3: +46 px. Odasız Spindel ve diğer formlar sığıyor.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.
@@ -275,6 +278,25 @@
   - Yazdırma sırası JavaScript ile (`beforeprint`/`afterprint`): Normprüfung ve footer çizimlerin önüne alınıyor; ekranda sıra değişmiyor.
   - Plan, sağ kenar: alan genişliği ölçüsü `L + a + 30 px`'te (son basamak numarasının arkasında); „fehlt“ yazısı ölçü çizgilerinden 18 px uzakta.
   - Ölçü yazısı (ör. „Total going 59.3“) yardımcı çizgilerin arasına sığmazsa sadece sayı yazılıyor. Liste DOM bilmediği için genişlik tahmin ediliyor: karakter sayısı × 0,55 × yazı boyutu (Helvetica için yaklaşık değer). DXF'te (1:50) kısa merdivenlerde de bu yüzden sadece sayı çıkabiliyor.
+
+## Validierung
+
+Plausibilitätstest, 18.11. (Browser-Konsole, Stahlbeton, Drehsinn links). Erwartung vom Nutzer, Ergebnis aus dem Tool; Punkte = Gesamtpunkte.
+
+| # | Eingabe (H / Gebäudeart / B / Raum L × B) | Erwartung | Ergebnis | |
+|---|---|---|---|---|
+| 1 | 275 / Wohn / 80 / 500 × 100 | Gerade | Gerade 61 (einzige passende) | ✓ |
+| 2 | 275 / Wohn / 80 / 450 × 90 | Gerade | Gerade 56 (einzige passende) | ✓ |
+| 3 | 275 / Wohn / 80 / 300 × 300 | L oder U, nicht Gerade/Spindel | L 85, U 82, Spindel 54; Gerade fehlt 8,3 cm | ✓ |
+| 4 | 275 / Wohn / 80 / 300 × 180 | U; L und Gerade passen nicht | U 72; L passt mit steilerer Stufung (Komfort 12) → 47 | ⚠ |
+| 5 | 275 / Wohn / 80 / 220 × 220 | Spindel (einzige) | Spindel 44; L/U fehlen 2,3 cm | ✓ |
+| 6 | 275 / Wohn / 80 / 150 × 150 | „Keine Variante passt“ | keine; am nächsten U (fehlt 72,3 / 20 cm) | ✓ |
+| 7 | 275 / Wohn / 80 / 600 × 600 | offen (großer Raum) | L 94,3 vor U 93,7; Platz trennt kaum, Gerade verliert bei Sicherheit | ✓ |
+| 8 | 300 / Allgemein / 100 / 400 × 300 | keine Spindel | U 76, L 75, Spindel 37 (Sicherheit 0, Nutzung 0) | ✓ |
+| 9 | 300 / Allgemein / 100 / 270 × 270 | offen (nur Spindel passt) | Spindel 29 als einzige empfohlen; L/U fehlen 12 cm → Hinweis „Alternative“ | ⚠ |
+| 10 | 320 / Wohn / 80 / 500 × 120 | Gerade, keine 18er-Regel in Wohn | Gerade 18 Steigungen (19 passen nicht in 500 cm); ohne Raum 19 normgerecht, Allgemein ✗ | ✓ |
+
+Sonuç: 8 senaryoda öneri beklentiyle uyuşuyor. ⚠ 4: araç daha dik bir Stufung ile L'yi sığdırıyor ama Komfort cezası yüzünden önermiyor. ⚠ 9: tek sığan zayıf varyant da „Empfehlung“ oluyor; bu yüzden öneri satırının altına „Alternative: … – es fehlen …“ notu eklendi (puanlama değişmedi).
 
 ## Fachbegriffe DE / EN / FR
 

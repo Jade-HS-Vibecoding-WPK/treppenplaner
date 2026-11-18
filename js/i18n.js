@@ -88,6 +88,7 @@ const TEXTE = {
     "empfehlung.satz": "Empfehlung: {form} – {punkte} von 100 Punkten, vor allem wegen {grund}.",
     "empfehlung.einzige": "Empfehlung: {form} – die einzige Variante, die passt und die Norm erfüllt ({punkte} von 100 Punkten).",
     "empfehlung.keine": "✗ Keine Variante passt. Am nächsten kommt: {form} ({grund}).",
+    "empfehlung.alternative": "Alternative: {form} – es fehlen {teile}.",
     "empfehlung.grund.komfort": "des bequemeren Steigungsverhältnisses",
     "empfehlung.grund.platz": "des geringeren Platzbedarfs",
     "empfehlung.grund.sicherheit": "der kürzeren Läufe",
@@ -118,7 +119,7 @@ const TEXTE = {
     "kriterium.podestlaenge": "Podestlänge",
     "kriterium.spindelLaufbreite": "Nutzbare Laufbreite (Regel Gehbereich)",
     "kriterium.auftrittInnen": "Auftritt an der inneren Begrenzung",
-    "kriterium.lauflinieGehbereich": "Lauflinie im Gehbereich (Abstand von innen)",
+    "kriterium.lauflinieGehbereich": "Lauflinie im Gehbereich (von innen)",
     "kriterium.durchgangshoehe": "Lichte Durchgangshöhe",
 
     "pruefung.titel": "Normprüfung",
@@ -292,6 +293,7 @@ const TEXTE = {
     "empfehlung.satz": "Recommended: {form} – {punkte} of 100 points, mainly because of {grund}.",
     "empfehlung.einzige": "Recommended: {form} – the only option that fits and meets the standard ({punkte} of 100 points).",
     "empfehlung.keine": "✗ No option fits. Closest: {form} ({grund}).",
+    "empfehlung.alternative": "Alternative: {form} – missing {teile}.",
     "empfehlung.grund.komfort": "the more comfortable rise and going",
     "empfehlung.grund.platz": "the smaller footprint",
     "empfehlung.grund.sicherheit": "the shorter flights",
@@ -322,7 +324,7 @@ const TEXTE = {
     "kriterium.podestlaenge": "Landing length",
     "kriterium.spindelLaufbreite": "Clear width (walking zone rule)",
     "kriterium.auftrittInnen": "Going at the inner boundary",
-    "kriterium.lauflinieGehbereich": "Walking line within walking zone (distance from inside)",
+    "kriterium.lauflinieGehbereich": "Walking line in walking zone (from inside)",
     "kriterium.durchgangshoehe": "Headroom",
 
     "pruefung.titel": "Check against DIN 18065",
@@ -498,6 +500,7 @@ const TEXTE = {
     "empfehlung.einzige":
       "Recommandation : {form} – la seule variante qui tient dans l'espace et respecte la norme ({punkte} points sur 100).",
     "empfehlung.keine": "✗ Aucune variante ne convient. La plus proche : {form} ({grund}).",
+    "empfehlung.alternative": "Alternative : {form} – il manque {teile}.",
     "empfehlung.grund.komfort": "à un rapport hauteur/giron plus confortable",
     "empfehlung.grund.platz": "à un encombrement plus faible",
     "empfehlung.grund.sicherheit": "à des volées plus courtes",
@@ -529,7 +532,7 @@ const TEXTE = {
     "kriterium.podestlaenge": "Longueur du palier",
     "kriterium.spindelLaufbreite": "Emmarchement (règle de la zone de marche)",
     "kriterium.auftrittInnen": "Giron à la limite intérieure",
-    "kriterium.lauflinieGehbereich": "Ligne de foulée dans la zone de marche (distance depuis l'intérieur)",
+    "kriterium.lauflinieGehbereich": "Ligne de foulée (depuis l'intérieur)",
     "kriterium.durchgangshoehe": "Échappée",
 
     "pruefung.titel": "Vérification selon la DIN 18065",

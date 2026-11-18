@@ -134,6 +134,7 @@ Der Arbeitsprozess ist nachvollziehbar in [`PLAN.md`](PLAN.md) (Plan und Stand),
 - Treppenauge abhängig vom Material (bei Holzwangen wären ≥ 12 cm nötig, bisher fest 10 cm)
 - Prüfung offener Stufen (Holz/Stahl) ergänzen
 - IFC-/3D-Export
+- Kosten werden nicht bewertet
 - Gewichtung der Kriterien durch den Nutzer
 
 ## Autor und Lizenz
