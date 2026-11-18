@@ -10,14 +10,16 @@
  *  - Setzstufen als radiale Linien von der Spindel bis zur äußeren Begrenzung der nutzbaren
  *    Laufbreite; nur eine Umdrehung – bei ganzzahliger Teilung liegen die Kanten der zweiten
  *    Umdrehung genau darauf (überdeckte Kanten werden nicht doppelt gezeichnet).
- *  - Außenkante der Stufen (Radius Ra) und Geländer (Außendurchmesser D) als Bögen.
+ *  - Außenkante der Stufen (Radius Ra) und Geländer als Bögen, Deckenkante (Öffnung Ø D) und
+ *    Austritt (letzte Setzstufe) gestrichelt über der Schnittebene.
  *  - Spindel geschnitten, mit Materialschraffur (material.js).
  *  - Schnittlinie schräg über die Setzstufe, die die Schnittebene (ca. 1 m) trifft; alles danach
  *    gestrichelt (wie bei den anderen Formen).
  *  - Stufennummern: erste Umdrehung außen, zweite auf einem inneren Ring, ab der dritten nur
  *    noch die letzte Nummer.
- *  - Lauflinie: Kreis am Antritt, Pfeil am Austritt; die zweite Umdrehung liegt auf der ersten
- *    und wird nicht noch einmal gezeichnet (nur der Pfeil).
+ *  - Lauflinie: Kreis am Antritt, bis zur Schnittlinie durchgezogen, dann gestrichelt bis zum
+ *    Pfeil am Austritt; über eine Umdrehung hinaus leicht nach innen versetzt (Spirale).
+ *  - Maßzahlen mit weißem Grund (nur SVG), damit Stufenkanten sie nicht durchkreuzen.
  */
 
 const SPINDEL_SCHNITTLINIE_NEIGUNG = 0.25; // Stufen: Schnittlinie von k − 0,25 (innen) bis k + 0,25 (außen)
@@ -100,7 +102,39 @@ function spindelKantenElemente(z, geo) {
     if (rKreuz > g.rS + 1e-9) z.linie(EBENE.treppe, innen, kreuz, STRICH.schnitt, { gestrichelt: true });
   }
   spindelBogenGeteilt(z, geo, EBENE.treppe, g.Ra, 0, geo.kEnde, STRICH.schnitt);
-  spindelBogenGeteilt(z, geo, EBENE.gelaender, geo.D / 2, 0, geo.kEnde, STRICH.mass);
+  // Geländer in der Mitte des Geländerzuschlags, damit die Deckenkante (Ø D) getrennt lesbar bleibt
+  spindelBogenGeteilt(z, geo, EBENE.gelaender, g.Ra + g.gelaenderZuschlag / 2, 0, geo.kEnde, STRICH.mass);
+}
+
+/**
+ * Obere Decke und Austritt (über der Schnittebene, daher gestrichelt):
+ *  - Deckenöffnung = Kreis mit Ø D (Annahme, notlar.md) als Deckenkante
+ *  - letzte Setzstufe (Austritt auf die obere Decke) kräftig, von der Spindel bis zur Deckenkante,
+ *    mit der Beschriftung „Austritt“ außen
+ */
+function spindelAustrittElemente(z, geo) {
+  const { g, lage, n, D } = geo;
+  const m = z.m;
+  const ueber = geo.kSchnitt != null; // ohne Schnittlinie (sehr niedrige Treppe) liegt alles darunter
+  z.bogen(EBENE.decke, lage.mitte, D / 2, 0, 360, STRICH.schnitt, { gestrichelt: ueber });
+  const kAustritt = n - 1;
+  z.linie(EBENE.decke, lage.punkt(g.rS, kAustritt), lage.punkt(D / 2, kAustritt), STRICH.decke, { gestrichelt: ueber });
+
+  // Beschriftung auf der Austrittskante zwischen Lauflinie und Außenkante, längs gedreht, mit
+  // weißem Grund (unterbricht die Linie). Außerhalb des Kreises stießen sie an die Raummaße.
+  // Passt der Text dort nicht, entfällt er (Kante und Pfeil zeigen den Austritt trotzdem).
+  const text = t("zeichnung.austritt");
+  const laenge = text.length * ZEICHENBREITE * SCHRIFTGROESSE * m;
+  if (laenge + 8 * m > g.Ra - g.rL) return;
+  const w = lage.winkel(kAustritt);
+  const umgedreht = Math.cos(w) < -1e-9;
+  const grad = (w * 180) / Math.PI + (umgedreht ? 180 : 0);
+  const [x, y] = lage.punkt((g.rL + g.Ra) / 2, kAustritt);
+  // Grundlinie um eine halbe Versalhöhe neben die Kante, damit die Schrift auf der Linie mittig sitzt
+  const quer = 0.36 * SCHRIFTGROESSE * m * (umgedreht ? 1 : -1);
+  z.text([x - quer * Math.sin(w), y + quer * Math.cos(w)], text, {
+    ausrichtung: "mitte", drehung: ((grad % 360) + 360) % 360, hintergrund: true,
+  });
 }
 
 /** Spindel geschnitten: Materialschraffur (Stahl: gefüllt, als Dreiecke für DXF-SOLID) und Umriss. */
@@ -139,7 +173,17 @@ function spindelSchnittlinieElemente(z, geo) {
   }
 }
 
-/** Lauflinie: Kreis am Antritt, Bogen (erste Umdrehung), gefüllter Pfeil an der letzten Setzstufe. */
+// Zweite Umdrehung der Lauflinie: um diesen Abstand (px) nach innen versetzt, damit sie nicht auf
+// dem durchgezogenen Anfang liegt und der Pfeil am Austritt eindeutig auf der gestrichelten Linie
+// sitzt (Darstellung, vereinfacht). Übergang über die letzte Stufe vor der vollen Umdrehung.
+const SPINDEL_LAUFLINIE_VERSATZ = 7;
+const SPINDEL_LAUFLINIE_PUNKTE_JE_STUFE = 8;
+
+/**
+ * Lauflinie wie bei L/U: Kreis am Antritt, durchgezogen bis zur Schnittlinie, danach gestrichelt
+ * bis zum Pfeil an der letzten Setzstufe (Austritt). Geht sie über eine Umdrehung hinaus, rückt
+ * sie ab der letzten Stufe vor 360° leicht nach innen (Spirale statt Überdeckung).
+ */
 function spindelLauflinieElemente(z, geo) {
   const { g, lage, n } = geo;
   const m = z.m;
@@ -149,13 +193,28 @@ function spindelLauflinieElemente(z, geo) {
 
   const kEnde = n - 1;
   const kPfeilBasis = kEnde - (LAUFLINIE_PFEIL.laenge * m) / stufeCm;
-  const kBogenEnde = Math.min(kPfeilBasis, g.teilung);
-  spindelBogenGeteilt(z, geo, EBENE.lauflinie, g.rL, radiusKreis / stufeCm, kBogenEnde, LAUFLINIE_STRICH);
+  const versatz = SPINDEL_LAUFLINIE_VERSATZ * m;
+  const kSpiraleAb = g.teilung - 1; // ab hier rückt die Lauflinie nach innen
+  const radius = (k) => g.rL - versatz * Math.min(Math.max(k - kSpiraleAb, 0), 1);
+  const spirale = kPfeilBasis > kSpiraleAb;
+
+  // Kreisbogen bis zur Schnittlinie durchgezogen, danach gestrichelt (bis zum Beginn der Spirale)
+  spindelBogenGeteilt(z, geo, EBENE.lauflinie, g.rL, radiusKreis / stufeCm, spirale ? kSpiraleAb : kPfeilBasis, LAUFLINIE_STRICH);
+  if (spirale) {
+    const punkte = [];
+    const schritte = Math.ceil((kPfeilBasis - kSpiraleAb) * SPINDEL_LAUFLINIE_PUNKTE_JE_STUFE);
+    for (let i = 0; i <= schritte; i++) {
+      const k = kSpiraleAb + ((kPfeilBasis - kSpiraleAb) * i) / schritte;
+      punkte.push(lage.punkt(radius(k), k));
+    }
+    z.polylinie(EBENE.lauflinie, punkte, LAUFLINIE_STRICH, { gestrichelt: geo.kSchnitt != null });
+  }
 
   const h = LAUFLINIE_PFEIL.halbeBreite * m;
-  const spitze = lage.punkt(g.rL, kEnde);
-  const basisInnen = lage.punkt(g.rL - h, kPfeilBasis);
-  const basisAussen = lage.punkt(g.rL + h, kPfeilBasis);
+  const r = radius(kEnde);
+  const spitze = lage.punkt(r, kEnde);
+  const basisInnen = lage.punkt(r - h, kPfeilBasis);
+  const basisAussen = lage.punkt(r + h, kPfeilBasis);
   z.flaeche(EBENE.lauflinie, [spitze, basisAussen, basisInnen], 0.5);
 }
 
@@ -204,7 +263,7 @@ function radialesMass(z, geo, k, r1, r2, langText, kurzText, rText = (r1 + r2) /
   const grad = (w * 180) / Math.PI + (umgedreht ? 180 : 0);
   const position = p(rText, (umgedreht ? -4 : 4) * m);
   const text = masstext(z, langText, kurzText, Math.abs(r2 - r1));
-  z.text(position, text, { ausrichtung: "mitte", drehung: ((grad % 360) + 360) % 360 });
+  z.text(position, text, { ausrichtung: "mitte", drehung: ((grad % 360) + 360) % 360, hintergrund: true });
 }
 
 /** Stufe (mit Versatz neben der Setzstufe), deren Strahl am nächsten an der gewünschten Richtung liegt. */
@@ -228,7 +287,7 @@ function spindelMassElemente(z, geo) {
   hilfslinie(z, [0, D / 2], [0, yMass - 4 * m]);
   hilfslinie(z, [D, D / 2], [D, yMass - 4 * m]);
   horizontalesMass(z, 0, D, yMass);
-  z.text([D / 2, yMass + 4 * m], `Ø ${zahl(D)}`, { ausrichtung: "mitte" });
+  z.text([D / 2, yMass + 4 * m], `Ø ${zahl(D)}`, { ausrichtung: "mitte", hintergrund: true });
 
   const wertB = zahl(geo.B);
   radialesMass(z, geo, spindelMassStufe(geo, 180), g.Ri, g.Ra, wertB, wertB);
@@ -237,9 +296,12 @@ function spindelMassElemente(z, geo) {
   const wertR = zahl(g.rL);
   const langR = t("zeichnung.radiusLauflinie", { wert: wertR });
   const kurzR = `r ${wertR}`;
-  const halbeTextlaenge = (masstext(z, langR, kurzR, g.rL).length * ZEICHENBREITE * SCHRIFTGROESSE * m) / 2;
-  const rText = Math.min(g.rS + halbeTextlaenge + 4 * m, g.rL / 2);
-  radialesMass(z, geo, spindelMassStufe(geo, 0), 0, g.rL, langR, kurzR, Math.max(rText, halbeTextlaenge));
+  // Langer Text nur, wenn er zwischen Spindel und innerem Nummernring Platz hat
+  const textlaenge = (text) => text.length * ZEICHENBREITE * SCHRIFTGROESSE * m;
+  const frei = spindelNummernRinge(g)[1] - NUMMER_SCHRIFTGROESSE * m - g.rS - 4 * m;
+  const textR = textlaenge(langR) <= frei ? langR : kurzR;
+  const rText = Math.max(g.rS + textlaenge(textR) / 2 + 4 * m, textlaenge(textR) / 2);
+  radialesMass(z, geo, spindelMassStufe(geo, 0), 0, g.rL, textR, textR, rText);
 }
 
 /**
@@ -253,6 +315,7 @@ function spindelGrundrissElemente(ergebnis, cmProPx) {
   if (geo.raum) raumElemente(z, geo);
   spindelKantenElemente(z, geo);
   spindelQuerschnittElemente(z, geo, materialVon(ergebnis));
+  spindelAustrittElemente(z, geo);
   if (geo.kSchnitt != null) spindelSchnittlinieElemente(z, geo);
   spindelLauflinieElemente(z, geo);
   spindelNummerElemente(z, geo);

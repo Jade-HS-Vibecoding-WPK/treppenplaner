@@ -7,6 +7,10 @@
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const SVG_STRICHELUNG = "5 3"; // px, Kanten oberhalb der Schnittebene
+// Weißer Grund hinter Texten mit { hintergrund: true }: Kontur in Papierfarbe unter der Füllung
+const SVG_TEXT_HINTERGRUND = {
+  stroke: "#fff", "stroke-width": 3, "stroke-linejoin": "round", "paint-order": "stroke",
+};
 
 /** Erzeugt ein SVG-Element mit Attributen und hängt es an. */
 function svgElement(eltern, name, attribute = {}) {
@@ -133,6 +137,9 @@ function zeichneElemente(svg, elemente, px, cmProPx, groesse) {
         if (el.drehung) attribute.transform = `rotate(${-el.drehung} ${x} ${y})`;
         const schriftPx = el.hoehe / cmProPx;
         if (Math.abs(schriftPx - SCHRIFTGROESSE) > 0.01) attribute["font-size"] = schriftPx.toFixed(1);
+        // Weißer Grund hinter dem Text (z. B. Maßzahl über Stufenkanten): weiße Kontur unter der Füllung.
+        // Nur SVG – im DXF R12 gibt es keine Textmaske.
+        if (el.hintergrund) Object.assign(attribute, SVG_TEXT_HINTERGRUND);
         svgElement(eltern, "text", attribute).textContent = el.inhalt;
         break;
       }

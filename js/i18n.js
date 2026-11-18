@@ -196,6 +196,7 @@ const TEXTE = {
     "zeichnung.lauflaenge": "Lauflänge {wert}",
     "zeichnung.podest": "Podest {wert}",
     "zeichnung.radiusLauflinie": "Lauflinie r {wert}",
+    "zeichnung.austritt": "Austritt",
     "zeichnung.raum": "Raum {wert}",
     "zeichnung.fehlt": "fehlt {wert}",
 
@@ -387,6 +388,7 @@ const TEXTE = {
     "zeichnung.lauflaenge": "Total going {wert}",
     "zeichnung.podest": "Landing {wert}",
     "zeichnung.radiusLauflinie": "Walking line r {wert}",
+    "zeichnung.austritt": "Top of stair",
     "zeichnung.raum": "Space {wert}",
     "zeichnung.fehlt": "missing {wert}",
 
@@ -584,6 +586,7 @@ const TEXTE = {
     "zeichnung.lauflaenge": "Reculement {wert}",
     "zeichnung.podest": "Palier {wert}",
     "zeichnung.radiusLauflinie": "Ligne de foulée r {wert}",
+    "zeichnung.austritt": "Arrivée",
     "zeichnung.raum": "Espace {wert}",
     "zeichnung.fehlt": "manque {wert}",
 

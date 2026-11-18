@@ -136,6 +136,13 @@
   - Spindel kesilmiş: malzeme taraması; Stahl'da dolu daire, DXF'te SOLID 4 köşe sınırı yüzünden üçgenlerle (48 parça). Yeni DXF katmanları SPINDEL ve GELAENDER (sadece kullanılınca).
   - Kesit henüz yok: Spindel seçiliyken ekranda sadece Grundriss, kendi ölçeğiyle (`spindelGrundrissMassstab()`, en fazla 560 px yüksek, minimum ölçek diğerleriyle aynı). Kesit (Adım 4) gelince ölçek Abwicklung'dan alınacak.
   - Lejant: Spindel Ø, Geländer payı, Deckenöffnung = daire Ø D (Annahme), ikinci tur numaraları iç halkada.
+- **Grundriss düzeltmeleri (18.11., kullanıcının görsel kontrolü):**
+  - Austritt: son Setzstufe (dönüş 386°) Spindel'den Deckenkante'ye kadar kalın (2 px, DECKE katmanı) ve kesikli; üzerinde, Lauflinie ile dış kenar arasında „Austritt“ / „Top of stair“ / „Arrivée“ yazısı (beyaz zeminli, çizgiyi kesiyor). Sığmazsa yazı yok, kalın çizgi ve ok kalıyor. Yazıyı dairenin dışına koymak oda ölçüleriyle çakışıyordu.
+  - Deckenkante = Deckenöffnung Ø D (Annahme), tam daire, kesikli (Schnittebene'nin üstünde, diğer planlardaki konvansiyon). Geländer çizgisi bu yüzden Geländer payının ortasına alındı (Ra + g/2), iki çizgi ayrı okunuyor.
+  - Lauflinie L/U'daki gibi: Antritt'ten Schnittlinie'ye kadar düz, sonra oka kadar kesikli. Bir turu aşarsa son basamaktan itibaren 7 px içe kayıyor (spiral); böylece ok düz başlangıç kısmının üstüne düşmüyor. DXF'te bu kısım kesikli POLYLINE.
+  - Ölçü yazılarının arkasında beyaz zemin: SVG'de beyaz kontur + `paint-order: stroke` (yeni seçenek `hintergrund: true`, sadece Spindel planındaki ölçüler ve Austritt). Diğer çizimlerde böyle bir zemin yoktu. DXF R12'de metin maskesi olmadığı için orada yok.
+  - „Lauflinie r …“ uzun yazısı sadece Spindel ile iç numara halkası arasına sığarsa; yoksa „r …“.
+  - Kontrol: 744 ekran durumu (DE/EN/FR, 150–600 cm, links/rechts, odalı/odasız), yazılar döndürülmüş dikdörtgenlerle (SAT) test edildi: çakışma yok, taşma yok; 1260 durumda NaN/hata yok, DXF üretiliyor.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.
