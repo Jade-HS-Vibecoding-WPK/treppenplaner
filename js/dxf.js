@@ -84,7 +84,20 @@ function dxfKreis(s, el) {
   s.punkt(10, el.mitte).paar(40, dxfZahl(el.radius * DXF_MM_PRO_CM));
 }
 
-const DXF_AUSRICHTUNG = { links: 0, mitte: 1, rechts: 2 }; // Gruppe 72, Grundlinie bleibt (73 = 0)
+/** Kreisbogen (R12: ARC, Winkel in Grad gegen den Uhrzeigersinn); Vollkreis als CIRCLE. */
+function dxfBogen(s, el) {
+  if (el.ende - el.start >= 360 - 1e-9) {
+    dxfKreis(s, el);
+    return;
+  }
+  const normiert = (grad) => ((grad % 360) + 360) % 360;
+  s.paar(0, "ARC");
+  dxfEigenschaften(s, el);
+  s.punkt(10, el.mitte).paar(40, dxfZahl(el.radius * DXF_MM_PRO_CM))
+    .paar(50, dxfZahl(normiert(el.start))).paar(51, dxfZahl(normiert(el.ende)));
+}
+
+const DXF_AUSRICHTUNG ={ links: 0, mitte: 1, rechts: 2 }; // Gruppe 72, Grundlinie bleibt (73 = 0)
 
 function dxfText(s, el) {
   s.paar(0, "TEXT");
@@ -134,7 +147,9 @@ function dxfAusdehnung(elemente) {
       case "linie": return [el.p1, el.p2];
       case "polylinie": case "flaeche": return el.punkte;
       case "schraffur": return el.umriss;
-      case "kreis": return [[el.mitte[0] - el.radius, el.mitte[1] - el.radius], [el.mitte[0] + el.radius, el.mitte[1] + el.radius]];
+      case "kreis":
+      case "bogen": // vereinfacht: umschließendes Quadrat des ganzen Kreises
+        return [[el.mitte[0] - el.radius, el.mitte[1] - el.radius], [el.mitte[0] + el.radius, el.mitte[1] + el.radius]];
       case "text": return [el.position];
       default: return [];
     }
@@ -202,6 +217,7 @@ function erzeugeDxf(elemente, strichelung) {
       case "polylinie": dxfPolylinie(s, el, el.punkte, el.geschlossen); break;
       case "flaeche": dxfFlaeche(s, el); break;
       case "kreis": dxfKreis(s, el); break;
+      case "bogen": dxfBogen(s, el); break;
       case "text": dxfText(s, el); break;
       case "schraffur":
         for (const [p1, p2] of schraffurLinien(el)) dxfLinie(s, el, p1, p2);

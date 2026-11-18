@@ -25,6 +25,9 @@ const EBENE = {
   wange: "WANGE",
   schraffurHolz: "SCHRAFFUR_HOLZ",
   schraffurStahl: "SCHRAFFUR_STAHL",
+  // Spindeltreppe (nur im DXF, wenn benutzt)
+  spindel: "SPINDEL",
+  gelaender: "GELAENDER",
 };
 
 // Strichstärken und Schrift in px (nur SVG; im DXF legt das CAD-Programm sie je Ebene fest).
@@ -48,6 +51,12 @@ function neueZeichenliste(cmProPx) {
     /** Gefüllte Fläche (Pfeilspitze). */
     flaeche: (ebene, punkte, breite) => neu({ typ: "flaeche", ebene, punkte, breite }),
     kreis: (ebene, mitte, radius, breite) => neu({ typ: "kreis", ebene, mitte, radius, breite }),
+    /**
+     * Kreisbogen gegen den Uhrzeigersinn von start bis ende (Grad, 0° = +x, ende > start,
+     * höchstens 360°) – wie ARC im DXF. Optionen wie bei der Linie (gestrichelt).
+     */
+    bogen: (ebene, mitte, radius, start, ende, breite, optionen = {}) =>
+      neu({ typ: "bogen", ebene, mitte, radius, start, ende, breite, ...optionen }),
     /**
      * Linienschraffur innerhalb eines geschlossenen Umrisses (ohne Umrisslinie).
      * Standard: 45°, Abstand SCHRAFFUR_ABSTAND px; Materialien (material.js) geben winkel/abstandPx/breite vor.

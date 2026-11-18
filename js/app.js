@@ -94,6 +94,7 @@ function zeigeErgebnis(e) {
   spindelHinweis.hidden = !spindel;
   spindelHinweis.textContent = spindel ? t("hinweis.notwendigeTreppe") : "";
   setzeZeichnungstitel(gerade);
+  if (spindel) setzeI18n(grundrissSvg, "grundriss.ariaSpindel", true);
   setzeLegenden(e, auswahl.material);
   setzeUntertitel(e.form);
 
@@ -185,7 +186,12 @@ function setzeLegenden(e, materialSchluessel) {
   });
 
   const teile = [t("grundriss.legende", { material: materialText })];
-  if (material.konstruktion === "wange") teile.push(t("grundriss.wangen"));
+  if (e.form === "spindel") {
+    const masse = spindelMasse(material);
+    teile.push(t("grundriss.spindel", { d: cm(masse.spindelDurchmesser), g: cm(masse.gelaenderZuschlag) }));
+  } else if (material.konstruktion === "wange") {
+    teile.push(t("grundriss.wangen"));
+  }
   // U: Wangen am Treppenauge stoßen aneinander, wenn zwei Wangendicken breiter sind als das Auge.
   const augeMin = 2 * wangendicke(material);
   if (e.form === "U" && augeMin > TREPPENAUGE + RECHENTOLERANZ) {
@@ -290,18 +296,20 @@ function zeigeDruckEingabe(e) {
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
 function zeichneZeichnungen() {
-  // Vorläufig: Spindeltreppe noch ohne Zeichnungen und DXF/SVG-Export (folgen in den nächsten Schritten).
+  // Vorläufig: Spindeltreppe noch ohne Schnitt (Abwicklung folgt) – nur der Grundriss, eigener Maßstab.
   const spindel = letztesErgebnis.form === "spindel";
   document.getElementById("zeichnungFolgt").hidden = !spindel;
-  zeichenflaeche.hidden = spindel;
-  for (const knopf of document.querySelectorAll('.export [data-export="dxf"], .export [data-export="svg"]')) {
-    knopf.disabled = spindel;
-  }
-  if (spindel) return;
+  document.getElementById("schnittTitel").hidden = spindel;
+  schnittSvg.closest("figure").hidden = spindel;
+  for (const knopf of document.querySelectorAll('.export [data-zeichnung="schnitt"]')) knopf.disabled = spindel;
 
   // Sichtbare Breite des Scrollbereichs, nicht der Abbildung (die wächst mit der Zeichnung).
   // Abgerundet: clientWidth rundet z. B. 957,6 px auf 958 – die Zeichnung wäre dann zu breit.
   const breite = Math.floor(zeichenflaeche.getBoundingClientRect().width);
+  if (spindel) {
+    zeichneGrundriss(grundrissSvg, letztesErgebnis, spindelGrundrissMassstab(letztesErgebnis, breite));
+    return;
+  }
   const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, breite);
   zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
 }

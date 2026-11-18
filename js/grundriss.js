@@ -1,5 +1,6 @@
 /*
- * grundriss.js – Grundriss einer Treppe aus Läufen und Podesten (gerade, L, U).
+ * grundriss.js – Grundriss einer Treppe aus Läufen und Podesten (gerade, L, U);
+ * die Spindeltreppe zeichnet spindelgrundriss.js (gleiche Ausgabe, eigene Geometrie).
  *
  * grundrissElemente() liefert eine Elementliste (elemente.js); zeichneGrundriss() gibt sie
  * als SVG aus. Bei der geraden Treppe werden Maßstab und x-Lage vom Schnitt übernommen,
@@ -585,6 +586,7 @@ function podestMassElemente(z, geo) {
  * @param {number} cmProPx Umrechnung der Beschriftungsgrößen (px) in cm
  */
 function grundrissElemente(ergebnis, cmProPx) {
+  if (ergebnis.form === "spindel") return spindelGrundrissElemente(ergebnis, cmProPx); // spindelgrundriss.js
   const geo = grundrissGeometrie(ergebnis);
   const z = neueZeichenliste(cmProPx);
 
@@ -609,7 +611,7 @@ function grundrissElemente(ergebnis, cmProPx) {
  * @param {object} abb Abbildung des Schnitts (Rückgabe von zeichneSchnitt())
  */
 function zeichneGrundriss(svg, ergebnis, abb) {
-  const geo = grundrissGeometrie(ergebnis);
+  const geo = ergebnis.form === "spindel" ? spindelGrundrissGeometrie(ergebnis) : grundrissGeometrie(ergebnis);
   const k = abb.k;
   const elemente = grundrissElemente(ergebnis, 1 / k);
   const randUnten = GRUNDRISS_RAND.unten + (geo.raum?.laengeVorgegeben ? RAUMMASS_ABSTAND + 16 : 0);
@@ -625,7 +627,7 @@ function zeichneGrundriss(svg, ergebnis, abb) {
     return;
   }
 
-  // L/U: eigene Lage, gleicher Maßstab. Links Platz für die Breitenkette, rechts für die Raumbreite.
+  // L/U/Spindel: eigene Lage, gleicher Maßstab. Links Platz für die Breitenkette, rechts für die Raumbreite.
   const { xMin, yMin } = geo.belegt;
   const xMax = Math.max(geo.belegt.xMax, geo.raum?.laenge ?? 0);
   const yMax = Math.max(geo.belegt.yMax, geo.raum?.breite ?? 0);

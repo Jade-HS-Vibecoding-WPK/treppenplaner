@@ -58,7 +58,7 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Platzbedarf (Grundriss)",
     "ergebnis.durchmesser": "Durchmesser D (Grundriss)",
     "ergebnis.teilung": "Teilung (Stufen je 360°)",
-    "zeichnung.folgt": "Die Zeichnungen der Spindeltreppe folgen (in Arbeit).",
+    "zeichnung.folgt": "Der Schnitt (Abwicklung) der Spindeltreppe folgt (in Arbeit).",
     "formwahl.label": "Treppenform",
     "form.gerade": "Gerade Treppe",
     "form.L": "L-Treppe",
@@ -165,6 +165,7 @@ const TEXTE = {
       "Abwicklung entlang der Lauflinie, ohne Maßstab · Maße in cm · {konstruktion} · " +
       "Deckendicke angenommen {decke} cm · Schraffur vereinfacht",
     "grundriss.ariaPodest": "Grundriss der Treppe mit Podest",
+    "grundriss.ariaSpindel": "Grundriss der Spindeltreppe",
     "grundriss.legende":
       "Grundriss, ohne Maßstab · Maße in cm · Material: {material} · Darstellung ohne Wände/Handlauf · " +
       "Schnittführung ca. 1 m über Fußboden (Darstellungskonvention, keine Normvorgabe)",
@@ -187,12 +188,14 @@ const TEXTE = {
       "{material}-Wangentreppe: Trittstufen und Podestbelag {tritt} cm, Wangen {wd} × {wh} cm " +
       "(Annahmen, keine Normwerte) · offene Stufen, Prüfung offener Stufen nicht enthalten",
     "grundriss.wangen": "Wangen außerhalb der nutzbaren Laufbreite, in der Raumprüfung nicht berücksichtigt (vereinfacht)",
+    "grundriss.spindel": "Spindel Ø {d} cm, Geländer {g} cm außerhalb der nutzbaren Laufbreite, Deckenöffnung als Kreis Ø D (Annahmen, keine Normwerte); zweite Umdrehung: Nummern auf dem inneren Ring",
     "grundriss.augeVereinfacht": "vereinfacht: bei {material} wäre ein Treppenauge ≥ {min} cm nötig",
     "druck.material": "Material: {wert}",
     "zeichnung.material": "Material: {wert} (Maße angenommen, keine Normwerte)",
 
     "zeichnung.lauflaenge": "Lauflänge {wert}",
     "zeichnung.podest": "Podest {wert}",
+    "zeichnung.radiusLauflinie": "Lauflinie r {wert}",
     "zeichnung.raum": "Raum {wert}",
     "zeichnung.fehlt": "fehlt {wert}",
 
@@ -249,7 +252,7 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Space required (plan)",
     "ergebnis.durchmesser": "Diameter D (plan)",
     "ergebnis.teilung": "Steps per full turn (360°)",
-    "zeichnung.folgt": "Drawings of the spiral staircase to follow (in progress).",
+    "zeichnung.folgt": "The section (development) of the spiral staircase will follow (in progress).",
     "formwahl.label": "Stair shape",
     "form.gerade": "Straight stair",
     "form.L": "L-shaped stair",
@@ -355,6 +358,7 @@ const TEXTE = {
       "Development along the walking line, not to scale · dimensions in cm · {konstruktion} · " +
       "slab thickness assumed {decke} cm · hatching simplified",
     "grundriss.ariaPodest": "Plan of the stair with landing",
+    "grundriss.ariaSpindel": "Plan of the spiral staircase",
     "grundriss.legende":
       "Plan, not to scale · dimensions in cm · material: {material} · shown without walls/handrail · " +
       "cut approx. 1 m above floor (drawing convention, not a requirement of the standard)",
@@ -375,12 +379,14 @@ const TEXTE = {
       "{material} stringer stair: treads and landing deck {tritt} cm, stringers {wd} × {wh} cm " +
       "(assumptions, not values of the standard) · open risers, check of open risers not included",
     "grundriss.wangen": "stringers outside the clear width, not included in the space check (simplified)",
+    "grundriss.spindel": "newel Ø {d} cm, balustrade {g} cm outside the clear width, floor opening as circle Ø D (assumptions, not standard values); second turn: numbers on the inner ring",
     "grundriss.augeVereinfacht": "simplified: a {material} stair would need a well of at least {min} cm",
     "druck.material": "Material: {wert}",
     "zeichnung.material": "Material: {wert} (dimensions assumed, not values of the standard)",
 
     "zeichnung.lauflaenge": "Total going {wert}",
     "zeichnung.podest": "Landing {wert}",
+    "zeichnung.radiusLauflinie": "Walking line r {wert}",
     "zeichnung.raum": "Space {wert}",
     "zeichnung.fehlt": "missing {wert}",
 
@@ -441,7 +447,7 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Encombrement (vue en plan)",
     "ergebnis.durchmesser": "Diamètre D (vue en plan)",
     "ergebnis.teilung": "Marches par tour (360°)",
-    "zeichnung.folgt": "Les dessins de l’escalier à vis suivront (en cours).",
+    "zeichnung.folgt": "La coupe (développée) de l’escalier à vis suivra (en cours).",
     "formwahl.label": "Forme de l’escalier",
     "form.gerade": "Escalier droit",
     "form.L": "Escalier en L",
@@ -549,6 +555,7 @@ const TEXTE = {
       "Développement selon la ligne de foulée, sans échelle · cotes en cm · {konstruktion} · " +
       "épaisseur de dalle supposée {decke} cm · hachures simplifiées",
     "grundriss.ariaPodest": "Vue en plan de l’escalier avec palier",
+    "grundriss.ariaSpindel": "Vue en plan de l’escalier à vis",
     "grundriss.legende":
       "Vue en plan, sans échelle · cotes en cm · matériau : {material} · représentée sans murs ni main courante · " +
       "plan de coupe à env. 1 m au-dessus du sol (convention de dessin, pas une exigence de la norme)",
@@ -569,12 +576,14 @@ const TEXTE = {
       "escalier à limons en {material} : marches et platelage du palier {tritt} cm, limons {wd} × {wh} cm " +
       "(hypothèses, pas des valeurs de la norme) · marches sans contremarches, contrôle des marches ouvertes non inclus",
     "grundriss.wangen": "limons hors de l’emmarchement, non pris en compte dans le contrôle de l’espace (simplifié)",
+    "grundriss.spindel": "noyau Ø {d} cm, garde-corps {g} cm hors de l’emmarchement, trémie circulaire Ø D (hypothèses, pas de valeurs normatives) ; deuxième tour : numéros sur l’anneau intérieur",
     "grundriss.augeVereinfacht": "simplifié : en {material}, il faudrait un jour d’escalier d’au moins {min} cm",
     "druck.material": "Matériau : {wert}",
     "zeichnung.material": "Matériau : {wert} (cotes supposées, pas des valeurs de la norme)",
 
     "zeichnung.lauflaenge": "Reculement {wert}",
     "zeichnung.podest": "Palier {wert}",
+    "zeichnung.radiusLauflinie": "Ligne de foulée r {wert}",
     "zeichnung.raum": "Espace {wert}",
     "zeichnung.fehlt": "manque {wert}",
 

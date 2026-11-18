@@ -102,6 +102,8 @@
   - Puanlama: `GEWICHTE` değişmiyor. Komfort için seçenek C (Kₐ nutzbare Laufbreite boyunca ortalama), Adım 2'deki senaryolardan sonra tekrar bakılacak. Sicherheit ve Nutzung için mevcut formüller, ek ceza yok. *(Benim kararım.)*
   - B > 130 cm → Spindel eleniyor (Gehbereich kuralı belgelenmemiş). *(Benim kararım.)*
   - Plan: ikinci turun numaraları iç halkada; çok karışırsa sadece ilk tur + son numara. Deckenöffnung = D çaplı daire; kenardaki Kopfhöhe kontrol edilmiyor (README Eigene Annahmen, PLAN'daki açık madde kalıyor). *(Benim kararım.)*
+  - Senaryo d (275 / Wohngebäude / 80 / Raum 230 × 230): 230 × 230'da L (Komfort 12, sehr steil) Spindel'i 48:46 ile geçiyor; bilerek kabul edildi, yeni puan kuralı yok. Fark küçük, kullanıcı iki kartı da görüyor (18.11.). *(Benim kararım.)*
+  - Kart yüksekliği (1366 px'te 4 kart, ~318 px) ve yazdırmadaki FR-600 istisnası (107 px) kabul edildi (18.11.). *(Benim kararım.)*
 
 ## Yapay zekânın kararları
 
@@ -124,6 +126,16 @@
   - **Senaryo sonucu, kullanıcıyla konuşulacak:** d) 275/Wohn/80/230 × 230'da Spindel tek uyan değil: L daha dik Stufung ile (Komfort 12) sığıyor ve 48 puanla Spindel'in (46) önünde. 1152 durumluk taramada Spindel sadece tek uyan varyant olduğunda öneriliyor (14 durum).
   - Kartlar 1366 px'te 4'ü yan yana, yükseklik ~250 → 318 px (dar kartta değerler ve alt puanlar iki satıra kayıyor, Spindel'de uyarı satırı).
   - Yazdırma: bilinen istisna (FR, 600 cm, 450 × 120) 44 → 107 px'e çıktı (4. satır + uzun gerekçe); diğer 41 simüle durum sığıyor.
+- **Spindeltreppe – Grundriss (18.11., Adım 3):**
+  - Ayrı dosya `js/spindelgrundriss.js`; `grundrissElemente()` ve `zeichneGrundriss()` Spindel için oraya yönleniyor. Yeni eleman `bogen` (merkez, yarıçap, başlangıç/bitiş açısı, saat yönünün tersine; DXF ARC ile aynı mantık). SVG'de `path` + `A`, tam daire iki yarım yay. DXF'te ARC, 360° ise CIRCLE (ikisi de R12'de var).
+  - Basamak kenarları sadece bir tur çiziliyor: Teilung tam sayı olduğu için ikinci turun kenarları birincinin üstüne düşüyor (L/U'daki „üst üste binen kenar çizilmez“ kuralı).
+  - Schnittlinie: kesilen Setzstufe'nin üzerinden hafif eğik (içte k − 0,25, dışta k + 0,25), düz merdivendeki eğik çizgi gibi; Setzstufe çizgisiyle çakışmıyor. Ondan sonraki her şey (basamak kenarları, dış yay, Geländer, Lauflinie) kesikli.
+  - Lauflinie ikinci turda birincinin üstünden geçtiği için tekrar çizilmiyor; sadece sondaki ok (Austritt) ikinci turda.
+  - Numaralar: 1. tur Lauflinie ile dış kenar arasında, 2. tur Lauflinie ile iç sınır arasında, 3. ve sonraki turlarda sadece son numara daha içte (600 cm'de 3. tur oluyor).
+  - Ölçüler: Ø D altta (teğet noktalarından yardımcı çizgi), Laufbreite ve Lauflinie yarıçapı radyal, basamak numaralarının arasından (Setzstufe + 0,25 basamak) geçen ışın üzerinde; Laufbreite batıya, r doğuya en yakın ışında. r yazısı Spindel'e yakın duruyor, ikinci turun numaralarıyla çakışmasın diye (taramada 450/600 cm'de çakışma vardı, düzeltildi).
+  - Spindel kesilmiş: malzeme taraması; Stahl'da dolu daire, DXF'te SOLID 4 köşe sınırı yüzünden üçgenlerle (48 parça). Yeni DXF katmanları SPINDEL ve GELAENDER (sadece kullanılınca).
+  - Kesit henüz yok: Spindel seçiliyken ekranda sadece Grundriss, kendi ölçeğiyle (`spindelGrundrissMassstab()`, en fazla 560 px yüksek, minimum ölçek diğerleriyle aynı). Kesit (Adım 4) gelince ölçek Abwicklung'dan alınacak.
+  - Lejant: Spindel Ø, Geländer payı, Deckenöffnung = daire Ø D (Annahme), ikinci tur numaraları iç halkada.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.

@@ -98,6 +98,29 @@ function zeichneElemente(svg, elemente, px, cmProPx, groesse) {
         svgElement(eltern, "circle", { cx, cy, r: el.radius / cmProPx, "stroke-width": el.breite });
         break;
       }
+      case "bogen": {
+        // Weltkoordinaten y nach oben: gegen den Uhrzeigersinn ist im SVG (y nach unten) sweep-flag 0.
+        const r = el.radius / cmProPx;
+        const punkt = (grad) => px([
+          el.mitte[0] + el.radius * Math.cos((grad * Math.PI) / 180),
+          el.mitte[1] + el.radius * Math.sin((grad * Math.PI) / 180),
+        ]);
+        const spanne = el.ende - el.start;
+        // Vollkreis als zwei Halbbögen (ein SVG-Bogen mit gleichem Anfang und Ende wäre leer)
+        const teile = spanne >= 360 - 1e-9 ? [[el.start, el.start + 180], [el.start + 180, el.start + 360]] : [[el.start, el.ende]];
+        const [x0, y0] = punkt(teile[0][0]);
+        let d = `M ${x0.toFixed(2)} ${y0.toFixed(2)}`;
+        for (const [von, bis] of teile) {
+          const [x, y] = punkt(bis);
+          d += ` A ${r.toFixed(2)} ${r.toFixed(2)} 0 ${bis - von > 180 ? 1 : 0} 0 ${x.toFixed(2)} ${y.toFixed(2)}`;
+        }
+        const pfad = svgElement(eltern, "path", { d, "stroke-width": el.breite });
+        if (el.gestrichelt) {
+          pfad.setAttribute("stroke-dasharray", SVG_STRICHELUNG);
+          pfad.setAttribute("stroke-linecap", "butt");
+        }
+        break;
+      }
       case "schraffur":
         svgElement(eltern, "polygon", {
           points: svgPunkte(el.umriss, px), fill: `url(#${schraffurMuster(el)})`, stroke: "none",

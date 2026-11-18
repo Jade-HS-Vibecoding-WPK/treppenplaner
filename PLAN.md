@@ -24,7 +24,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
-- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · ✅ 2 Karte + Punkte · [ ] 3 Grundriss · [ ] 4 Abwicklung · [ ] 5 DXF, Texte, README
+- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · ✅ 2 Karte + Punkte · ✅ 3 Grundriss · [ ] 4 Abwicklung · [ ] 5 DXF, Texte, README
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
@@ -98,6 +98,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Spindeltreppe, Schritt 2 (18.11.): vierte Karte im Vergleich (`TREPPENFORMEN`); Mini-Grundriss (Außenkreis D, Laufbreite, Spindel, Setzstufen einer Umdrehung, Lauflinie mit Antrittskreis), Drehsinn links | rechts wie bei L, Wert „Durchmesser D“, schwarzer Hinweis „Als notwendige Treppe ggf. nicht zulässig – Landesbauordnung prüfen.“ (Karte und unter den Kennwerten); Punkte: Komfort mit Auftrittspunkten gemittelt über die nutzbare Laufbreite (Variante C), Platz mit der Kreisfläche, Nutzung ohne gerade Läufe (Gebäude im Allgemeinen 0), Sicherheit unverändert; Kennwerte „Durchmesser D“ und „Teilung (Stufen je 360°)“, a = Auftritt auf der Lauflinie; Materialwechsel rechnet den Vergleich neu; Ausschlussgründe „Laufbreite über 130 cm“ und „Geometrie“; vorläufig „Zeichnungen folgen“ statt Schnitt/Grundriss, DXF/SVG gesperrt; DE/EN/FR.
 - ✅ Szenarien Schritt 2 (Konsole, alle drei Materialien gleich): a) 275/Wohn/80 → L 94, Spindel 65; b) 280/Wohn/80/450 × 120 → gerade 59; c) 280/Wohn/100/320 × 220 → U 68 (unverändert), Spindel passt nicht; d) 275/Wohn/80/230 × 230 → L 48 (steilere Stufung), Spindel 46, U 44 – erwartet war „nur Spindel passt“; e) 300/Allgemein/100 → L 90, Spindel 49 (D 261,3 cm, t = 16). Sweep 1152 Fälle: Spindel nur in 14 Fällen empfohlen, immer als einzige passende Variante. Karten bei 1366 px nebeneinander 318 px hoch (vorher ca. 250), 375 px ohne Überlauf (DE/EN/FR). Druck Seite 1 (simuliert, 42 Fälle DE/EN/FR): passt bis auf die bekannte Ausnahme FR 600 cm / 450 × 120 (jetzt 107 px statt 44 px zu lang).
 
+- ✅ Spindeltreppe, Schritt 3 (18.11.): `js/spindelgrundriss.js` – Grundriss mit Außenkante der Stufen (Bogen), Geländer (Bogen, Ebene GELAENDER), Spindel geschnitten mit Materialschraffur (Stahl gefüllt, als SOLID-Dreiecke; Ebene SPINDEL), radialen Setzstufen einer Umdrehung (zweite Umdrehung liegt darauf), schräger Schnittlinie und gestrichelten Teilen darüber, Stufennummern (1. Umdrehung außen, 2. innerer Ring, ab der 3. nur die letzte), Lauflinie mit Kreis und Pfeil, Maßen Ø D (unten), Laufbreite und Lauflinienradius (radial); Raumrechteck und Überstand wie bei den anderen Formen. Neues Element `bogen` (SVG-Pfad, DXF ARC bzw. CIRCLE). Bei der Spindeltreppe am Bildschirm vorerst nur der Grundriss mit eigenem Maßstab; Schnitt „folgt“ und dessen Export gesperrt, Grundriss-Export aktiv (`treppe_275_spindel-links_grundriss.dxf`).
+- ✅ Konsolentest Schritt 3: 275 / Wohngebäude / 80 → D 214,9 cm, t = 14, 15 Auftritte, Drehung 385,7°, 14 Setzstufen + Austritt, Außenbögen zusammen 360°; 3780 Kombinationen ohne Fehler/NaN; 162 Bildschirmfälle (DE/EN/FR, links/rechts, drei Materialien, mit/ohne Raum) ohne überlappende Texte, ohne Überlauf; DXF: AC1009, ARC mit 8/10/20/30/40/50/51 (Winkel 0–360°, gegen den Uhrzeigersinn), CIRCLE mit 8/10/20/30/40, Ebenen SPINDEL und GELAENDER in der Tabelle.
+
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
@@ -127,7 +130,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - Spindeltreppe als 4. Variante – Plan abgestimmt (siehe `notlar.md`), fünf Schritte mit je einem Commit, kein Push:
   1. ✅ Berechnung + Normprüfung (`js/spindeltreppe.js`, `norm.js`, `material.js`)
   2. ✅ Karte + Punkte (Komfort C), Szenarien a–e, Hinweis „notwendige Treppe“, Druck Seite 1 geprüft – offen: Szenario d (L statt Spindel) und Druck-Ausnahme FR 600 cm mit dem Nutzer besprechen
-  3. Grundriss (Bogen-Element, DXF ARC)
+  3. ✅ Grundriss (Bogen-Element, DXF ARC/CIRCLE, Ebenen SPINDEL und GELAENDER)
   4. Abwicklung (kann entfallen)
   5. DXF-Dateiname, Fachbegriffe DE/EN/FR, README (Eigene Annahmen: Kragstufen bei Stahlbeton vereinfacht, Deckenöffnung = Kreis D, Kopfhöhe am Rand nicht geprüft)
 - ✅ Sichtprüfung Materialwahl (Nutzer)
