@@ -143,6 +143,13 @@
   - Ölçü yazılarının arkasında beyaz zemin: SVG'de beyaz kontur + `paint-order: stroke` (yeni seçenek `hintergrund: true`, sadece Spindel planındaki ölçüler ve Austritt). Diğer çizimlerde böyle bir zemin yoktu. DXF R12'de metin maskesi olmadığı için orada yok.
   - „Lauflinie r …“ uzun yazısı sadece Spindel ile iç numara halkası arasına sığarsa; yoksa „r …“.
   - Kontrol: 744 ekran durumu (DE/EN/FR, 150–600 cm, links/rechts, odalı/odasız), yazılar döndürülmüş dikdörtgenlerle (SAT) test edildi: çakışma yok, taşma yok; 1260 durumda NaN/hata yok, DXF üretiliyor.
+- **Spindeltreppe – Abwicklung (18.11., Adım 4):**
+  - Mevcut `schnittGeometrie()` kullanılıyor: Spindel sonucu tek „Lauf“ olduğu için profil, döşemeler, kotlar ve ölçüler düz merdivendeki gibi çıkıyor; x = Lauflinie boyunca açılmış uzunluk ((n − 1) · a, 275 cm'de 429,4).
+  - Konstrüksiyon: Kragstufen, her malzemede aynı şekil (dikdörtgen a × basamak kalınlığı, malzeme taraması), Setzstufe/Laufplatte/Wange yok. Stahlbeton'da lejantta „vereinfacht: meist monolithische Wendelplatte“. Ortak kod: `trittstufenRechtecke()` (Wangentreppe ile paylaşılıyor).
+  - Durchgangshöhe: açılmış kesitte üstteki basamak normalde t · a sağda; ama planda tam üstte. Bu yüzden t numaralı basamak (bir tur yukarı) birinci basamağın üstüne kesikli çiziliyor ve aradaki mesafe „lichte Durchgangshöhe“ olarak ölçüleniyor (= t · s − Stufendicke, hesapla aynı). Bir turdan az dönen merdivenlerde (n − 2 < t) yok.
+  - Grundriss artık Abwicklung'un ölçeğini kullanıyor (geçici `spindelGrundrissMassstab()` kaldırıldı). Ölçek küçüldüğü için Lauflinie yarıçapı ölçüsü çoğu zaman planda yer bulamıyor → değeri her zaman lejantta („Lauflinie r = 64,3 cm“), planda sadece sığarsa.
+  - 3. tur (≥ ~500 cm): son numara iç halkada, bir tur alttaki numaranın yerine (aynı yerde iki numara sığmıyordu).
+  - Kontrol: 1368 ekran durumu çakışmasız; DXF kesit ve plan, üç malzeme, R12 uyumlu.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.

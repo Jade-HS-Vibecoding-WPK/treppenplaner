@@ -218,10 +218,9 @@ function spindelLauflinieElemente(z, geo) {
   z.flaeche(EBENE.lauflinie, [spitze, basisAussen, basisInnen], 0.5);
 }
 
-/** Radien der Nummernringe: 1. Umdrehung außen, 2. zwischen Lauflinie und innerer Begrenzung, 3. weiter innen. */
+/** Radien der Nummernringe: 1. Umdrehung außen, ab der 2. zwischen Lauflinie und innerer Begrenzung. */
 function spindelNummernRinge(g) {
-  const innen = (g.Ri + g.rL) / 2;
-  return [(g.rL + g.Ra) / 2, innen, (g.Ri + innen) / 2];
+  return [(g.rL + g.Ra) / 2, (g.Ri + g.rL) / 2];
 }
 
 /** Stufennummern 1 … n: erste Umdrehung außen, zweite innen, danach nur die letzte Nummer. */
@@ -229,12 +228,15 @@ function spindelNummerElemente(z, geo) {
   const { g, lage, n } = geo;
   const ringe = spindelNummernRinge(g);
   const sehneFaktor = 2 * Math.sin(Math.PI / g.teilung);
+  // Ab der dritten Umdrehung (sehr hohe Geschosse) nur noch die letzte Nummer: Sie steht auf dem
+  // inneren Ring anstelle der Nummer eine Umdrehung tiefer (am selben Platz wäre kein Raum).
+  const letzteUmdrehung = Math.floor((n - 0.5) / g.teilung);
   for (let j = 1; j <= n; j++) {
     const k = j - 0.5;
     const umdrehung = Math.floor(k / g.teilung);
     if (umdrehung > 1 && j < n) continue;
-    // ab der dritten Umdrehung nur die letzte Nummer, auf einem dritten Ring weiter innen
-    const r = ringe[Math.min(umdrehung, 2)];
+    if (letzteUmdrehung > 1 && j === n - g.teilung) continue;
+    const r = ringe[Math.min(umdrehung, 1)];
     const hoehe = Math.min(NUMMER_SCHRIFTGROESSE * z.m, (r * sehneFaktor) / 1.3);
     const [x, y] = lage.punkt(r, k);
     z.text([x, y - 0.36 * hoehe], String(j), { ausrichtung: "mitte", hoehe });
@@ -299,6 +301,8 @@ function spindelMassElemente(z, geo) {
   // Langer Text nur, wenn er zwischen Spindel und innerem Nummernring Platz hat
   const textlaenge = (text) => text.length * ZEICHENBREITE * SCHRIFTGROESSE * m;
   const frei = spindelNummernRinge(g)[1] - NUMMER_SCHRIFTGROESSE * m - g.rS - 4 * m;
+  // Passt auch der kurze nicht (kleiner Maßstab), entfällt das Maß – r steht in der Legende.
+  if (textlaenge(kurzR) > frei) return;
   const textR = textlaenge(langR) <= frei ? langR : kurzR;
   const rText = Math.max(g.rS + textlaenge(textR) / 2 + 4 * m, textlaenge(textR) / 2);
   radialesMass(z, geo, spindelMassStufe(geo, 0), 0, g.rL, textR, textR, rText);
@@ -324,17 +328,3 @@ function spindelGrundrissElemente(ergebnis, cmProPx) {
   return z.elemente;
 }
 
-/**
- * Maßstab des Spindel-Grundrisses, solange es keinen Schnitt gibt: füllt die Breite,
- * höchstens MAX_HOEHE_PX hoch, nie kleiner als der Mindestmaßstab (zeichnung.js).
- */
-function spindelGrundrissMassstab(ergebnis, breitePx) {
-  const D = ergebnis.spindel.durchmesser;
-  const raum = ergebnis.raum?.vorgabe;
-  const breiteCm = Math.max(D, raum?.laenge ?? 0);
-  const hoeheCm = Math.max(D, raum?.breite ?? 0);
-  const randX = GRUNDRISS_RAND_SEITLICH.links + 28 + GRUNDRISS_RAND_SEITLICH.rechts + 54;
-  const randY = GRUNDRISS_RAND.oben + GRUNDRISS_RAND.unten + RAUMMASS_ABSTAND + 16;
-  const kPasst = Math.min((breitePx - randX) / breiteCm, (MAX_HOEHE_PX - randY) / hoeheCm, MAX_PX_PRO_CM);
-  return { k: Math.max(kPasst, mindestMassstab(ergebnis)) };
-}

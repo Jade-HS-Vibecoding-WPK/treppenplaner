@@ -58,7 +58,6 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Platzbedarf (Grundriss)",
     "ergebnis.durchmesser": "Durchmesser D (Grundriss)",
     "ergebnis.teilung": "Teilung (Stufen je 360°)",
-    "zeichnung.folgt": "Der Schnitt (Abwicklung) der Spindeltreppe folgt (in Arbeit).",
     "formwahl.label": "Treppenform",
     "form.gerade": "Gerade Treppe",
     "form.L": "L-Treppe",
@@ -181,6 +180,11 @@ const TEXTE = {
     "materialText.stahl": "Stahl",
     "konstruktion.laufplatte": "Stahlbeton, Laufplattendicke angenommen {platte} cm",
     "konstruktion.laufplatteAbwicklung": "Stahlbeton, Lauf- und Podestplatte angenommen {platte} cm",
+    "konstruktion.spindel":
+      "Spindeltreppe mit Kragstufen ({material}) {tritt} cm, ohne Setzstufen (Annahmen, keine Normwerte) · " +
+      "gestrichelt: Stufe eine Umdrehung höher (lichte Durchgangshöhe)",
+    "konstruktion.spindelStahlbeton": "vereinfacht: Stahlbeton-Spindeltreppen sind meist eine monolithische Wendelplatte",
+    "zeichnung.durchgangshoehe": "lichte Durchgangshöhe {wert}",
     "konstruktion.wange":
       "{material}-Wangentreppe: Trittstufen {tritt} cm, Wangen {wd} × {wh} cm (Annahmen, keine Normwerte) · " +
       "offene Stufen, Prüfung offener Stufen nicht enthalten",
@@ -188,7 +192,7 @@ const TEXTE = {
       "{material}-Wangentreppe: Trittstufen und Podestbelag {tritt} cm, Wangen {wd} × {wh} cm " +
       "(Annahmen, keine Normwerte) · offene Stufen, Prüfung offener Stufen nicht enthalten",
     "grundriss.wangen": "Wangen außerhalb der nutzbaren Laufbreite, in der Raumprüfung nicht berücksichtigt (vereinfacht)",
-    "grundriss.spindel": "Spindel Ø {d} cm, Geländer {g} cm außerhalb der nutzbaren Laufbreite, Deckenöffnung als Kreis Ø D (Annahmen, keine Normwerte); zweite Umdrehung: Nummern auf dem inneren Ring",
+    "grundriss.spindel": "Lauflinie r = {r} cm · Spindel Ø {d} cm, Geländer {g} cm außerhalb der nutzbaren Laufbreite, Deckenöffnung als Kreis Ø D (Annahmen, keine Normwerte); zweite Umdrehung: Nummern auf dem inneren Ring",
     "grundriss.augeVereinfacht": "vereinfacht: bei {material} wäre ein Treppenauge ≥ {min} cm nötig",
     "druck.material": "Material: {wert}",
     "zeichnung.material": "Material: {wert} (Maße angenommen, keine Normwerte)",
@@ -253,7 +257,6 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Space required (plan)",
     "ergebnis.durchmesser": "Diameter D (plan)",
     "ergebnis.teilung": "Steps per full turn (360°)",
-    "zeichnung.folgt": "The section (development) of the spiral staircase will follow (in progress).",
     "formwahl.label": "Stair shape",
     "form.gerade": "Straight stair",
     "form.L": "L-shaped stair",
@@ -373,6 +376,11 @@ const TEXTE = {
     "materialText.stahl": "steel",
     "konstruktion.laufplatte": "reinforced concrete, waist thickness assumed {platte} cm",
     "konstruktion.laufplatteAbwicklung": "reinforced concrete, waist and landing thickness assumed {platte} cm",
+    "konstruktion.spindel":
+      "spiral staircase with cantilevered steps ({material}) {tritt} cm, no risers (assumptions, not values of the standard) · " +
+      "dashed: step one turn higher (headroom)",
+    "konstruktion.spindelStahlbeton": "simplified: reinforced concrete spiral stairs are usually a monolithic helical slab",
+    "zeichnung.durchgangshoehe": "headroom {wert}",
     "konstruktion.wange":
       "{material} stringer stair: treads {tritt} cm, stringers {wd} × {wh} cm (assumptions, not values of the standard) · " +
       "open risers, check of open risers not included",
@@ -380,7 +388,7 @@ const TEXTE = {
       "{material} stringer stair: treads and landing deck {tritt} cm, stringers {wd} × {wh} cm " +
       "(assumptions, not values of the standard) · open risers, check of open risers not included",
     "grundriss.wangen": "stringers outside the clear width, not included in the space check (simplified)",
-    "grundriss.spindel": "newel Ø {d} cm, balustrade {g} cm outside the clear width, floor opening as circle Ø D (assumptions, not standard values); second turn: numbers on the inner ring",
+    "grundriss.spindel": "walking line r = {r} cm · newel Ø {d} cm, balustrade {g} cm outside the clear width, floor opening as circle Ø D (assumptions, not standard values); second turn: numbers on the inner ring",
     "grundriss.augeVereinfacht": "simplified: a {material} stair would need a well of at least {min} cm",
     "druck.material": "Material: {wert}",
     "zeichnung.material": "Material: {wert} (dimensions assumed, not values of the standard)",
@@ -449,7 +457,6 @@ const TEXTE = {
     "ergebnis.platzbedarf": "Encombrement (vue en plan)",
     "ergebnis.durchmesser": "Diamètre D (vue en plan)",
     "ergebnis.teilung": "Marches par tour (360°)",
-    "zeichnung.folgt": "La coupe (développée) de l’escalier à vis suivra (en cours).",
     "formwahl.label": "Forme de l’escalier",
     "form.gerade": "Escalier droit",
     "form.L": "Escalier en L",
@@ -571,6 +578,11 @@ const TEXTE = {
     "materialText.stahl": "acier",
     "konstruktion.laufplatte": "béton armé, épaisseur de paillasse supposée {platte} cm",
     "konstruktion.laufplatteAbwicklung": "béton armé, épaisseur de paillasse et de palier supposée {platte} cm",
+    "konstruktion.spindel":
+      "escalier à vis à marches en console ({material}) {tritt} cm, sans contremarches (hypothèses, pas des valeurs de la norme) · " +
+      "en tirets : marche un tour plus haut (échappée)",
+    "konstruktion.spindelStahlbeton": "simplifié : les escaliers à vis en béton armé sont le plus souvent une dalle hélicoïdale monolithique",
+    "zeichnung.durchgangshoehe": "échappée {wert}",
     "konstruktion.wange":
       "escalier à limons en {material} : marches {tritt} cm, limons {wd} × {wh} cm (hypothèses, pas des valeurs de la norme) · " +
       "marches sans contremarches, contrôle des marches ouvertes non inclus",
@@ -578,7 +590,7 @@ const TEXTE = {
       "escalier à limons en {material} : marches et platelage du palier {tritt} cm, limons {wd} × {wh} cm " +
       "(hypothèses, pas des valeurs de la norme) · marches sans contremarches, contrôle des marches ouvertes non inclus",
     "grundriss.wangen": "limons hors de l’emmarchement, non pris en compte dans le contrôle de l’espace (simplifié)",
-    "grundriss.spindel": "noyau Ø {d} cm, garde-corps {g} cm hors de l’emmarchement, trémie circulaire Ø D (hypothèses, pas de valeurs normatives) ; deuxième tour : numéros sur l’anneau intérieur",
+    "grundriss.spindel": "ligne de foulée r = {r} cm · noyau Ø {d} cm, garde-corps {g} cm hors de l’emmarchement, trémie circulaire Ø D (hypothèses, pas de valeurs normatives) ; deuxième tour : numéros sur l’anneau intérieur",
     "grundriss.augeVereinfacht": "simplifié : en {material}, il faudrait un jour d’escalier d’au moins {min} cm",
     "druck.material": "Matériau : {wert}",
     "zeichnung.material": "Matériau : {wert} (cotes supposées, pas des valeurs de la norme)",

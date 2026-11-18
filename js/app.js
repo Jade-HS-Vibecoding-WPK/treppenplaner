@@ -168,7 +168,10 @@ function setzeLegenden(e, materialSchluessel) {
   const cm = (wert) => zahlFlexibel(wert, 1);
 
   let konstruktion;
-  if (material.konstruktion === "laufplatte") {
+  if (e.form === "spindel") {
+    konstruktion = t("konstruktion.spindel", { material: materialText, tritt: cm(spindelMasse(material).stufendicke) });
+    if (material.konstruktion === "laufplatte") konstruktion += " · " + t("konstruktion.spindelStahlbeton");
+  } else if (material.konstruktion === "laufplatte") {
     konstruktion = t(gerade ? "konstruktion.laufplatte" : "konstruktion.laufplatteAbwicklung", {
       platte: cm(bauteil(material, "laufplatte").dicke),
     });
@@ -188,7 +191,9 @@ function setzeLegenden(e, materialSchluessel) {
   const teile = [t("grundriss.legende", { material: materialText })];
   if (e.form === "spindel") {
     const masse = spindelMasse(material);
-    teile.push(t("grundriss.spindel", { d: cm(masse.spindelDurchmesser), g: cm(masse.gelaenderZuschlag) }));
+    teile.push(t("grundriss.spindel", {
+      r: cm(e.spindel.rL), d: cm(masse.spindelDurchmesser), g: cm(masse.gelaenderZuschlag),
+    }));
   } else if (material.konstruktion === "wange") {
     teile.push(t("grundriss.wangen"));
   }
@@ -296,20 +301,9 @@ function zeigeDruckEingabe(e) {
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
 function zeichneZeichnungen() {
-  // Vorläufig: Spindeltreppe noch ohne Schnitt (Abwicklung folgt) – nur der Grundriss, eigener Maßstab.
-  const spindel = letztesErgebnis.form === "spindel";
-  document.getElementById("zeichnungFolgt").hidden = !spindel;
-  document.getElementById("schnittTitel").hidden = spindel;
-  schnittSvg.closest("figure").hidden = spindel;
-  for (const knopf of document.querySelectorAll('.export [data-zeichnung="schnitt"]')) knopf.disabled = spindel;
-
   // Sichtbare Breite des Scrollbereichs, nicht der Abbildung (die wächst mit der Zeichnung).
   // Abgerundet: clientWidth rundet z. B. 957,6 px auf 958 – die Zeichnung wäre dann zu breit.
   const breite = Math.floor(zeichenflaeche.getBoundingClientRect().width);
-  if (spindel) {
-    zeichneGrundriss(grundrissSvg, letztesErgebnis, spindelGrundrissMassstab(letztesErgebnis, breite));
-    return;
-  }
   const abbildung = zeichneSchnitt(schnittSvg, letztesErgebnis, breite);
   zeichneGrundriss(grundrissSvg, letztesErgebnis, abbildung);
 }

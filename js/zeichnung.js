@@ -1,5 +1,5 @@
 /*
- * zeichnung.js – Schnitt einer geraden Treppe bzw. Abwicklung entlang der Lauflinie (L, U).
+ * zeichnung.js – Schnitt einer geraden Treppe bzw. Abwicklung entlang der Lauflinie (L, U, Spindel).
  *
  * Geometrie in cm (y nach oben, Ursprung = Antritt auf OKFF unten).
  * Abwicklung: x = Länge entlang der Lauflinie; das Podest erscheint als waagerechtes Stück
@@ -101,8 +101,44 @@ function schnittGeometrie(ergebnis) {
   // Wangentreppe (Holz, Stahl): eigene Bauteile statt Laufplatte. Der Bereich (und damit der
   // Maßstab) bleibt wie bei Stahlbeton, damit ein Materialwechsel die Zeichnung nicht verschiebt.
   const material = materialVon(ergebnis);
-  if (material.konstruktion === "wange") geo.wangentreppe = wangentreppeGeometrie(geo, material);
+  if (ergebnis.form === "spindel") geo.spindeltreppe = spindelSchnittGeometrie(geo, ergebnis);
+  else if (material.konstruktion === "wange") geo.wangentreppe = wangentreppeGeometrie(geo, material);
   return geo;
+}
+
+/** Geschnittene Trittflächen zwischen zwei Setzstufen, Oberkante bei (i + 1) · s, Dicke nach unten. */
+function trittstufenRechtecke(geo, dicke) {
+  const { s, setzstufen } = geo;
+  const stufen = [];
+  for (let i = 0; i < setzstufen.length - 1; i++) {
+    const [x1, x2, y] = [setzstufen[i], setzstufen[i + 1], (i + 1) * s];
+    stufen.push([[x1, y], [x2, y], [x2, y - dicke], [x1, y - dicke]]);
+  }
+  return stufen;
+}
+
+/**
+ * Spindeltreppe als Abwicklung entlang der Lauflinie (ohne Podest, ein „Lauf“):
+ *  - Kragstufen (an der Spindel eingespannt), geschnitten, Dicke aus spindelMasse() – alle
+ *    Materialien gleich dargestellt; bei Stahlbeton vereinfacht (meist monolithische Wendelplatte)
+ *  - keine Laufplatte, keine Wangen; obere Decke als eigener Stahlbetonkörper
+ *  - lichte Durchgangshöhe: Stufe t (eine Umdrehung höher) liegt im Grundriss genau über
+ *    Stufe 0 – sie wird gestrichelt über der ersten Stufe gezeigt, mit Maß (nur wenn es sie gibt)
+ */
+function spindelSchnittGeometrie(geo, ergebnis) {
+  const { H, s, a, L, xEnde, n } = geo;
+  const g = ergebnis.spindel;
+  const dicke = g.stufendicke;
+  const obereDecke = [[L, H], [xEnde, H], [xEnde, H - DECKENDICKE], [L, H - DECKENDICKE]];
+  let durchgang = null;
+  if (g.teilung <= n - 2) {
+    const oben = (g.teilung + 1) * s; // Oberkante der Stufe eine Umdrehung höher
+    durchgang = {
+      stufeOben: [[0, oben], [a, oben], [a, oben - dicke], [0, oben - dicke]],
+      x: a / 2, von: s, bis: oben - dicke,
+    };
+  }
+  return { trittstufen: trittstufenRechtecke(geo, dicke), obereDecke, durchgang };
 }
 
 /**
@@ -113,16 +149,12 @@ function schnittGeometrie(ergebnis) {
  *  - obere Decke als eigener Stahlbetonkörper
  */
 function wangentreppeGeometrie(geo, material) {
-  const { H, s, a, L, xEnde, setzstufen, laufAnfang } = geo;
+  const { H, s, a, L, xEnde, laufAnfang } = geo;
   const dicke = bauteil(material, "trittstufe").dicke;
   const wange = bauteil(material, "wange");
 
   // Trittflächen zwischen zwei Setzstufen (Podest: längere Fläche), Oberkante bei (i + 1) · s
-  const trittstufen = [];
-  for (let i = 0; i < setzstufen.length - 1; i++) {
-    const [x1, x2, y] = [setzstufen[i], setzstufen[i + 1], (i + 1) * s];
-    trittstufen.push([[x1, y], [x2, y], [x2, y - dicke], [x1, y - dicke]]);
-  }
+  const trittstufen = trittstufenRechtecke(geo, dicke);
 
   // Wangenkanten als Folge von Geraden: je Lauf parallel zur Linie der Stufenvorderkanten
   // (durch [x0, h0 + s], Neigung s/a), je Podest waagerecht. Abstände senkrecht zur Steigung.
@@ -226,7 +258,9 @@ function schnittElemente(ergebnis, cmProPx) {
   // Geschnittene Bauteile: Schraffur und Umriss
   z.schraffur(EBENE.schraffur, geo.untereDecke);
   z.polylinie(EBENE.decke, geo.untereDecke, STRICH.schnitt, { geschlossen: true });
-  if (geo.wangentreppe) {
+  if (geo.spindeltreppe) {
+    spindelSchnittElemente(z, geo, materialVon(ergebnis));
+  } else if (geo.wangentreppe) {
     wangentreppeElemente(z, geo.wangentreppe, materialVon(ergebnis));
   } else {
     z.schraffur(EBENE.schraffur, geo.treppeUndDecke);
@@ -296,6 +330,26 @@ function wangentreppeElemente(z, w, material) {
   z.polylinie(EBENE.decke, w.obereDecke, STRICH.schnitt, { geschlossen: true });
   z.polylinie(EBENE.wange, w.wange, STRICH.mass, { geschlossen: true });
   for (const stufe of w.trittstufen) geschnittenesBauteil(z, material, EBENE.trittstufe, stufe);
+}
+
+/**
+ * Spindeltreppe: obere Decke (geschnitten), Kragstufen mit Materialschraffur, darüber
+ * gestrichelt die Stufe eine Umdrehung höher und die lichte Durchgangshöhe als Maß.
+ */
+function spindelSchnittElemente(z, geo, material) {
+  const sp = geo.spindeltreppe;
+  const m = z.m;
+  z.schraffur(EBENE.schraffur, sp.obereDecke);
+  z.polylinie(EBENE.decke, sp.obereDecke, STRICH.schnitt, { geschlossen: true });
+  for (const stufe of sp.trittstufen) geschnittenesBauteil(z, material, EBENE.trittstufe, stufe);
+
+  const d = sp.durchgang;
+  if (!d) return;
+  z.polylinie(EBENE.trittstufe, d.stufeOben, STRICH.schnitt, { geschlossen: true, gestrichelt: true });
+  vertikalesMass(z, d.x, d.von, d.bis);
+  const wert = zahl(d.bis - d.von);
+  const text = masstext(z, t("zeichnung.durchgangshoehe", { wert }), wert, d.bis - d.von);
+  z.text([d.x - 4 * m, (d.von + d.bis) / 2], text, { ausrichtung: "mitte", drehung: 90, hintergrund: true });
 }
 
 /**
