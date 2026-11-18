@@ -260,11 +260,11 @@ function zeigeVergleichDruck(vergleich) {
 /** Empfehlung, Karten und Drucktabelle; gewaehlteForm = Form der gezeichneten Variante. */
 function zeigeVergleich(vergleich, gewaehlteForm) {
   const satz = document.getElementById("empfehlung");
-  satz.textContent = empfehlungText(vergleich);
   satz.className = "urteil empfehlung " + (vergleich.empfehlung ? "ok" : "nicht-ok");
-  const hinweis = document.getElementById("empfehlungHinweis");
-  hinweis.textContent = empfehlungHinweisText(vergleich);
-  hinweis.hidden = hinweis.textContent === "";
+  // Hinweis (Alternative, notwendige Treppe) im selben Block, direkt unter dem Empfehlungssatz
+  satz.replaceChildren(empfehlungText(vergleich));
+  const hinweis = empfehlungHinweisText(vergleich);
+  if (hinweis) satz.appendChild(span("empfehlung-hinweis", hinweis));
 
   document.getElementById("varianten").replaceChildren(
     ...vergleich.varianten.map((v) => karte(v, vergleich, v.form === gewaehlteForm)),

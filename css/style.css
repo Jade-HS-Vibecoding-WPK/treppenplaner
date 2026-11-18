@@ -239,10 +239,12 @@ th, td {
   padding: var(--r) calc(1.5 * var(--r));
   border-left: 4px solid currentColor;
 }
-/* Hinweis direkt unter der Empfehlung (Alternative, notwendige Treppe): schwarz, eingerückt wie der Text */
+/* Hinweis im Empfehlungsblock unter dem Satz (Alternative, notwendige Treppe): schwarz, normal, klein */
 .empfehlung-hinweis {
-  margin: calc(-1.5 * var(--r)) 0 calc(2 * var(--r));
-  padding-left: calc(1.5 * var(--r) + 4px);
+  display: block;
+  margin-top: calc(0.5 * var(--r));
+  font-weight: normal;
+  font-size: var(--klein);
 }
 
 /* Zeichnung */
@@ -466,15 +468,15 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   footer p { margin: 0; }
   .druck-eingabe { font-size: 9pt; margin-bottom: calc(1.5 * var(--r)); padding-bottom: var(--r); }
   h2 { margin-bottom: var(--r); }
-  h3 { margin: calc(2 * var(--r)) 0 calc(0.5 * var(--r)); }
-  .urteil { margin-bottom: var(--r); padding: calc(0.5 * var(--r)) var(--r); }
+  h3 { margin: calc(1.5 * var(--r)) 0 calc(0.5 * var(--r)); }
+  .urteil { margin-bottom: calc(0.5 * var(--r)); padding: calc(0.5 * var(--r)) var(--r); }
   .pruefung { font-size: 9pt; }
   .pruefung th,
-  .pruefung td { padding: calc(0.5 * var(--r)) var(--r) calc(0.5 * var(--r)) 0; }
-  .kennwerte { margin-top: calc(1.5 * var(--r)); padding: var(--r) 0; gap: var(--r) calc(2 * var(--r)); }
+  .pruefung td { padding: calc(0.25 * var(--r)) var(--r) calc(0.25 * var(--r)) 0; line-height: 1.3; }
+  .kennwerte { margin-top: var(--r); padding: calc(0.5 * var(--r)) 0; gap: calc(0.5 * var(--r)) calc(2 * var(--r)); }
   .kennwerte dd { margin-top: 0; font-size: 13pt; }
   .hinweis { font-size: 9pt; }
-  .empfehlung-hinweis { margin: calc(-0.5 * var(--r)) 0 var(--r); padding-left: calc(var(--r) + 4px); }
+  .empfehlung-hinweis { margin-top: 0; font-size: 9pt; }
 }
 
 /* Hinweis „sehr steil“ (Karten, Kennwerte): schwarz, nur umrandet – kein Normverstoß, daher nicht rot */
