@@ -150,7 +150,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - DXF mit Holz/Stahl in AutoCAD prüfen (Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ/STAHL, SOLID)
 
 **Später / offen**
-- Türkische Texte am Bildschirm prüfen (Nutzer); Druck Seite 1 bei Szenario 9 als echtes PDF prüfen (simuliert nur 23 px Reserve).
+- ✅ Türkische Texte am Bildschirm und Druck Seite 1 bei Szenario 9 als echtes PDF vom Nutzer geprüft (18.11.).
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
 6. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
 7. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
