@@ -86,7 +86,7 @@ h3 {
 
 .untertitel { margin: var(--r) 0 0; }
 
-/* Sprachwahl DE | EN | FR */
+/* Sprachwahl DE | EN | FR | TR */
 .sprachwahl {
   display: flex;
   align-items: center;

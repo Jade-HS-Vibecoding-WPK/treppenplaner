@@ -39,7 +39,7 @@
   - Birim her dilde **cm**.
   - Sayı biçimi dile göre: `de-DE` / `fr-FR` → 17,5 · `en-GB` → 17.5. Hesap her zaman tam değerle.
   - Normun adı (DIN 18065) her dilde aynı; EN/FR'de bunun bir Alman normu olduğu yazıyor. EN/FR'de „Übersetzung zur Orientierung, maßgebend ist der deutsche Normtext“ notu var.
-  - Terimler aşağıdaki tabloda („Fachbegriffe DE / EN / FR“).
+  - Terimler aşağıdaki tabloda („Fachbegriffe DE / EN / FR / TR“).
 - **Export (16.11., hocanın isteği):**
   - DXF: kesit ve plan **ayrı dosyalar** (Revit/ArchiCAD'da plan ve kesit farklı görünümlere yerleştiriliyor).
   - Açıklama ölçeği **1:50** (yazı kâğıtta 2,5 mm).
@@ -280,6 +280,13 @@
   - Plan, sağ kenar: alan genişliği ölçüsü `L + a + 30 px`'te (son basamak numarasının arkasında); „fehlt“ yazısı ölçü çizgilerinden 18 px uzakta.
   - Ölçü yazısı (ör. „Total going 59.3“) yardımcı çizgilerin arasına sığmazsa sadece sayı yazılıyor. Liste DOM bilmediği için genişlik tahmin ediliyor: karakter sayısı × 0,55 × yazı boyutu (Helvetica için yaklaşık değer). DXF'te (1:50) kısa merdivenlerde de bu yüzden sadece sayı çıkabiliyor.
 
+- **Türkçe (18.11.):**
+  - TR, `js/i18n.js` içinde 4. dil (`tr-TR`, ondalık virgül); dil seçicide „TR“. Terimler kullanıcının listesinden; listede olmayanlar terim tablosunda **(YZ)** ile işaretli.
+  - Norm kontrolünde yalnız TR'de bir kez not: Kontrol DIN 18065'e göre, Türk yönetmelikleri (Planlı Alanlar İmar Yönetmeliği, Binaların Yangından Korunması Hakkında Yönetmelik) kontrol edilmez. Anahtar `pruefung.landesHinweis`; DE/EN/FR'de boş = gizli.
+  - DXF R12 UTF-8 bilmiyor: TR'de metinler Windows-1254 ile kodlanıyor (`$DWGCODEPAGE = ANSI_1254`; ğ ı İ ş Ş Ğ), diğer dillerde 1252 aynen kalıyor. Codepage `SPRACHEN` içinde.
+  - „Landesbauordnung“ TR metinlerinde parantez içinde Almanca kalıyor (EN/FR gibi).
+  - Kontrol (sadece 275/Wohn/80 ve Senaryo 9, dört varyant): plan/kesitte yazı çakışması yok, kartlarda taşma yok. Yazdırma 1. sayfa (simülasyon, A4, 15 mm kenar): 275/Wohn/80 750/1009 px; Senaryo 9 (Spindel) 986/1009 px – sığıyor ama sıkı (DE: 895 px).
+
 ## Validierung
 
 Plausibilitätstest, 18.11. (Browser-Konsole, Stahlbeton, Drehsinn links). Erwartung vom Nutzer, Ergebnis aus dem Tool; Punkte = Gesamtpunkte.
@@ -299,45 +306,54 @@ Plausibilitätstest, 18.11. (Browser-Konsole, Stahlbeton, Drehsinn links). Erwar
 
 Sonuç: 8 senaryoda öneri beklentiyle uyuşuyor. ⚠ 4: araç daha dik bir Stufung ile L'yi sığdırıyor ama Komfort cezası yüzünden önermiyor. ⚠ 9: tek sığan zayıf varyant da „Empfehlung“ oluyor; bu yüzden öneri satırının altına „Alternative: … – es fehlen …“ notu eklendi (puanlama değişmedi).
 
-## Fachbegriffe DE / EN / FR
+## Fachbegriffe DE / EN / FR / TR
 
 Kaynak: yapay zekânın önerisi, kullanıcı tarafından kontrol edildi ve düzeltildi (16.11.). DIN 18065'in resmi EN/FR çevirisi görülmedi. ⚠ = emin değil.
+TR (18.11.): terimler kullanıcı tarafından verildi; **(YZ)** = listede yoktu, yapay zekânın önerisi – kontrol edilmeli.
 
 > **TODO:** Französisch von einer Muttersprachlerin / einem Muttersprachler prüfen lassen.
 
-| Deutsch | English | Français | Not |
-|---|---|---|---|
-| Geschosshöhe | storey height | hauteur d'étage | |
-| Steigung s | rise s | hauteur de marche s | |
-| Auftritt a | going a | giron a | |
-| Schrittmaß 2s + a | 2R + G rule (2s + a) | formule de Blondel (2s + a) | EN: Approved Document K'daki adı (kullanıcı) |
-| Nutzbare Laufbreite | clear width ⚠ | emmarchement (largeur utile) | emmarchement = largeur de la volée (kullanıcı) |
-| Lauflinie | walking line | ligne de foulée | |
-| Podest | landing | palier (Zwischenpodest: palier de repos) | |
-| Lauflänge | total going | reculement | EN: kullanıcı düzeltmesi |
-| Treppenlauf | flight | volée | |
-| Raumvorgabe | available space ⚠ | espace disponible ⚠ | terim değil, açıklayıcı ifade |
-| Höhenkote | level / spot level | cote de niveau | |
-| OKFF | FFL (finished floor level) | niveau du sol fini ⚠ | FR kısaltması belirsiz |
-| Laufplatte | waist (stair slab) | paillasse | |
-| Setzstufe | riser | contremarche | |
-| Stufe / Stufennummer | step / step number | marche / numéro de marche | |
-| Antritt / Austritt | foot / top of stair | départ / arrivée | |
-| Schnitt / Grundriss | section / plan | coupe / vue en plan | |
-| Schnittlinie (im Grundriss) | cut line ⚠ | ligne de coupe ⚠ | |
-| Deckendicke | slab thickness | épaisseur de dalle | |
-| Treppenloch | stairwell opening | trémie | |
-| Kopfhöhe | headroom | échappée | |
-| Handlauf / Wange | handrail / stringer | main courante / limon | |
-| Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen | residential buildings with no more than two dwellings / within dwellings ⚠ | bâtiments d'habitation d'au plus deux logements / à l'intérieur des logements ⚠ | kendi çevirimiz |
-| Gebäude im Allgemeinen | buildings in general ⚠ | bâtiments en général ⚠ | kendi çevirimiz |
-| Notwendige Treppe | required stair ⚠ | escalier nécessaire ⚠ | Alman yönetmelik kavramı |
-| Spindeltreppe | spiral staircase | escalier à vis ⚠ | FR: „escalier hélicoïdal“ çoğunlukla Treppenauge'li Wendeltreppe için; „escalier à vis / en colimaçon“ merkez dikmeli – doğrulanmadı |
-| Spindel | newel | noyau ⚠ | doğrulanmadı |
-| Gehbereich | walking zone ⚠ | zone de marche ⚠ | kendi çevirimiz |
-| Teilung (Stufen je 360°) | steps per full turn ⚠ | marches par tour ⚠ | açıklayıcı ifade, terim değil |
-| Lichte Durchgangshöhe | headroom | échappée | |
-| Kragstufe | cantilevered step ⚠ | marche en console ⚠ | doğrulanmadı |
-| Geländer | balustrade | garde-corps | |
-| Austritt (Planbeschriftung) | top of stair | arrivée | |
-| Abwicklung | development | développée / développement ⚠ | |
+| Deutsch | English | Français | Türkçe | Not |
+|---|---|---|---|---|
+| Geschosshöhe | storey height | hauteur d'étage | kat yüksekliği | |
+| Steigung s | rise s | hauteur de marche s | rıht yüksekliği s | |
+| Auftritt a | going a | giron a | basamak genişliği a | |
+| Anzahl Steigungen / Auftritte | number of rises / goings | nombre de contremarches / marches | rıht sayısı / basamak sayısı | |
+| Schrittmaß 2s + a | 2R + G rule (2s + a) | formule de Blondel (2s + a) | adım ölçüsü 2s + a | EN: Approved Document K'daki adı (kullanıcı) |
+| Nutzbare Laufbreite | clear width ⚠ | emmarchement (largeur utile) | kullanılabilir kol genişliği | emmarchement = largeur de la volée (kullanıcı) |
+| Lauflinie | walking line | ligne de foulée | yürüme çizgisi | |
+| Podest | landing | palier (Zwischenpodest: palier de repos) | sahanlık (Viertel-/Halbpodest: çeyrek / yarım sahanlık) | |
+| Lauflänge | total going | reculement | kol uzunluğu | EN: kullanıcı düzeltmesi |
+| Treppenlauf | flight | volée | merdiven kolu | |
+| Treppenauge | well | jour d'escalier | merdiven boşluğu | |
+| Raumvorgabe | available space ⚠ | espace disponible ⚠ | mevcut alan (YZ) | terim değil, açıklayıcı ifade |
+| Höhenkote | level / spot level | cote de niveau | kot (YZ) | |
+| OKFF | FFL (finished floor level) | niveau du sol fini ⚠ | bitmiş döşeme üst kotu (YZ) ⚠ | FR kısaltması belirsiz |
+| Laufplatte | waist (stair slab) | paillasse | merdiven plağı (YZ) ⚠ | |
+| Trittstufe | tread | marche | basamak | |
+| Setzstufe | riser | contremarche | rıht | |
+| Kragstufe | cantilevered step ⚠ | marche en console ⚠ | konsol basamak | doğrulanmadı (EN/FR) |
+| Stufe / Stufennummer | step / step number | marche / numéro de marche | basamak / basamak numarası (YZ) | |
+| Antritt / Austritt | foot / top of stair | départ / arrivée | merdiven başlangıcı / merdiven çıkışı | |
+| Schnitt / Grundriss | section / plan | coupe / vue en plan | kesit / plan | |
+| Schnittlinie (im Grundriss) | cut line ⚠ | ligne de coupe ⚠ | kesit çizgisi (YZ) | |
+| Deckendicke | slab thickness | épaisseur de dalle | döşeme kalınlığı (YZ) | |
+| Deckenöffnung / Deckenkante | floor opening / slab edge | trémie / bord de dalle | döşeme boşluğu / döşeme kenarı | |
+| Treppenloch | stairwell opening | trémie | döşeme boşluğu | |
+| Kopfhöhe / lichte Durchgangshöhe | headroom | échappée | geçiş yüksekliği / net geçiş yüksekliği („net“: YZ) | |
+| Handlauf / Wange | handrail / stringer | main courante / limon | küpeşte / limon | |
+| Geländer | balustrade | garde-corps | korkuluk | |
+| Stahlbeton / Holz / Stahl | reinforced concrete / timber / steel | béton armé / bois / acier | betonarme / ahşap / çelik | |
+| Wohngebäude mit bis zu zwei Wohnungen / innerhalb von Wohnungen | residential buildings with no more than two dwellings / within dwellings ⚠ | bâtiments d'habitation d'au plus deux logements / à l'intérieur des logements ⚠ | en fazla 2 konutlu konut binası / konut içi („konut içi“: YZ) | kendi çevirimiz |
+| Gebäude im Allgemeinen | buildings in general ⚠ | bâtiments en général ⚠ | genel binalar | kendi çevirimiz |
+| Notwendige Treppe | required stair ⚠ | escalier nécessaire ⚠ | zorunlu merdiven (kaçış yolu merdiveni) | Alman yönetmelik kavramı |
+| Gerade / L- / U-Treppe | straight / L-shaped / U-shaped stair | escalier droit / en L / en U | tek kollu düz merdiven / L merdiven / U merdiven | |
+| Spindeltreppe | spiral staircase | escalier à vis ⚠ | orta dikmeli döner merdiven | FR: „escalier hélicoïdal“ çoğunlukla Treppenauge'li Wendeltreppe için; „escalier à vis / en colimaçon“ merkez dikmeli – doğrulanmadı |
+| Spindel | newel | noyau ⚠ | orta dikme | doğrulanmadı (FR) |
+| Gehbereich | walking zone ⚠ | zone de marche ⚠ | yürüme alanı | kendi çevirimiz (EN/FR) |
+| Teilung (Stufen je 360°) | steps per full turn ⚠ | marches par tour ⚠ | 360° başına basamak sayısı (YZ) | açıklayıcı ifade, terim değil |
+| Drehsinn links / rechts | turn left / right | sens à gauche / à droite | dönüş yönü sol / sağ | |
+| Austritt (Planbeschriftung) | top of stair | arrivée | merdiven çıkışı | |
+| Abwicklung (entlang der Lauflinie) | development | développée / développement ⚠ | yürüme çizgisi boyunca açınım | |
+| Komfort / Platz / Sicherheit / Nutzung | comfort / space / safety / use | confort / encombrement / sécurité / usage | konfor / alan / güvenlik / kullanım | |
+| Empfehlung / Normprüfung / Kennwerte | recommended / standard check / values | recommandation / vérification / valeurs | öneri / norm kontrolü / değerler | |

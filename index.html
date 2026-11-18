@@ -19,6 +19,8 @@
       <button type="button" data-sprache="en" lang="en" aria-pressed="false">EN</button>
       <span aria-hidden="true">|</span>
       <button type="button" data-sprache="fr" lang="fr" aria-pressed="false">FR</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" data-sprache="tr" lang="tr" aria-pressed="false">TR</button>
     </nav>
   </header>
 
@@ -132,6 +134,8 @@
       <!-- Am Bildschirm unter den Zeichnungen; beim Drucken auf Seite 1 (export.js) -->
       <div class="normpruefung">
         <h3 data-i18n="pruefung.titel">Normprüfung</h3>
+        <!-- nur Türkisch: Hinweis, dass türkische Vorschriften nicht geprüft werden -->
+        <p class="hinweis" data-i18n="pruefung.landesHinweis" hidden></p>
         <table class="pruefung">
           <thead>
             <tr>

@@ -1,20 +1,22 @@
 /*
- * i18n.js – Alle Texte der Oberfläche in Deutsch, Englisch und Französisch.
+ * i18n.js – Alle Texte der Oberfläche in Deutsch, Englisch, Französisch und Türkisch.
  *
  * - Texte stehen nur hier (Wörterbuch TEXTE); andere Dateien rufen t("schluessel") auf.
  * - Platzhalter: t("fehler.geschosshoeheBereich", { min: 50, max: 600 }) → {min}, {max}.
- * - Fehlt ein Schlüssel in EN/FR, wird der deutsche Text gezeigt (mit Warnung in der Konsole).
- * - Zahlen werden je Sprache formatiert (de-DE / en-GB / fr-FR); gerechnet wird immer exakt.
+ * - Fehlt ein Schlüssel in EN/FR/TR, wird der deutsche Text gezeigt (mit Warnung in der Konsole).
+ * - Zahlen werden je Sprache formatiert (de-DE / en-GB / fr-FR / tr-TR); gerechnet wird immer exakt.
  * - Statische Texte in index.html: data-i18n="schluessel" (Text), data-i18n-aria="schluessel" (aria-label).
  *
- * Fachbegriffe und offene Fragen zur Übersetzung: siehe notlar.md, „Fachbegriffe DE / EN / FR“.
+ * Fachbegriffe und offene Fragen zur Übersetzung: siehe notlar.md, „Fachbegriffe DE / EN / FR / TR“.
  * TODO: Französisch von einer Muttersprachlerin / einem Muttersprachler prüfen lassen.
  */
 
+// dxfCodepage: Windows-Codepage der DXF-Texte (R12 kennt kein UTF-8); Türkisch braucht 1254 (ğ, ı, İ, ş).
 const SPRACHEN = Object.freeze({
-  de: { zahlenformat: "de-DE" },
-  en: { zahlenformat: "en-GB" },
-  fr: { zahlenformat: "fr-FR" },
+  de: { zahlenformat: "de-DE", dxfCodepage: 1252 },
+  en: { zahlenformat: "en-GB", dxfCodepage: 1252 },
+  fr: { zahlenformat: "fr-FR", dxfCodepage: 1252 },
+  tr: { zahlenformat: "tr-TR", dxfCodepage: 1254 },
 });
 const STANDARDSPRACHE = "de";
 const SPRACHE_SPEICHERSCHLUESSEL = "treppenplaner.sprache";
@@ -129,6 +131,7 @@ const TEXTE = {
     "pruefung.ergebnis": "Ergebnis",
     "pruefung.erfuellt": "✓ erfüllt",
     "pruefung.nichtErfuellt": "✗ nicht erfüllt",
+    "pruefung.landesHinweis": "", // nur Türkisch (leer = ausgeblendet)
 
     "raum.kriterium": "Passt in den Raum",
     "raum.laenge": "Länge",
@@ -334,6 +337,7 @@ const TEXTE = {
     "pruefung.ergebnis": "Result",
     "pruefung.erfuellt": "✓ met",
     "pruefung.nichtErfuellt": "✗ not met",
+    "pruefung.landesHinweis": "",
 
     "raum.kriterium": "Fits the available space",
     "raum.laenge": "Length",
@@ -542,6 +546,7 @@ const TEXTE = {
     "pruefung.ergebnis": "Résultat",
     "pruefung.erfuellt": "✓ respecté",
     "pruefung.nichtErfuellt": "✗ non respecté",
+    "pruefung.landesHinweis": "",
 
     "raum.kriterium": "Tient dans l'espace disponible",
     "raum.laenge": "Longueur",
@@ -633,6 +638,217 @@ const TEXTE = {
       "Valeurs limites : DIN 18065:2020-08 (norme allemande relative aux escaliers), tableau 1 " +
       "(cité d'après WEKA-Fachportal, original non consulté).",
     "fuss.uebersetzung": "Traduction à titre indicatif ; seul le texte allemand de la norme fait foi.",
+  },
+
+  // Türkisch: Fachbegriffe vom Nutzer vorgegeben (notlar.md, „Fachbegriffe“, Spalte TR)
+  tr: {
+    "seite.untertitel":
+      "Tek kollu düz merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
+    "seite.untertitelL":
+      "Çeyrek sahanlıklı L merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
+    "seite.untertitelU":
+      "Yarım sahanlıklı U merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
+    "seite.untertitelSpindel":
+      "Orta dikmeli döner merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
+    "sprachwahl.label": "Dil",
+
+    "eingabe.titel": "Girdi",
+    "eingabe.geschosshoehe": "Kat yüksekliği (cm)",
+    "eingabe.gebaeudeart": "Bina türü",
+    "gebaeudeart.wohngebaeude": "En fazla 2 konutlu konut binası / konut içi",
+    "gebaeudeart.allgemein": "Genel binalar",
+    "gebaeudeart.hinweis": "2'den fazla konutlu konut binası → genel binalar.",
+    "eingabe.laufbreite": "Kullanılabilir kol genişliği (cm)",
+    "laufbreite.mindestens": "DIN 18065'e göre en az {min} cm.",
+    "laufbreite.unterschritten": "DIN 18065'e göre en az {min} cm olmalı; bu değerin altında.",
+    "eingabe.raum": "Mevcut alan (isteğe bağlı)",
+    "eingabe.raumLaenge": "Mevcut uzunluk (cm, çıkış yönünde)",
+    "eingabe.raumBreite": "Mevcut genişlik (cm)",
+    "eingabe.raumHinweis": "Bir sınır yoksa boş bırakın.",
+    "eingabe.berechnen": "Hesapla",
+
+    "fehler.geschosshoeheUngueltig": "Lütfen cm cinsinden geçerli bir kat yüksekliği girin.",
+    "fehler.geschosshoeheBereich": "Kat yüksekliği {min} ile {max} cm arasında olmalıdır.",
+    "fehler.laufbreiteUngueltig": "Lütfen cm cinsinden geçerli bir kullanılabilir kol genişliği girin.",
+    "fehler.laufbreiteBereich": "Kullanılabilir kol genişliği {min} ile {max} cm arasında olmalıdır.",
+    "fehler.raumLaengeUngueltig": "Lütfen cm cinsinden geçerli bir mevcut uzunluk girin veya alanı boş bırakın.",
+    "fehler.raumLaengeBereich": "Mevcut uzunluk {min} ile {max} cm arasında olmalıdır.",
+    "fehler.raumBreiteUngueltig": "Lütfen cm cinsinden geçerli bir mevcut genişlik girin veya alanı boş bırakın.",
+    "fehler.raumBreiteBereich": "Mevcut genişlik {min} ile {max} cm arasında olmalıdır.",
+
+    "ergebnis.titel": "Sonuç",
+    "ergebnis.anzahlSteigungen": "Rıht sayısı",
+    "ergebnis.anzahlAuftritte": "Basamak sayısı",
+    "ergebnis.lauflaenge": "Kol uzunluğu (plan)",
+    "ergebnis.platzbedarf": "Alan ihtiyacı (plan)",
+    "ergebnis.durchmesser": "Çap D (plan)",
+    "ergebnis.teilung": "360° başına basamak sayısı",
+    "formwahl.label": "Merdiven biçimi",
+    "form.gerade": "Tek kollu düz merdiven",
+    "form.L": "L merdiven",
+    "form.U": "U merdiven",
+    "form.spindel": "Orta dikmeli döner merdiven",
+    "richtung.links": "sol",
+    "richtung.rechts": "sağ",
+    "vergleich.titel": "Varyant karşılaştırması",
+    "vergleich.empfehlung": "Öneri",
+    "vergleich.ausgeschlossen": "elendi",
+    "vergleich.naechste": "en yakın",
+    "hinweis.sehrSteil": "çok dik",
+    "hinweis.notwendigeTreppe":
+      "Zorunlu merdiven (kaçış yolu merdiveni) olarak izin verilmeyebilir – eyalet yapı yönetmeliğini (Landesbauordnung) kontrol edin.",
+    "vergleich.punkte": "Puan",
+    "vergleich.vonHundert": "{punkte} / 100",
+    "vergleich.variante": "Varyant",
+    "vergleich.ergebnis": "Sonuç",
+    "vergleich.drehsinn": "Dönüş yönü",
+    "vergleich.drehsinnLabel": "Dönüş yönü:",
+    "vergleich.gewichte":
+      "Puanlar: konfor %{komfort}, alan %{platz}, güvenlik %{sicherheit}, kullanım %{nutzung} – " +
+      "kendi ağırlıklandırmamız, norm şartı değildir.",
+    "vergleich.anklicken": "Varyantı çizmek için karta tıklayın.",
+    "bewertung.komfort": "Konfor",
+    "bewertung.platz": "Alan",
+    "bewertung.sicherheit": "Güvenlik",
+    "bewertung.nutzung": "Kullanım",
+    "empfehlung.satz": "Öneri: {form} – 100 üzerinden {punkte} puan, özellikle {grund} nedeniyle.",
+    "empfehlung.einzige": "Öneri: {form} – sığan ve normu karşılayan tek varyant (100 üzerinden {punkte} puan).",
+    "empfehlung.keine": "✗ Hiçbir varyant sığmıyor. En yakın: {form} ({grund}).",
+    "empfehlung.alternative": "Alternatif: {form} – eksik: {teile}.",
+    "empfehlung.grund.komfort": "daha konforlu rıht yüksekliği / basamak genişliği oranı",
+    "empfehlung.grund.platz": "daha az alan ihtiyacı",
+    "empfehlung.grund.sicherheit": "daha kısa merdiven kolları",
+    "empfehlung.grund.nutzung": "dinlenme noktası olarak sahanlık",
+    "ausschluss.stufen": "Norm karşılanmıyor: rıht yüksekliği / basamak genişliği",
+    "ausschluss.laufbreite": "Kullanılabilir kol genişliği en az değerin altında",
+    "ausschluss.podestNoetig": "Sahanlık gerekli ({max} rıhttan fazla)",
+    "ausschluss.laufZuKurz": "Merdiven kolu çok kısa ({min} rıhttan az)",
+    "ausschluss.podest": "Sahanlık çok kısa",
+    "ausschluss.raum": "sığmıyor, eksik: {teile}",
+    "ausschluss.spindelLaufbreite": "Kol genişliği {max} cm'den fazla (yürüme alanı kuralı)",
+    "ausschluss.spindel": "Norm karşılanmıyor: orta dikmeli döner merdivenin geometrisi",
+    "urteil.normgerecht": "✓ Merdiven, DIN 18065'in kontrol edilen şartlarını karşılıyor.",
+    "urteil.keineLoesung":
+      "✗ Bu kat yüksekliği için DIN 18065'e uygun bir basamak dizisi mümkün değil. En yakın çözüm gösteriliyor.",
+    "urteil.laufbreite": "✗ Kullanılabilir kol genişliği, DIN 18065'teki en az değerin altında.",
+    "urteil.podestNoetig":
+      "✗ Sahanlıksız {max} rıhttan fazla – genel binalarda sahanlık gerekli (L veya U merdiven).",
+    "urteil.laeufe": "✗ Merdiven kollarına bölünüş şartları karşılamıyor (bkz. norm kontrolü).",
+    "urteil.spindel": "✗ Orta dikmeli döner merdivenin geometrisi şartları karşılamıyor (bkz. norm kontrolü).",
+
+    "kriterium.steigung": "Rıht yüksekliği s",
+    "kriterium.auftritt": "Basamak genişliği a",
+    "kriterium.schrittmass": "Adım ölçüsü 2s + a",
+    "kriterium.laufbreite": "Kullanılabilir kol genişliği",
+    "kriterium.laufMin": "Kol başına rıht sayısı (en az)",
+    "kriterium.laufMax": "Sahanlıksız kol başına rıht sayısı",
+    "kriterium.podestlaenge": "Sahanlık uzunluğu",
+    "kriterium.spindelLaufbreite": "Kullanılabilir kol genişliği (yürüme alanı kuralı)",
+    "kriterium.auftrittInnen": "İç sınırda basamak genişliği",
+    "kriterium.lauflinieGehbereich": "Yürüme çizgisi yürüme alanında (içten)",
+    "kriterium.durchgangshoehe": "Net geçiş yüksekliği",
+
+    "pruefung.titel": "Norm kontrolü (DIN 18065)",
+    "pruefung.kriterium": "Kriter",
+    "pruefung.wert": "Değer",
+    "pruefung.zulaessig": "İzin verilen",
+    "pruefung.ergebnis": "Sonuç",
+    "pruefung.erfuellt": "✓ karşılanıyor",
+    "pruefung.nichtErfuellt": "✗ karşılanmıyor",
+    "pruefung.landesHinweis":
+      "Kontrol Alman normu DIN 18065'e göre yapılır. Türkiye'deki yönetmelikler (ör. Planlı Alanlar " +
+      "İmar Yönetmeliği, Binaların Yangından Korunması Hakkında Yönetmelik) farklı değerler içerebilir " +
+      "ve kontrol edilmez.",
+
+    "raum.kriterium": "Alana sığıyor",
+    "raum.laenge": "Uzunluk",
+    "raum.breite": "Genişlik",
+    "raum.vorgabe": "(mevcut alan)",
+
+    "druck.geschosshoehe": "Kat yüksekliği",
+    "druck.laufbreite": "Kullanılabilir kol genişliği",
+    "druck.raum": "Mevcut alan",
+    "druck.gebaeudeart": "Bina türü: {wert}",
+    "druck.form": "Merdiven biçimi: {wert}",
+    "druck.raumSeite": "Mevcut alan: {seite} {wert}",
+    "raum.passt": "✓ sığıyor",
+    "raum.fehltLaenge": "{wert} uzunluk",
+    "raum.fehltBreite": "{wert} genişlik",
+    "raum.und": " ve ",
+    "raum.fehlt": "Eksik: {teile}.",
+    "raum.urteilPasst": "✓ Merdiven mevcut alana sığıyor.",
+    "raum.urteilPasstNicht": "✗ Merdiven mevcut alana sığmıyor. {fehlt}",
+    "raum.hinweis":
+      "Basitleştirilmiş alan kontrolü: gereken genişlik = kullanılabilir kol genişliği (limon, küpeşte " +
+      "ve duvar mesafesi hariç); merdiven başlangıcı ve çıkışındaki serbest alan hariç.",
+
+    "schnitt.titel": "Kesit",
+    "schnitt.aria": "Tek kollu düz merdivenin kesiti",
+    "schnitt.legende":
+      "Kesit, ölçeksiz · ölçüler cm · {konstruktion} · döşeme kalınlığı varsayım {decke} cm · tarama basitleştirilmiş",
+    "grundriss.titel": "Plan",
+    "grundriss.aria": "Tek kollu düz merdivenin planı",
+    "schnitt.titelAbwicklung": "Yürüme çizgisi boyunca açınım",
+    "schnitt.ariaAbwicklung": "Merdivenin yürüme çizgisi boyunca açınımı",
+    "schnitt.legendeAbwicklung":
+      "Yürüme çizgisi boyunca açınım, ölçeksiz · ölçüler cm · {konstruktion} · " +
+      "döşeme kalınlığı varsayım {decke} cm · tarama basitleştirilmiş",
+    "grundriss.ariaPodest": "Sahanlıklı merdivenin planı",
+    "grundriss.ariaSpindel": "Orta dikmeli döner merdivenin planı",
+    "grundriss.legende":
+      "Plan, ölçeksiz · ölçüler cm · malzeme: {material} · duvarlar ve küpeşte gösterilmemiştir · " +
+      "kesit düzlemi döşemeden yakl. 1 m yukarıda (çizim kuralı, norm şartı değil)",
+    "grundriss.legendeSpindel":
+      "Plan, ölçeksiz · ölçüler cm · malzeme: {material} · duvarlar gösterilmemiştir, korkuluk basitleştirilmiş daire olarak · " +
+      "kesit düzlemi döşemeden yakl. 1 m yukarıda (çizim kuralı, norm şartı değil)",
+
+    "material.titel": "Malzeme",
+    "material.stahlbeton": "Betonarme",
+    "material.holz": "Ahşap",
+    "material.stahl": "Çelik",
+    "materialText.stahlbeton": "betonarme",
+    "materialText.holz": "ahşap",
+    "materialText.stahl": "çelik",
+    "konstruktion.laufplatte": "betonarme, merdiven plağı kalınlığı varsayım {platte} cm",
+    "konstruktion.laufplatteAbwicklung": "betonarme, merdiven ve sahanlık plağı kalınlığı varsayım {platte} cm",
+    "konstruktion.spindel":
+      "konsol basamaklı ({material}) orta dikmeli döner merdiven, basamak {tritt} cm, rıhtsız (varsayımlar, norm değeri değil) · " +
+      "kesikli: bir tur yukarıdaki basamak (net geçiş yüksekliği)",
+    "konstruktion.spindelStahlbeton": "basitleştirilmiş: betonarme döner merdivenler çoğunlukla monolitik helisel plaktır",
+    "schnitt.spindelMasse": "ölçüler yürüme çizgisi üzerinde ölçülmüştür",
+    "grundriss.austrittLegende": "kalın kesikli çizgi = merdiven çıkışı (döşeme kenarı)",
+    "zeichnung.durchgangshoehe": "net geçiş yüksekliği {wert}",
+    "konstruktion.wange":
+      "{material} limonlu merdiven: basamaklar {tritt} cm, limonlar {wd} × {wh} cm (varsayımlar, norm değeri değil) · " +
+      "rıhtsız açık basamaklar, açık basamak kontrolü dahil değil",
+    "konstruktion.wangeAbwicklung":
+      "{material} limonlu merdiven: basamaklar ve sahanlık kaplaması {tritt} cm, limonlar {wd} × {wh} cm " +
+      "(varsayımlar, norm değeri değil) · rıhtsız açık basamaklar, açık basamak kontrolü dahil değil",
+    "grundriss.wangen": "limonlar kullanılabilir kol genişliğinin dışında, alan kontrolünde dikkate alınmadı (basitleştirilmiş)",
+    "grundriss.spindel": "yürüme çizgisi r = {r} cm · orta dikme Ø {d} cm, korkuluk kullanılabilir kol genişliğinin {g} cm dışında, döşeme boşluğu daire Ø D (varsayımlar, norm değeri değil); ikinci tur: numaralar iç halkada",
+    "grundriss.augeVereinfacht": "basitleştirilmiş: {material} merdivende en az {min} cm merdiven boşluğu gerekirdi",
+    "druck.material": "Malzeme: {wert}",
+    "zeichnung.material": "Malzeme: {wert} (ölçüler varsayım, norm değeri değil)",
+
+    "zeichnung.lauflaenge": "Kol uzunluğu {wert}",
+    "zeichnung.podest": "Sahanlık {wert}",
+    "zeichnung.radiusLauflinie": "Yürüme çizgisi r {wert}",
+    "zeichnung.austritt": "Merdiven çıkışı",
+    "zeichnung.raum": "Alan {wert}",
+    "zeichnung.fehlt": "eksik {wert}",
+
+    "export.titel": "Dışa aktarma",
+    "export.schnitt": "Kesit",
+    "export.grundriss": "Plan",
+    "export.drucken": "Yazdır / PDF",
+    "export.hinweisDxf": "DXF: birim mm, ölçek 1:1",
+
+    "fuss.landesrecht":
+      "Yol gösterici bir araçtır; Alman eyalet yapı yönetmeliklerine (Landesbauordnung) göre yapılacak kontrolün yerini tutmaz.",
+    "fuss.quelle":
+      "Sınır değerler: DIN 18065:2020-08 (merdivenler için Alman normu), Tablo 1 " +
+      "(WEKA-Fachportal'dan alıntı, orijinal incelenmedi).",
+    "fuss.uebersetzung": "Çeviri yalnızca yol göstermek içindir; normun Almanca metni esastır.",
   },
 };
 

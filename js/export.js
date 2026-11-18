@@ -56,7 +56,7 @@ function exportiereDxf(ergebnis, zeichnung) {
   const elemente = mitMaterialzeile(ZEICHNUNGEN[zeichnung](ergebnis, EXPORT_CM_PRO_PX), ergebnis, EXPORT_CM_PRO_PX);
   const strichelung = SVG_STRICHELUNG.split(" ").map((px) => Number(px) * EXPORT_CM_PRO_PX);
   const dxf = erzeugeDxf(elemente, strichelung);
-  ladeHerunter(alsWindows1252(dxf), exportDateiname(ergebnis, zeichnung, "dxf"), "application/dxf");
+  ladeHerunter(alsDxfBytes(dxf), exportDateiname(ergebnis, zeichnung, "dxf"), "application/dxf");
 }
 
 /**

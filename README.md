@@ -20,7 +20,7 @@ Web-App für Architekturstudierende: Aus Geschosshöhe, Gebäudeart und verfügb
 | Zeichnungen | Schnitt bzw. Abwicklung entlang der Lauflinie und Grundriss mit Stufennummern, Lauflinie und Maßketten |
 | Materialwahl | Stahlbeton (Laufplatte), Holz oder Stahl (Wangentreppe mit offenen Trittstufen): ändert Konstruktion und Schraffur in Schnitt, Grundriss und Export – nicht die Normprüfung. Bei der Spindeltreppe bestimmt das Material Spindeldurchmesser und Stufendicke und geht damit in die Berechnung ein. Maße sind Annahmen, keine Normwerte; Schraffur vereinfacht |
 | Export | DXF (Schnitt und Grundriss getrennt), SVG, PDF über den Druckdialog |
-| Sprachen | Deutsch, Englisch, Französisch |
+| Sprachen | Deutsch, Englisch, Französisch, Türkisch (Umschalter oben rechts). Auf Türkisch weist die Normprüfung darauf hin, dass türkische Vorschriften (z. B. Planlı Alanlar İmar Yönetmeliği, Binaların Yangından Korunması Hakkında Yönetmelik) nicht geprüft werden |
 
 ## Wie rechnet der Treppenplaner?
 
@@ -77,9 +77,9 @@ Reines HTML, CSS und JavaScript, ohne Frameworks, ohne Build-Schritt und ohne In
 | `js/grundriss.js` | Grundriss mit Läufen, Podest, Stufennummern, Lauflinie, Raum und Maßketten. |
 | `js/spindelgrundriss.js` | Grundriss der Spindeltreppe (Bögen, radiale Stufen, Austritt, Maße). |
 | `js/svg-ausgabe.js` | Gibt eine Geometrieliste als SVG aus. |
-| `js/dxf.js` | Schreibt eine Geometrieliste als DXF R12 (mm, Ebenen, Windows-1252). |
+| `js/dxf.js` | Schreibt eine Geometrieliste als DXF R12 (mm, Ebenen, Windows-1252 bzw. auf Türkisch Windows-1254). |
 | `js/export.js` | Download von DXF und SVG, Drucken als PDF. |
-| `js/i18n.js` | Alle Texte auf Deutsch, Englisch und Französisch; Zahlenformat je Sprache. |
+| `js/i18n.js` | Alle Texte auf Deutsch, Englisch, Französisch und Türkisch; Zahlenformat und DXF-Codepage je Sprache (Türkisch: Windows-1254). |
 | `js/app.js` | Verbindet Formular, Berechnung, Vergleich und Anzeige. |
 
 **Lokal testen:** Im Projektordner einen einfachen Webserver starten, z. B.

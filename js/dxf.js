@@ -7,7 +7,7 @@
  *  - Keine assoziativen Bemaßungen: Maßketten bestehen aus Linien und Texten.
  *  - Keine Einheitenangabe ($INSUNITS gehört nicht zu R12): Einheit mm, Maßstab 1:1,
  *    der Hinweis steht neben den Export-Schaltflächen.
- * Texte werden in Windows-1252 kodiert ($DWGCODEPAGE = ANSI_1252).
+ * Texte werden in Windows-1252 kodiert ($DWGCODEPAGE = ANSI_1252), auf Türkisch in Windows-1254 (ANSI_1254).
  */
 
 const DXF_MM_PRO_CM = 10;
@@ -163,7 +163,7 @@ function dxfAusdehnung(elemente) {
 function dxfKopf(s, ausdehnung) {
   s.paar(0, "SECTION").paar(2, "HEADER");
   s.paar(9, "$ACADVER").paar(1, "AC1009");
-  s.paar(9, "$DWGCODEPAGE").paar(3, "ANSI_1252");
+  s.paar(9, "$DWGCODEPAGE").paar(3, "ANSI_" + dxfCodepage());
   s.paar(9, "$INSBASE").punkt(10, [0, 0]);
   s.paar(9, "$EXTMIN").punkt(10, ausdehnung.min);
   s.paar(9, "$EXTMAX").punkt(10, ausdehnung.max);
@@ -237,13 +237,25 @@ const CP1252_SONDERZEICHEN = {
   0x2122: 0x99, 0x0161: 0x9a, 0x203a: 0x9b, 0x0153: 0x9c, 0x017e: 0x9e, 0x0178: 0x9f,
 };
 
-/** Kodiert Text als Windows-1252; nicht darstellbare Zeichen werden „?“. */
-function alsWindows1252(text) {
+// Windows-1254 (Türkisch) = Windows-1252 bis auf sechs Plätze (Ğ İ Ş ğ ı ş statt Ð Ý Þ ð ý þ);
+// 0x8E und 0x9E (Ž ž) sind in 1254 nicht belegt.
+const CP1254_ABWEICHUNGEN = { 0x011e: 0xd0, 0x0130: 0xdd, 0x015e: 0xde, 0x011f: 0xf0, 0x0131: 0xfd, 0x015f: 0xfe };
+const CP1254_NICHT_BELEGT = new Set([0xd0, 0xdd, 0xde, 0xf0, 0xfd, 0xfe, 0x8e, 0x9e]);
+
+/** Codepage der DXF-Texte für die aktuelle Sprache (1252 oder 1254, siehe SPRACHEN in i18n.js). */
+function dxfCodepage() {
+  return SPRACHEN[aktuelleSprache].dxfCodepage;
+}
+
+/** Kodiert Text als Windows-1252 bzw. -1254 (je Sprache); nicht darstellbare Zeichen werden „?“. */
+function alsDxfBytes(text) {
+  const tuerkisch = dxfCodepage() === 1254;
   const bytes = new Uint8Array(text.length);
   for (let i = 0; i < text.length; i++) {
     const c = text.charCodeAt(i);
-    if (c < 0x80 || (c >= 0xa0 && c <= 0xff)) bytes[i] = c;
-    else bytes[i] = CP1252_SONDERZEICHEN[c] ?? 0x3f;
+    let b = c < 0x80 || (c >= 0xa0 && c <= 0xff) ? c : CP1252_SONDERZEICHEN[c] ?? 0x3f;
+    if (tuerkisch) b = CP1254_ABWEICHUNGEN[c] ?? (CP1254_NICHT_BELEGT.has(b) ? 0x3f : b);
+    bytes[i] = b;
   }
   return bytes;
 }

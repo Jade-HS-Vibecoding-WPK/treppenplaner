@@ -20,7 +20,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ L-Treppe mit Viertelpodest, links und rechts (Podestregeln siehe `notlar.md`)
 - ✅ U-Treppe mit Halbpodest (Treppenauge 10 cm, Annahme)
 - ✅ Variantenvergleich + Bewertung + Empfehlung
-- ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung
+- ✅ Mehrsprachigkeit: Deutsch, Englisch, Französisch (Umschalter auf der Seite) – Wunsch der Betreuung · Türkisch als 4. Sprache (18.11.)
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
@@ -109,6 +109,8 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 - ✅ Nach der Sichtprüfung (18.11.): passt die Beschriftung „Austritt“ nicht in den Grundriss, erklärt die Legende „dicke Strichlinie = Austritt (Deckenkante)“; Abwicklungs-Legende „Maße wie auf der Lauflinie gemessen“; README-Ausblick: Vertikalschnitt durch die Spindelachse.
 
+- ✅ Türkisch (18.11.): vierte Sprache TR in `js/i18n.js` (Fachbegriffe vom Nutzer, Tabelle in `notlar.md`), Zahlenformat tr-TR, Umschalter DE | EN | FR | TR; einmaliger Hinweis in der Normprüfung, dass türkische Vorschriften nicht geprüft werden; DXF auf Türkisch in Windows-1254 (`$DWGCODEPAGE` ANSI_1254). Kontrolle nur 275 / Wohngebäude / 80 und Szenario 9 (alle vier Varianten): keine Textüberschneidungen in Plan/Schnitt, Karten ohne Überlauf; Druck Seite 1 (simuliert) passt, Szenario 9 knapp (986 von 1009 px).
+
 **Stand 18.11., Spindeltreppe abgeschlossen (nicht gepusht).** Offen: DXF-Test in AutoCAD/Viewer, Kopfhöhe an der Deckenkante.
 
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
@@ -148,6 +150,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - DXF mit Holz/Stahl in AutoCAD prüfen (Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ/STAHL, SOLID)
 
 **Später / offen**
+- Türkische Texte am Bildschirm prüfen (Nutzer); Druck Seite 1 bei Szenario 9 als echtes PDF prüfen (simuliert nur 23 px Reserve).
 5. Französische Texte von einer Muttersprachlerin / einem Muttersprachler prüfen lassen (Fachbegriffe in `notlar.md`).
 6. Kopfhöhe 2,00 m im Schnitt prüfen und darstellen. Dafür muss die Lage bzw. Länge der Deckenöffnung festgelegt werden – vorher Plan abstimmen.
 7. Wände und Treppenloch im Grundriss (bisher nur Raumrechteck).
