@@ -68,7 +68,7 @@
       <p id="druckEingabe" class="druck-eingabe"></p>
       <h2 data-i18n="ergebnis.titel">Ergebnis</h2>
 
-      <!-- Variantenvergleich: Empfehlung, drei Karten (Bildschirm) bzw. Tabelle (Druck); Inhalt aus app.js -->
+      <!-- Variantenvergleich: Empfehlung, vier Karten (Bildschirm) bzw. Tabelle (Druck); Inhalt aus app.js -->
       <p id="empfehlung" class="urteil empfehlung"></p>
       <div id="varianten" class="varianten" role="group" data-i18n-aria="formwahl.label" aria-label="Treppenform"></div>
       <table id="vergleichDruck" class="pruefung vergleich-druck">
@@ -95,9 +95,12 @@
         <div><dt data-i18n="kriterium.auftritt">Auftritt a</dt><dd id="auftritt"></dd></div>
         <div><dt data-i18n="kriterium.schrittmass">Schrittmaß 2s + a</dt><dd id="schrittmass"></dd></div>
         <div><dt id="lauflaengeTitel" data-i18n="ergebnis.lauflaenge">Lauflänge (Grundriss)</dt><dd id="lauflaenge"></dd></div>
+        <div id="teilungKennwert" hidden><dt data-i18n="ergebnis.teilung">Teilung (Stufen je 360°)</dt><dd id="teilung"></dd></div>
       </dl>
+      <!-- Nur bei der Spindeltreppe (Inhalt aus app.js); schwarz: Hinweis, kein Normverstoß -->
+      <p id="spindelHinweis" class="hinweis" hidden></p>
 
-      <!-- Material: ändert nur die Darstellung (Konstruktion, Schraffur), nicht Berechnung und Normprüfung -->
+      <!-- Material: ändert die Darstellung (Konstruktion, Schraffur); nur bei der Spindeltreppe auch die Berechnung -->
       <div class="materialwahl richtungwahl" role="group" data-i18n-aria="material.titel" aria-label="Material">
         <span data-i18n="material.titel">Material</span>
         <button type="button" data-material="stahlbeton" aria-pressed="true" data-i18n="material.stahlbeton">Stahlbeton</button>
@@ -106,6 +109,8 @@
       </div>
 
       <!-- Gemeinsamer Scrollbereich: Schnitt und Grundriss bleiben beim Scrollen übereinander. -->
+      <!-- Vorläufig: Spindeltreppe noch ohne Zeichnungen und ohne DXF/SVG-Export (app.js) -->
+      <p id="zeichnungFolgt" class="hinweis" data-i18n="zeichnung.folgt" hidden>Die Zeichnungen der Spindeltreppe folgen (in Arbeit).</p>
       <div class="zeichnungen">
       <h3 id="schnittTitel" data-i18n="schnitt.titel">Schnitt</h3>
       <figure class="zeichnung">

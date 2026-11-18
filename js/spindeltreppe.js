@@ -87,6 +87,23 @@ function spindelGeometrie(stufung, B, durchgangshoeheMin, masse) {
   };
 }
 
+/**
+ * Lage im Grundriss (für Mini-Grundriss und Grundriss): Mittelpunkt in der Mitte des
+ * Quadrats D × D (Treppe in der linken unteren Ecke des Raums wie die anderen Formen).
+ * Die erste Setzstufe (Antritt, k = 0) zeigt nach unten (−90°); beim Hinaufgehen dreht
+ * die Treppe „links“ gegen den Uhrzeigersinn, „rechts“ im Uhrzeigersinn.
+ * winkel(k) = Winkel der Setzstufe k (Bogenmaß, k darf gebrochen sein),
+ * punkt(r, k) = Punkt im Abstand r vom Mittelpunkt auf diesem Strahl.
+ */
+function spindelLage(e) {
+  const g = e.spindel;
+  const R = g.durchmesser / 2;
+  const drehsinn = e.richtung === "rechts" ? -1 : 1;
+  const winkel = (k) => -Math.PI / 2 + (drehsinn * k * 2 * Math.PI) / g.teilung;
+  const punkt = (r, k) => [R + r * Math.cos(winkel(k)), R + r * Math.sin(winkel(k))];
+  return { mitte: [R, R], drehsinn, winkel, punkt };
+}
+
 /** Prüfungen nur der Spindeltreppe (ohne Texte, Schlüssel wie in berechnung.js). */
 function pruefeSpindel(geo, B, grenzen) {
   const norm = DIN18065.spindeltreppe;

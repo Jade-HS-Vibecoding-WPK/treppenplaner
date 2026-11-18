@@ -112,6 +112,18 @@
   - Pratikte bağlayıcı olan, iç Auftritt ≥ 10 cm koşulu: Lauflinie çoğunlukla 0,5 B'ye yakın kayıyor ve Durchgangshöhe 230 cm'in üstünde kalıyor. Bu yüzden malzeme D'yi şimdilik değiştirmiyor, sadece Durchgangshöhe'yi değiştiriyor.
   - Normprüfung'da yeni satırlar: Laufbreite ≤ 130 (Gehbereich kuralı), Auftritt innen, Lauflinie im Gehbereich (iç sınırdan uzaklık, sınır 0,5–0,7 B), Durchgangshöhe; 18-Steigungen-Regel düz merdivendeki gibi. „≥ 3 Steigungen je Lauf“ sadece L/U'da.
   - Örnek: 275 cm, Wohngebäude, B = 80 → n = 16, t = 14, R_i = 22,5, r_L = 64,3 (0,52 B), D = 214,9 cm, dönüş 386°.
+- **Spindeltreppe – kart ve puan (18.11., Adım 2):**
+  - Komfort C: Kₐ, iç sınırdaki Auftritt'ten dış sınırdakine kadar (doğrusal) 200 noktada hesaplanıp ortalaması alınıyor; Kₛ değişmedi. 275 cm'de Komfort 55 (L/U 94).
+  - Platz: kaplanan alan = D çaplı daire (L'deki „boş köşe sayılmaz“ kararıyla tutarlı); Raumprüfung D × D kareyle.
+  - Nutzung: Spindel'de düz kol yok → Allgemein'de 0, Wohngebäude'de 100. Sicherheit mevcut formül (tek kol, m = n).
+  - Ausschluss: „spindelLaufbreite“ (B > 130) ve „spindel“ (iç Auftritt / Gehbereich / Durchgangshöhe; pratikte hiç oluşmuyor).
+  - Seçim: `auswahl.richtung = { L, spindel }`; Drehsinn butonları kartın formuna göre. Malzeme `letzteEingabe.material` içinde; malzeme değişince karşılaştırma yeniden hesaplanıyor, seçili kart kalıyor.
+  - Kennwerte: Spindel'de „Platzbedarf“ yerine „Durchmesser D“, ayrıca „Teilung (Stufen je 360°)“; a = Lauflinie üzerindeki Auftritt (275 cm'de 28,6). Uyarı Kennwerte'nin altında siyah küçük yazı (yazdırmada da 1. sayfada).
+  - Geçici: Spindel seçiliyken çizimler yerine „Die Zeichnungen der Spindeltreppe folgen“, DXF/SVG butonları pasif (Adım 3/4'te kalkacak).
+  - Mini plan: `spindelLage()` (spindeltreppe.js) – merkez D × D karenin ortasında, Antritt aşağı (−90°), links = saat yönünün tersi. Büyük plan da aynı fonksiyonu kullanacak.
+  - **Senaryo sonucu, kullanıcıyla konuşulacak:** d) 275/Wohn/80/230 × 230'da Spindel tek uyan değil: L daha dik Stufung ile (Komfort 12) sığıyor ve 48 puanla Spindel'in (46) önünde. 1152 durumluk taramada Spindel sadece tek uyan varyant olduğunda öneriliyor (14 durum).
+  - Kartlar 1366 px'te 4'ü yan yana, yükseklik ~250 → 318 px (dar kartta değerler ve alt puanlar iki satıra kayıyor, Spindel'de uyarı satırı).
+  - Yazdırma: bilinen istisna (FR, 600 cm, 450 × 120) 44 → 107 px'e çıktı (4. satır + uzun gerekçe); diğer 41 simüle durum sığıyor.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.

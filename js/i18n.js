@@ -24,6 +24,7 @@ const TEXTE = {
     "seite.untertitel": "Gerade Treppe – Bemessung nach DIN 18065",
     "seite.untertitelL": "L-Treppe mit Viertelpodest – Bemessung nach DIN 18065",
     "seite.untertitelU": "U-Treppe mit Halbpodest – Bemessung nach DIN 18065",
+    "seite.untertitelSpindel": "Spindeltreppe – Bemessung nach DIN 18065",
     "sprachwahl.label": "Sprache",
 
     "eingabe.titel": "Eingabe",
@@ -55,6 +56,9 @@ const TEXTE = {
     "ergebnis.anzahlAuftritte": "Anzahl Auftritte",
     "ergebnis.lauflaenge": "Lauflänge (Grundriss)",
     "ergebnis.platzbedarf": "Platzbedarf (Grundriss)",
+    "ergebnis.durchmesser": "Durchmesser D (Grundriss)",
+    "ergebnis.teilung": "Teilung (Stufen je 360°)",
+    "zeichnung.folgt": "Die Zeichnungen der Spindeltreppe folgen (in Arbeit).",
     "formwahl.label": "Treppenform",
     "form.gerade": "Gerade Treppe",
     "form.L": "L-Treppe",
@@ -67,6 +71,7 @@ const TEXTE = {
     "vergleich.ausgeschlossen": "ausgeschlossen",
     "vergleich.naechste": "am nächsten",
     "hinweis.sehrSteil": "sehr steil",
+    "hinweis.notwendigeTreppe": "Als notwendige Treppe ggf. nicht zulässig – Landesbauordnung prüfen.",
     "vergleich.punkte": "Punkte",
     "vergleich.vonHundert": "{punkte} / 100",
     "vergleich.variante": "Variante",
@@ -94,6 +99,8 @@ const TEXTE = {
     "ausschluss.laufZuKurz": "Lauf zu kurz (weniger als {min} Steigungen)",
     "ausschluss.podest": "Podest zu kurz",
     "ausschluss.raum": "passt nicht: es fehlen {teile}",
+    "ausschluss.spindelLaufbreite": "Laufbreite über {max} cm (Regel für den Gehbereich)",
+    "ausschluss.spindel": "Norm nicht erfüllt: Geometrie der Spindeltreppe",
     "urteil.normgerecht": "✓ Die Treppe erfüllt die geprüften Anforderungen der DIN 18065.",
     "urteil.keineLoesung":
       "✗ Für diese Geschosshöhe ist keine normgerechte Stufenfolge möglich. Gezeigt wird die nächstliegende Lösung.",
@@ -207,6 +214,8 @@ const TEXTE = {
       "L-shaped stair with quarter landing – design to DIN 18065 (German standard for stairs in buildings)",
     "seite.untertitelU":
       "U-shaped stair with half landing – design to DIN 18065 (German standard for stairs in buildings)",
+    "seite.untertitelSpindel":
+      "Spiral staircase – design to DIN 18065 (German standard for stairs in buildings)",
     "sprachwahl.label": "Language",
 
     "eingabe.titel": "Input",
@@ -238,6 +247,9 @@ const TEXTE = {
     "ergebnis.anzahlAuftritte": "Number of goings",
     "ergebnis.lauflaenge": "Total going (plan)",
     "ergebnis.platzbedarf": "Space required (plan)",
+    "ergebnis.durchmesser": "Diameter D (plan)",
+    "ergebnis.teilung": "Steps per full turn (360°)",
+    "zeichnung.folgt": "Drawings of the spiral staircase to follow (in progress).",
     "formwahl.label": "Stair shape",
     "form.gerade": "Straight stair",
     "form.L": "L-shaped stair",
@@ -250,6 +262,7 @@ const TEXTE = {
     "vergleich.ausgeschlossen": "excluded",
     "vergleich.naechste": "closest",
     "hinweis.sehrSteil": "very steep",
+    "hinweis.notwendigeTreppe": "May not be permitted as a required stair – check the state building code (Landesbauordnung).",
     "vergleich.punkte": "Points",
     "vergleich.vonHundert": "{punkte} / 100",
     "vergleich.variante": "Option",
@@ -277,6 +290,8 @@ const TEXTE = {
     "ausschluss.laufZuKurz": "Flight too short (fewer than {min} risers)",
     "ausschluss.podest": "Landing too short",
     "ausschluss.raum": "does not fit: missing {teile}",
+    "ausschluss.spindelLaufbreite": "Clear width above {max} cm (walking zone rule)",
+    "ausschluss.spindel": "Standard not met: geometry of the spiral staircase",
     "urteil.normgerecht": "✓ The stair meets the checked requirements of DIN 18065.",
     "urteil.keineLoesung":
       "✗ No step sequence complying with DIN 18065 is possible for this storey height. The closest solution is shown.",
@@ -390,6 +405,8 @@ const TEXTE = {
       "Escalier en L avec palier – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
     "seite.untertitelU":
       "Escalier en U avec palier – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
+    "seite.untertitelSpindel":
+      "Escalier à vis – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
     "sprachwahl.label": "Langue",
 
     "eingabe.titel": "Saisie",
@@ -422,6 +439,9 @@ const TEXTE = {
     "ergebnis.anzahlAuftritte": "Nombre de marches",
     "ergebnis.lauflaenge": "Reculement (vue en plan)",
     "ergebnis.platzbedarf": "Encombrement (vue en plan)",
+    "ergebnis.durchmesser": "Diamètre D (vue en plan)",
+    "ergebnis.teilung": "Marches par tour (360°)",
+    "zeichnung.folgt": "Les dessins de l’escalier à vis suivront (en cours).",
     "formwahl.label": "Forme de l’escalier",
     "form.gerade": "Escalier droit",
     "form.L": "Escalier en L",
@@ -434,6 +454,7 @@ const TEXTE = {
     "vergleich.ausgeschlossen": "exclue",
     "vergleich.naechste": "la plus proche",
     "hinweis.sehrSteil": "très raide",
+    "hinweis.notwendigeTreppe": "Éventuellement non admis comme escalier nécessaire – vérifier le règlement de construction du Land (Landesbauordnung).",
     "vergleich.punkte": "Points",
     "vergleich.vonHundert": "{punkte} / 100",
     "vergleich.variante": "Variante",
@@ -462,6 +483,8 @@ const TEXTE = {
     "ausschluss.laufZuKurz": "Volée trop courte (moins de {min} contremarches)",
     "ausschluss.podest": "Palier trop court",
     "ausschluss.raum": "ne tient pas : il manque {teile}",
+    "ausschluss.spindelLaufbreite": "Emmarchement supérieur à {max} cm (règle de la zone de marche)",
+    "ausschluss.spindel": "Norme non satisfaite : géométrie de l’escalier à vis",
     "urteil.normgerecht": "✓ L'escalier satisfait aux exigences vérifiées de la DIN 18065.",
     "urteil.keineLoesung":
       "✗ Aucune suite de marches conforme à la DIN 18065 n'est possible pour cette hauteur d'étage. " +

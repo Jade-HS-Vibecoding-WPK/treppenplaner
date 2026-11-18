@@ -370,7 +370,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   .pruefung { font-size: 0.85rem; }
 }
 
-/* Variantenvergleich: drei Karten im Raster (gerade, L, U); am Handy untereinander */
+/* Variantenvergleich: vier Karten im Raster (gerade, L, U, Spindel); am Handy untereinander */
 .empfehlung { font-weight: 700; }
 
 .varianten {
@@ -432,6 +432,8 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
 
 .karte-gruende { display: block; margin-top: calc(0.5 * var(--r)); color: var(--fehler); font-weight: 700; font-size: var(--klein); }
 .karte-gruende > span { display: block; }
+/* Spindeltreppe: Hinweis „notwendige Treppe“ – schwarz, klein (Hinweis, kein Normverstoß) */
+.karte-hinweis { display: block; margin-top: calc(0.5 * var(--r)); font-size: 0.75rem; line-height: 1.3; }
 
 .karte .richtungwahl {
   display: flex;

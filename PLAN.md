@@ -24,7 +24,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
-- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · [ ] 2 Karte + Punkte · [ ] 3 Grundriss · [ ] 4 Abwicklung · [ ] 5 DXF, Texte, README
+- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · ✅ 2 Karte + Punkte · [ ] 3 Grundriss · [ ] 4 Abwicklung · [ ] 5 DXF, Texte, README
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
@@ -95,6 +95,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Spindeltreppe, Schritt 1 (18.11.): `js/spindeltreppe.js` – Teilung t (ganzzahlig) aus lichter Durchgangshöhe (t · s − Stufendicke ≥ 200 cm) und Gehbereich (Auftritt innen ≥ 10 cm, Lauflinie 0,5–0,7 B von innen, bevorzugt 0,6 B), kleinstes t = kleinster Durchmesser; Auftritt als Sehne; Normprüfung mit vier neuen Zeilen (Laufbreite ≤ 130 cm für die Gehbereichsregel, Auftritt innen, Lauflinie im Gehbereich, Durchgangshöhe) und der 18er-Regel; Material geht in die Berechnung ein (Spindel-Ø 20/12/10 cm, Stufendicke 8/5/4 cm, Geländer 5 cm, Annahmen in `material.js`); Quellen in `norm.js` (Baunetz Wissen, Original nicht eingesehen), Durchgangshöhe und Schrittmaß jetzt mit Quelle; DE/EN/FR. Noch nicht im Variantenvergleich (Schritt 2).
 - ✅ Konsolentest Schritt 1: 275 cm / Wohngebäude / 80 → n = 16, t = 14, Lauflinie 0,52 B, D = 214,9 cm, Drehung 386°, Durchgangshöhe 232,6–236,6 cm; 25 308 Kombinationen (50–600 cm, beide Gebäudearten, B 30–400, drei Materialien) ohne Fehler/NaN; bei B ≤ 130 und normgerechten Stufen immer eine zulässige Teilung gefunden.
 
+- ✅ Spindeltreppe, Schritt 2 (18.11.): vierte Karte im Vergleich (`TREPPENFORMEN`); Mini-Grundriss (Außenkreis D, Laufbreite, Spindel, Setzstufen einer Umdrehung, Lauflinie mit Antrittskreis), Drehsinn links | rechts wie bei L, Wert „Durchmesser D“, schwarzer Hinweis „Als notwendige Treppe ggf. nicht zulässig – Landesbauordnung prüfen.“ (Karte und unter den Kennwerten); Punkte: Komfort mit Auftrittspunkten gemittelt über die nutzbare Laufbreite (Variante C), Platz mit der Kreisfläche, Nutzung ohne gerade Läufe (Gebäude im Allgemeinen 0), Sicherheit unverändert; Kennwerte „Durchmesser D“ und „Teilung (Stufen je 360°)“, a = Auftritt auf der Lauflinie; Materialwechsel rechnet den Vergleich neu; Ausschlussgründe „Laufbreite über 130 cm“ und „Geometrie“; vorläufig „Zeichnungen folgen“ statt Schnitt/Grundriss, DXF/SVG gesperrt; DE/EN/FR.
+- ✅ Szenarien Schritt 2 (Konsole, alle drei Materialien gleich): a) 275/Wohn/80 → L 94, Spindel 65; b) 280/Wohn/80/450 × 120 → gerade 59; c) 280/Wohn/100/320 × 220 → U 68 (unverändert), Spindel passt nicht; d) 275/Wohn/80/230 × 230 → L 48 (steilere Stufung), Spindel 46, U 44 – erwartet war „nur Spindel passt“; e) 300/Allgemein/100 → L 90, Spindel 49 (D 261,3 cm, t = 16). Sweep 1152 Fälle: Spindel nur in 14 Fällen empfohlen, immer als einzige passende Variante. Karten bei 1366 px nebeneinander 318 px hoch (vorher ca. 250), 375 px ohne Überlauf (DE/EN/FR). Druck Seite 1 (simuliert, 42 Fälle DE/EN/FR): passt bis auf die bekannte Ausnahme FR 600 cm / 450 × 120 (jetzt 107 px statt 44 px zu lang).
+
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
@@ -123,7 +126,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 **Do 18.11.**
 - Spindeltreppe als 4. Variante – Plan abgestimmt (siehe `notlar.md`), fünf Schritte mit je einem Commit, kein Push:
   1. ✅ Berechnung + Normprüfung (`js/spindeltreppe.js`, `norm.js`, `material.js`)
-  2. Karte + Punkte (Komfort C, danach Szenarien a–e im Konsolentest), Hinweis „notwendige Treppe“, Druck Seite 1 prüfen
+  2. ✅ Karte + Punkte (Komfort C), Szenarien a–e, Hinweis „notwendige Treppe“, Druck Seite 1 geprüft – offen: Szenario d (L statt Spindel) und Druck-Ausnahme FR 600 cm mit dem Nutzer besprechen
   3. Grundriss (Bogen-Element, DXF ARC)
   4. Abwicklung (kann entfallen)
   5. DXF-Dateiname, Fachbegriffe DE/EN/FR, README (Eigene Annahmen: Kragstufen bei Stahlbeton vereinfacht, Deckenöffnung = Kreis D, Kopfhöhe am Rand nicht geprüft)

@@ -1,5 +1,5 @@
 /*
- * bewertung.js – Variantenvergleich: gerade, L- und U-Treppe berechnen, ausschließen,
+ * bewertung.js – Variantenvergleich: gerade, L-, U- und Spindeltreppe berechnen, ausschließen,
  * bewerten und die beste empfehlen.
  *
  * Ablauf:
@@ -40,7 +40,7 @@ const SICHERHEIT = Object.freeze({
 // Nur bei „Gebäude im Allgemeinen“; in Wohngebäuden bekommen alle Formen 100.
 // Festlegung des Nutzers, kein Normwert.
 const NUTZUNG = Object.freeze({
-  geradeLaeufe: 50, // haben alle drei Formen (keine gewendelten Stufen)
+  geradeLaeufe: 50, // gerade, L und U (die Spindeltreppe hat keine geraden Läufe)
   podest: 50,
 });
 
@@ -63,18 +63,42 @@ function punkte0bis100(wert) {
   return Math.min(Math.max(wert, 0), 100);
 }
 
+function auftrittPunkte(auftritt) {
+  return punkte0bis100(100 * (1 - Math.abs(auftritt - KOMFORT.auftritt) / KOMFORT.auftrittSpanne));
+}
+
+// Spindeltreppe: Auftrittspunkte gemittelt über die nutzbare Laufbreite (Zahl der Stützstellen).
+// Festlegung des Nutzers (18.11., Variante C), kein Normwert.
+const KOMFORT_SPINDEL_STUETZSTELLEN = 200;
+
+/**
+ * Spindeltreppe: Der Auftritt wächst linear von der inneren zur äußeren Begrenzung
+ * (auftrittInnen … auftrittAussen). Bewertet wird der Mittelwert der Auftrittspunkte
+ * über die ganze nutzbare Laufbreite – die keilförmigen Stufen kosten Komfort.
+ */
+function auftrittPunkteSpindel(g) {
+  let summe = 0;
+  for (let i = 0; i < KOMFORT_SPINDEL_STUETZSTELLEN; i++) {
+    const anteil = (i + 0.5) / KOMFORT_SPINDEL_STUETZSTELLEN;
+    summe += auftrittPunkte(g.auftrittInnen + anteil * (g.auftrittAussen - g.auftrittInnen));
+  }
+  return summe / KOMFORT_SPINDEL_STUETZSTELLEN;
+}
+
 function komfortPunkte(t) {
-  const ks = 100 * (1 - Math.abs(t.steigung - KOMFORT.steigung) / KOMFORT.steigungSpanne);
-  const ka = 100 * (1 - Math.abs(t.auftritt - KOMFORT.auftritt) / KOMFORT.auftrittSpanne);
-  return (punkte0bis100(ks) + punkte0bis100(ka)) / 2;
+  const ks = punkte0bis100(100 * (1 - Math.abs(t.steigung - KOMFORT.steigung) / KOMFORT.steigungSpanne));
+  const ka = t.spindel ? auftrittPunkteSpindel(t.spindel) : auftrittPunkte(t.auftritt);
+  return (ks + ka) / 2;
 }
 
 /**
  * Tatsächlich belegte Grundfläche: Läufe (Länge × Laufbreite) + Podest (Tiefe × Breite).
  * Nicht das umschließende Rechteck (footprint): Die freie Ecke der L-Treppe bleibt nutzbar
  * und zählt nicht. Das Rechteck gilt weiter für „Passt in den Raum“ (pruefeRaum).
+ * Spindeltreppe: Kreisfläche mit dem Außendurchmesser D (die Ecken des Quadrats bleiben frei).
  */
 function belegteFlaeche(t) {
+  if (t.spindel) return (Math.PI * t.spindel.durchmesser ** 2) / 4;
   const laeufe = t.laeufe.reduce((summe, l) => summe + l.laenge * t.laufbreite, 0);
   return laeufe + (t.podest ? t.podest.tiefe * t.podest.breite : 0);
 }
@@ -98,7 +122,7 @@ function sicherheitPunkte(t) {
 
 function nutzungPunkte(t) {
   if (t.gebaeudeart !== "allgemein") return 100;
-  return NUTZUNG.geradeLaeufe + (t.podest ? NUTZUNG.podest : 0);
+  return (t.form === "spindel" ? 0 : NUTZUNG.geradeLaeufe) + (t.podest ? NUTZUNG.podest : 0);
 }
 
 /** Summe der Fehlmaße (0 ohne Raumvorgabe oder wenn es passt). */
@@ -132,7 +156,7 @@ function treppeFuerForm(form, richtung, eingabe) {
 
 /**
  * Gründe für den Ausschluss (leer = nicht ausgeschlossen), ohne Texte:
- * stufen | laufbreite | podestNoetig | laufZuKurz | podest | raum.
+ * stufen | laufbreite | podestNoetig | laufZuKurz | podest | spindelLaufbreite | spindel | raum.
  */
 function ausschlussGruende(t) {
   const gruende = [];
@@ -143,6 +167,10 @@ function ausschlussGruende(t) {
     if (p.kriterium === "laufMax") gruende.push({ grund: "podestNoetig", max: p.grenze.max });
     if (p.kriterium === "laufMin") gruende.push({ grund: "laufZuKurz", min: p.grenze.min });
     if (p.kriterium === "podestlaenge") gruende.push({ grund: "podest" });
+    if (p.kriterium === "spindelLaufbreite") gruende.push({ grund: "spindelLaufbreite", max: p.grenze.max });
+    if (["auftrittInnen", "lauflinieGehbereich", "durchgangshoehe"].includes(p.kriterium)) {
+      gruende.push({ grund: "spindel" });
+    }
   }
   if (t.raum && !t.raum.passt) gruende.push({ grund: "raum", fehlt: t.raum.fehlt });
   return gruende;
@@ -165,16 +193,17 @@ function begruendung(geeignete) {
 }
 
 /**
- * Hauptfunktion: alle drei Formen berechnen, ausschließen, bewerten, empfehlen.
- * @param {object} eingabe wie bei berechneTreppe()
- * @param {"links"|"rechts"} richtungL Drehsinn der L-Treppe (gleiche Punkte für beide, Spiegelbild)
+ * Hauptfunktion: alle vier Formen berechnen, ausschließen, bewerten, empfehlen.
+ * @param {object} eingabe wie bei berechneTreppe() (mit material für die Spindeltreppe)
+ * @param {{L: "links"|"rechts", spindel: "links"|"rechts"}} richtungen Drehsinn der L- und der
+ *   Spindeltreppe (gleiche Punkte für beide Richtungen, Spiegelbild)
  * @returns {{varianten: object[], empfehlung: string|null, naechste: string|null, begruendung: object|null}}
  *   empfehlung = Form mit den meisten Punkten (null, wenn keine Variante geeignet ist);
  *   naechste = die Variante, der am wenigsten fehlt (nur wenn keine geeignet ist).
  */
-function vergleicheVarianten(eingabe, richtungL = "links") {
+function vergleicheVarianten(eingabe, richtungen = { L: "links", spindel: "links" }) {
   const varianten = TREPPENFORMEN.map((form) => {
-    const treppe = treppeFuerForm(form, form === "L" ? richtungL : null, eingabe);
+    const treppe = treppeFuerForm(form, richtungen[form] ?? null, eingabe);
     const gruende = ausschlussGruende(treppe);
     return { form, treppe, gruende, ausgeschlossen: gruende.length > 0 };
   });
@@ -194,7 +223,7 @@ function vergleicheVarianten(eingabe, richtungL = "links") {
     v.gesamt = Object.keys(GEWICHTE).reduce((summe, k) => summe + (GEWICHTE[k] * v.punkte[k]) / 100, 0);
   }
 
-  // Stabil sortiert: bei Gleichstand gewinnt die einfachere Form (Reihenfolge gerade, L, U).
+  // Stabil sortiert: bei Gleichstand gewinnt die einfachere Form (Reihenfolge gerade, L, U, Spindel).
   const rangfolge = [...geeignet].sort((p, q) => q.gesamt - p.gesamt);
   if (rangfolge.length > 0) {
     return { varianten, empfehlung: rangfolge[0].form, naechste: null, begruendung: begruendung(rangfolge) };

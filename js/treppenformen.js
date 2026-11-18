@@ -19,7 +19,7 @@
 // Annahme, kein Normwert (Festlegung des Nutzers, 17.11.).
 const TREPPENAUGE = 10; // cm
 
-const TREPPENFORMEN = Object.freeze(["gerade", "L", "U"]);
+const TREPPENFORMEN = Object.freeze(["gerade", "L", "U", "spindel"]);
 
 function neuerLauf(steigungen, auftritt) {
   const auftritte = Math.max(steigungen - 1, 0);

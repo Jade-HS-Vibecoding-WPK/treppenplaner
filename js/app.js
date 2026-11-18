@@ -79,12 +79,20 @@ function zeigeErgebnis(e) {
   setzeText("auftritt", cm(e.auftritt));
   zeigeSteilHinweis(e);
   setzeText("schrittmass", cm(e.schrittmass));
-  // Gerade Treppe: Lauflänge; mit Podest: Platzbedarf Länge × Breite
+  // Gerade Treppe: Lauflänge; mit Podest: Platzbedarf Länge × Breite; Spindeltreppe: Durchmesser D
   const gerade = e.form === "gerade";
-  setzeI18n(document.getElementById("lauflaengeTitel"), gerade ? "ergebnis.lauflaenge" : "ergebnis.platzbedarf");
+  const spindel = e.form === "spindel";
+  const titel = gerade ? "ergebnis.lauflaenge" : spindel ? "ergebnis.durchmesser" : "ergebnis.platzbedarf";
+  setzeI18n(document.getElementById("lauflaengeTitel"), titel);
   // Umbruch höchstens nach „×“, nie vor „cm“
   const platzbedarf = `${zahl(e.footprint.laenge)}${NBSP}× ${cm(e.footprint.breite)}`;
-  setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : platzbedarf);
+  setzeText("lauflaenge", gerade ? cm(e.lauflaenge) : spindel ? cm(e.spindel.durchmesser) : platzbedarf);
+  // Spindeltreppe: Teilung und Hinweis „notwendige Treppe“
+  document.getElementById("teilungKennwert").hidden = !spindel;
+  if (spindel) setzeText("teilung", String(e.spindel.teilung));
+  const spindelHinweis = document.getElementById("spindelHinweis");
+  spindelHinweis.hidden = !spindel;
+  spindelHinweis.textContent = spindel ? t("hinweis.notwendigeTreppe") : "";
   setzeZeichnungstitel(gerade);
   setzeLegenden(e, auswahl.material);
   setzeUntertitel(e.form);
@@ -134,9 +142,10 @@ function setzeI18n(el, schluessel, aria = false) {
   }
 }
 
-/** Untertitel der Seite je nach gewählter Form (gerade | L | U). */
+/** Untertitel der Seite je nach gewählter Form (gerade | L | U | spindel). */
 function setzeUntertitel(form) {
-  const schluessel = form === "gerade" ? "seite.untertitel" : "seite.untertitel" + form;
+  const endung = { gerade: "", L: "L", U: "U", spindel: "Spindel" }[form];
+  const schluessel = "seite.untertitel" + endung;
   setzeI18n(document.querySelector(".untertitel"), schluessel);
 }
 
@@ -281,6 +290,15 @@ function zeigeDruckEingabe(e) {
 
 /** Schnitt und Grundriss zeichnen; der Grundriss übernimmt Maßstab und x-Lage des Schnitts. */
 function zeichneZeichnungen() {
+  // Vorläufig: Spindeltreppe noch ohne Zeichnungen und DXF/SVG-Export (folgen in den nächsten Schritten).
+  const spindel = letztesErgebnis.form === "spindel";
+  document.getElementById("zeichnungFolgt").hidden = !spindel;
+  zeichenflaeche.hidden = spindel;
+  for (const knopf of document.querySelectorAll('.export [data-export="dxf"], .export [data-export="svg"]')) {
+    knopf.disabled = spindel;
+  }
+  if (spindel) return;
+
   // Sichtbare Breite des Scrollbereichs, nicht der Abbildung (die wächst mit der Zeichnung).
   // Abgerundet: clientWidth rundet z. B. 957,6 px auf 958 – die Zeichnung wäre dann zu breit.
   const breite = Math.floor(zeichenflaeche.getBoundingClientRect().width);
@@ -389,19 +407,19 @@ formular.addEventListener("submit", (ereignis) => {
     raumVorgabe[schluessel] = wert;
   }
 
-  letzteEingabe = { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe };
+  letzteEingabe = { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe, material: auswahl.material };
   berechneVergleich(true);
 });
 
-// Variantenvergleich (bewertung.js): alle drei Formen; gezeichnet, geprüft und exportiert
+// Variantenvergleich (bewertung.js): alle vier Formen; gezeichnet, geprüft und exportiert
 // wird die gewählte Karte – nach „Berechnen“ die Empfehlung (oder die, der am wenigsten fehlt).
 let letzteEingabe = null;
 let letzterVergleich = null;
-const auswahl = { form: null, richtungL: "links", material: STANDARD_MATERIAL };
+const auswahl = { form: null, richtung: { L: "links", spindel: "links" }, material: STANDARD_MATERIAL };
 
 /** Vergleicht die Varianten neu; bei neuer Eingabe wird die Empfehlung gewählt. */
 function berechneVergleich(neueEingabe) {
-  letzterVergleich = vergleicheVarianten(letzteEingabe, auswahl.richtungL);
+  letzterVergleich = vergleicheVarianten(letzteEingabe, auswahl.richtung);
   if (neueEingabe) auswahl.form = letzterVergleich.empfehlung ?? letzterVergleich.naechste;
   zeigeAuswahl();
 }
@@ -418,19 +436,20 @@ document.getElementById("varianten").addEventListener("click", (ereignis) => {
   if (!karte) return;
   auswahl.form = karte.dataset.form;
   if (richtungKnopf) {
-    auswahl.richtungL = richtungKnopf.dataset.richtung;
+    auswahl.richtung[auswahl.form] = richtungKnopf.dataset.richtung; // L oder Spindeltreppe
     berechneVergleich(false);
   } else {
     zeigeAuswahl();
   }
   // Die Karten werden neu aufgebaut: Fokus auf dieselbe Schaltfläche zurücksetzen.
   const ziel = richtungKnopf
-    ? `.karte[data-form="L"] [data-richtung="${auswahl.richtungL}"]`
+    ? `.karte[data-form="${auswahl.form}"] [data-richtung="${auswahl.richtung[auswahl.form]}"]`
     : `.karte[data-form="${auswahl.form}"] .karte-wahl`;
   document.querySelector(ziel)?.focus();
 });
 
-// Materialwahl: zeichnet die gewählte Variante neu (Berechnung und Normprüfung bleiben gleich).
+// Materialwahl: zeichnet die gewählte Variante neu. Gerade, L und U bleiben gleich; bei der
+// Spindeltreppe gehen Spindel und Stufendicke in die Berechnung ein – daher neu vergleichen.
 const materialwahl = document.querySelector(".materialwahl");
 materialwahl.addEventListener("click", (ereignis) => {
   const knopf = ereignis.target.closest("button[data-material]");
@@ -439,7 +458,9 @@ materialwahl.addEventListener("click", (ereignis) => {
   for (const b of materialwahl.querySelectorAll("button")) {
     b.setAttribute("aria-pressed", String(b === knopf));
   }
-  if (letzterVergleich) zeigeAuswahl();
+  if (!letzterVergleich) return;
+  letzteEingabe = { ...letzteEingabe, material: auswahl.material };
+  berechneVergleich(false);
 });
 
 // Beim Öffnen sofort mit den Standardwerten des Formulars rechnen (275 cm, Wohngebäude, 80 cm),

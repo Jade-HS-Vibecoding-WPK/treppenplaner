@@ -1,6 +1,6 @@
 /*
  * variantenkarten.js – Anzeige des Variantenvergleichs (bewertung.js):
- * Empfehlungssatz, drei Karten mit Mini-Grundriss (ohne Maße) und die Kurztabelle für den Druck.
+ * Empfehlungssatz, vier Karten mit Mini-Grundriss (ohne Maße) und die Kurztabelle für den Druck.
  * Rechnet nichts selbst; Texte aus i18n.js, Zahlenformat wie in app.js (cm, NBSP).
  */
 
@@ -25,7 +25,6 @@ function miniGrundriss(treppe) {
   svg.setAttribute("aria-hidden", "true");
   svg.setAttribute("preserveAspectRatio", "xMinYMid meet");
 
-  const { laeufe, podest } = anordnung(treppe);
   const B = treppe.laufbreite;
   const a = treppe.auftritt;
   const vorgabe = treppe.raum?.vorgabe;
@@ -48,6 +47,12 @@ function miniGrundriss(treppe) {
       class: treppe.raum.passt ? "" : "fehlmass",
     });
   }
+  if (treppe.spindel) {
+    spindelSkizze(svg, treppe, p, strich);
+    return svg;
+  }
+
+  const { laeufe, podest } = anordnung(treppe);
   for (const lauf of laeufe) {
     rechteck(laufRechteck(lauf, B), 1);
     const auftritte = Math.round(lauf.laenge / a);
@@ -68,12 +73,44 @@ function miniGrundriss(treppe) {
   return svg;
 }
 
+// Stützpunkte je Stufe für Bögen im Mini-Grundriss (Polylinie statt SVG-Bogen, auch über 360°)
+const SKIZZE_BOGENPUNKTE_JE_STUFE = 4;
+
+/**
+ * Mini-Grundriss der Spindeltreppe: Außenkreis (D), nutzbare Laufbreite außen, Spindel,
+ * Setzstufen einer Umdrehung (bei ganzzahliger Teilung liegen die der zweiten darauf),
+ * Lauflinie vom Antritt bis zur letzten Setzstufe mit Antrittskreis.
+ */
+function spindelSkizze(svg, treppe, p, strich) {
+  const g = treppe.spindel;
+  const lage = spindelLage(treppe);
+  const [mx, my] = lage.mitte;
+  const kreis = (r, breite) =>
+    skizzenElement(svg, "circle", { ...strich, cx: mx, cy: -my, r, "stroke-width": breite });
+  kreis(g.durchmesser / 2, 0.75);
+  kreis(g.Ra, 1);
+  kreis(g.rS, 1);
+  for (let k = 0; k < Math.min(g.teilung, treppe.anzahlSteigungen); k++) {
+    const punkte = [lage.punkt(g.rS, k), lage.punkt(g.Ra, k)].map(p).join(" ");
+    skizzenElement(svg, "polyline", { ...strich, points: punkte, "stroke-width": 0.5 });
+  }
+  const ende = treppe.anzahlSteigungen - 1;
+  const lauflinie = [];
+  for (let i = 0; i <= ende * SKIZZE_BOGENPUNKTE_JE_STUFE; i++) {
+    lauflinie.push(lage.punkt(g.rL, i / SKIZZE_BOGENPUNKTE_JE_STUFE));
+  }
+  skizzenElement(svg, "polyline", { ...strich, points: lauflinie.map(p).join(" "), "stroke-width": 0.5 });
+  const [sx, sy] = lauflinie[0];
+  skizzenElement(svg, "circle", { ...strich, cx: sx, cy: -sy, r: treppe.laufbreite / 12, "stroke-width": 0.75 });
+}
+
 /** Text eines Ausschlussgrunds, z. B. „passt nicht: es fehlen 34,3 cm Länge“. */
 function ausschlussText(g) {
   switch (g.grund) {
     case "raum": return t("ausschluss.raum", { teile: fehltTeile(g.fehlt) });
     case "podestNoetig": return t("ausschluss.podestNoetig", { max: g.max });
     case "laufZuKurz": return t("ausschluss.laufZuKurz", { min: g.min });
+    case "spindelLaufbreite": return t("ausschluss.spindelLaufbreite", { max: g.max });
     default: return t("ausschluss." + g.grund);
   }
 }
@@ -136,9 +173,13 @@ function karte(v, vergleich, gewaehlt) {
   werte.append(
     kartenwert(t("ergebnis.anzahlSteigungen"), tr.anzahlSteigungen + jeLauf),
     kartenwert("s / a", `${zahl(tr.steigung)} / ${cm(tr.auftritt)}`),
-    kartenwert(t("ergebnis.platzbedarf"), `${zahl(tr.footprint.laenge)}${NBSP}× ${cm(tr.footprint.breite)}`),
+    tr.spindel
+      ? kartenwert(t("ergebnis.durchmesser"), cm(tr.spindel.durchmesser))
+      : kartenwert(t("ergebnis.platzbedarf"), `${zahl(tr.footprint.laenge)}${NBSP}× ${cm(tr.footprint.breite)}`),
   );
   inhalt.appendChild(werte);
+  // Spindeltreppe: Hinweis zur notwendigen Treppe – schwarz (Hinweis, kein Normverstoß)
+  if (tr.spindel) inhalt.appendChild(span("karte-hinweis", t("hinweis.notwendigeTreppe")));
 
   if (v.ausgeschlossen) {
     const gruende = span("karte-gruende");
@@ -154,8 +195,8 @@ function karte(v, vergleich, gewaehlt) {
   }
   el.appendChild(knopf);
 
-  // L: Drehsinn links | rechts (gleiche Punkte, Spiegelbild)
-  if (v.form === "L") {
+  // L und Spindeltreppe: Drehsinn links | rechts (gleiche Punkte, Spiegelbild)
+  if (v.form === "L" || v.form === "spindel") {
     const wahl = document.createElement("div");
     wahl.className = "richtungwahl";
     wahl.setAttribute("role", "group");
