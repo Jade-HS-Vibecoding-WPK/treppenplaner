@@ -86,7 +86,32 @@
   - Holz'da Treppenauge çakışması (2×6 > 10 cm) bilerek düzeltilmedi, notta belirtildi; zaman nedeniyle Spindeltreppe öncelikli (17.11.).
   - Görsel kontrolden sonra (17.11.): Holz kesitinde Trittstufe'ler boş kutu gibi görünüyordu → tarama daha sık ve kalın (2 px, 0,6 px), kontur 1,5 px; Stahl ve Stahlbeton değişmedi. Grundriss'te Schnittlinie'nin üstündeki Wange çizgileri her yerde kesik olmalı.
 
+- **Spindeltreppe (18.11., hocanın isteği, 4. varyant):** Plan kullanıcıyla konuşuldu, 5 adım, her adım ayrı commit, push yok.
+  - **Norm (sekundär, Original nicht eingesehen):** Kaynak: Baunetz Wissen „Spindeltreppen“ (https://www.baunetzwissen.de/treppen/fachwissen/treppenformen/spindeltreppen-3375193) ve Glossar „Gehbereich“ (https://www.baunetzwissen.de/glossar/g/gehbereich-48139), ikisi de DIN 18065'e atıfla, baskı yılı yok.
+    - Lauflinie boyunca s, a ve 2s + a (59–65 cm) düz merdivenle aynı.
+    - Gehbereich = 2/10 B, iç sınırı B'nin ortasında (B ≤ 130 cm), dış sınıra en fazla 40 cm; Lauflinie Gehbereich'in içinde.
+    - İç sınırda Auftritt ≥ 10 cm; daha dar kısım nutzbare Laufbreite'ye sayılmıyor.
+    - Lichte Durchgangshöhe ≥ 200 cm (Gehbereich'te / Lauflinie boyunca). Bu artık `norm.js`'deki `durchgangshoeheMin` değerinin kaynağı.
+    - ⚠ Glossar'daki genel cümle (B > 100 cm'de Gehbereich 20 cm) Spindel kuralıyla uzlaştırılmamış; Spindel kuralı kullanılıyor.
+    - Bulunamadı: Spindel çapı, Teilung kuralı, Auftritt'in yay mı kiriş mi ölçüldüğü.
+  - **Notwendige Treppe:** Net bir yasak bulunamadı. MBO § 34 sadece einschiebbare Treppen ve Rolltreppen'i yasaklıyor (MV-Fassung, umwelt-online). Baunetz: „besser nicht als notwendige Treppen“, izin Landesbauordnung'a bağlı. DGUV 208-005, Kap. 4: iş yerlerinde birinci kaçış yolunda izinli değil. → Kart kalıyor; her iki bina türünde kısa siyah uyarı „als notwendige Treppe ggf. nicht zulässig – Landesbauordnung prüfen“. *(Benim kararım.)*
+  - Malzeme hesaba giriyor (Spindel çapı, basamak kalınlığı → Durchgangshöhe). Diğer formlar etkilenmiyor. *(Benim kararım.)*
+  - Teilung tam sayı (ikinci turun basamak çizgileri birinci turunkilerle çakışıyor). *(Benim kararım.)*
+  - Lauflinie tercihen 0,6 B (DGUV önerisi, Gehbereich ortası), gerekirse Gehbereich içinde 0,5 B'ye kadar içe. *(Benim kararım.)*
+  - Varsayımlar (Annahme, kein Normwert): Spindel Ø Stahlbeton 20 / Holz 12 / Stahl 10 cm; Geländer payı dışta 5 cm; basamak kalınlığı Holz/Stahl mevcut Trittstufe (5 / 4 cm), Stahlbeton 8 cm Kragstufe. Stahlbeton spiralde Kragstufe gösterimi bir basitleştirme (gerçekte genelde monolitik helis plak) → kesit notuna ve README „Eigene Annahmen“a. *(Benim kararım.)*
+  - Puanlama: `GEWICHTE` değişmiyor. Komfort için seçenek C (Kₐ nutzbare Laufbreite boyunca ortalama), Adım 2'deki senaryolardan sonra tekrar bakılacak. Sicherheit ve Nutzung için mevcut formüller, ek ceza yok. *(Benim kararım.)*
+  - B > 130 cm → Spindel eleniyor (Gehbereich kuralı belgelenmemiş). *(Benim kararım.)*
+  - Plan: ikinci turun numaraları iç halkada; çok karışırsa sadece ilk tur + son numara. Deckenöffnung = D çaplı daire; kenardaki Kopfhöhe kontrol edilmiyor (README Eigene Annahmen, PLAN'daki açık madde kalıyor). *(Benim kararım.)*
+
 ## Yapay zekânın kararları
+
+- **Spindeltreppe – hesap (18.11., Adım 1):**
+  - Ayrı dosya `js/spindeltreppe.js`; `berechneTreppe("spindel", …)` oraya yönlendiriyor. Sonuç diğer formlarla aynı biçimde: tek „Lauf“ Lauflinie boyunca (n Steigung, n − 1 Auftritt, uzunluk = Abwicklung), Podest yok, Footprint D × D, ek olarak `spindel` (geometri).
+  - Sıra: s ve a mevcut mantıkla (`stufenKandidaten`, `treppeFuerForm`) → Teilung t: Durchgangshöhe (t·s − Stufendicke ≥ 200) ve Gehbereich koşulunu sağlayan **en küçük** tam sayı (en küçük çap) → r_L = a / (2 sin(π/t)) → R_i = max(Spindel, 10 / (2 sin(π/t)), r_L − 0,6 B) → R_a = R_i + B → D = 2 (R_a + Geländer).
+  - Auftritt'ler kiriş (Sehne) olarak ölçülüyor: biraz daha küçük, güvenli taraf (`TODO: Quelle prüfen`).
+  - Pratikte bağlayıcı olan, iç Auftritt ≥ 10 cm koşulu: Lauflinie çoğunlukla 0,5 B'ye yakın kayıyor ve Durchgangshöhe 230 cm'in üstünde kalıyor. Bu yüzden malzeme D'yi şimdilik değiştirmiyor, sadece Durchgangshöhe'yi değiştiriyor.
+  - Normprüfung'da yeni satırlar: Laufbreite ≤ 130 (Gehbereich kuralı), Auftritt innen, Lauflinie im Gehbereich (iç sınırdan uzaklık, sınır 0,5–0,7 B), Durchgangshöhe; 18-Steigungen-Regel düz merdivendeki gibi. „≥ 3 Steigungen je Lauf“ sadece L/U'da.
+  - Örnek: 275 cm, Wohngebäude, B = 80 → n = 16, t = 14, R_i = 22,5, r_L = 64,3 (0,52 B), D = 214,9 cm, dönüş 386°.
 
 - **Materialwahl – teknik (17.11.):**
   - `js/material.js`: `MATERIALIEN` (konstruktion `laufplatte` | `wange`, `bauteile`, `schraffur`). Çizimler sadece `materialVon()`, `bauteil()`, `wangendicke()`, `materialSchraffur()` ve `geschnittenesBauteil()` ile erişiyor. Spindeltreppe için her malzemeye bir `spindel` girdisi eklenmesi yeterli olmalı.

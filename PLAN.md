@@ -24,7 +24,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Gestaltung nach dem UI-Design-Kurs (Stil-Prompt und bewusste Entscheidungen in `CLAUDE.md`)
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
-- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; eigener Schritt, nutzt die Materiallogik aus `js/material.js`)
+- [ ] Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt 18.11., 5 Schritte): ✅ 1 Berechnung + Normprüfung · [ ] 2 Karte + Punkte · [ ] 3 Grundriss · [ ] 4 Abwicklung · [ ] 5 DXF, Texte, README
 - [ ] Veröffentlichung auf GitHub Pages
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
@@ -92,6 +92,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 - ✅ Nach der Sichtprüfung (Nutzer, U 275 / Wohngebäude / 80): Holz-Trittstufen deutlicher (Schraffur 2 px / 0,6 px, Kontur 1,5 px, auch DXF SCHRAFFUR_HOLZ); Wangen im Grundriss über der Schnittebene überall gestrichelt (überlagerte Kanten am Treppenauge entfernt, Innenecke L/U korrigiert). Treppenauge 10 cm bei Holz bewusst nicht geändert (Hinweis in Legende und README-Ausblick).
 
+- ✅ Spindeltreppe, Schritt 1 (18.11.): `js/spindeltreppe.js` – Teilung t (ganzzahlig) aus lichter Durchgangshöhe (t · s − Stufendicke ≥ 200 cm) und Gehbereich (Auftritt innen ≥ 10 cm, Lauflinie 0,5–0,7 B von innen, bevorzugt 0,6 B), kleinstes t = kleinster Durchmesser; Auftritt als Sehne; Normprüfung mit vier neuen Zeilen (Laufbreite ≤ 130 cm für die Gehbereichsregel, Auftritt innen, Lauflinie im Gehbereich, Durchgangshöhe) und der 18er-Regel; Material geht in die Berechnung ein (Spindel-Ø 20/12/10 cm, Stufendicke 8/5/4 cm, Geländer 5 cm, Annahmen in `material.js`); Quellen in `norm.js` (Baunetz Wissen, Original nicht eingesehen), Durchgangshöhe und Schrittmaß jetzt mit Quelle; DE/EN/FR. Noch nicht im Variantenvergleich (Schritt 2).
+- ✅ Konsolentest Schritt 1: 275 cm / Wohngebäude / 80 → n = 16, t = 14, Lauflinie 0,52 B, D = 214,9 cm, Drehung 386°, Durchgangshöhe 232,6–236,6 cm; 25 308 Kombinationen (50–600 cm, beide Gebäudearten, B 30–400, drei Materialien) ohne Fehler/NaN; bei B ≤ 130 und normgerechten Stufen immer eine zulässige Teilung gefunden.
+
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 
 **Stand 17.11., Teil C (Variantenvergleich) fertig, bewertet, Druck korrigiert und gepusht** – echter PDF-Test des Nutzers nach der Korrektur steht aus.
@@ -118,7 +121,12 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
    **Offen:** PDF nach der Korrektur erneut prüfen (280 cm, Wohngebäude, 100, 320 × 220 → 2 Seiten erwartet). Bekannt: bei 600 cm passen Abwicklung und Grundriss zusammen nicht auf Seite 2 (Grundriss auf Seite 3).
 
 **Do 18.11.**
-- Spindeltreppe als 4. Variante (eigener Schritt, Plan vorher abstimmen; nutzt `js/material.js`, je Material ein Eintrag `spindel` ergänzen)
+- Spindeltreppe als 4. Variante – Plan abgestimmt (siehe `notlar.md`), fünf Schritte mit je einem Commit, kein Push:
+  1. ✅ Berechnung + Normprüfung (`js/spindeltreppe.js`, `norm.js`, `material.js`)
+  2. Karte + Punkte (Komfort C, danach Szenarien a–e im Konsolentest), Hinweis „notwendige Treppe“, Druck Seite 1 prüfen
+  3. Grundriss (Bogen-Element, DXF ARC)
+  4. Abwicklung (kann entfallen)
+  5. DXF-Dateiname, Fachbegriffe DE/EN/FR, README (Eigene Annahmen: Kragstufen bei Stahlbeton vereinfacht, Deckenöffnung = Kreis D, Kopfhöhe am Rand nicht geprüft)
 - ✅ Sichtprüfung Materialwahl (Nutzer)
 - DXF mit Holz/Stahl in AutoCAD prüfen (Ebenen WANGE, TRITTSTUFE, SCHRAFFUR_HOLZ/STAHL, SOLID)
 

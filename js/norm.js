@@ -10,8 +10,8 @@
 
 const DIN18065 = Object.freeze({
   // Schrittmaßregel: 59 cm ≤ 2s + a ≤ 65 cm
-  // Quelle: DIN 18065 – nicht an einer Quelle geprüft (WEKA bestätigt nur s, a und Laufbreite)
-  // TODO: Quelle prüfen
+  // Quelle: Baunetz Wissen „Spindeltreppen“ (mit Verweis auf DIN 18065, Ausgabe nicht genannt),
+  // abgerufen 18.11.; Original nicht eingesehen (WEKA bestätigt nur s, a und Laufbreite)
   schrittmass: Object.freeze({
     min: 59,
     max: 65,
@@ -28,6 +28,25 @@ const DIN18065 = Object.freeze({
   // Quelle: Baunetz Wissen „Treppen“ (mit Verweis auf DIN 18065), Original nicht eingesehen
   podest: Object.freeze({
     minLaengeJeLaufbreite: 1,
+  }),
+
+  // Spindeltreppe. Längs der Lauflinie gelten Steigung, Auftritt und Schrittmaß wie bei
+  // geraden Treppen (Werte der Gebäudeart unten).
+  // Quelle für alle Werte dieses Blocks: Baunetz Wissen „Spindeltreppen“ und Glossar „Gehbereich“
+  // (mit Verweis auf DIN 18065, Ausgabe nicht genannt), abgerufen 18.11.; Original nicht eingesehen.
+  spindeltreppe: Object.freeze({
+    // Gehbereich = 2/10 der nutzbaren Laufbreite; die Lauflinie muss darin liegen.
+    gehbereichAnteil: 0.2,
+    // Innere Grenze des Gehbereichs in der Mitte der nutzbaren Laufbreite
+    // (Anteil der Laufbreite, gemessen von der inneren Begrenzung).
+    gehbereichInnenAnteil: 0.5,
+    // Diese Lage des Gehbereichs gilt für nutzbare Laufbreiten bis 130 cm; für breitere
+    // Spindeltreppen wurde keine Regel gefunden (im Tool: Variante ausgeschlossen).
+    laufbreiteMax: 130,
+    // Auftritt an der inneren Begrenzung der nutzbaren Laufbreite ≥ 10 cm; schmalere Bereiche
+    // zählen nicht zur nutzbaren Laufbreite.
+    // TODO: Quelle prüfen – gemessen als Sehne (im Tool) oder als Bogen? (Sehne ist die sichere Seite)
+    auftrittInnenMin: 10,
   }),
 
   gebaeudearten: Object.freeze({
@@ -48,8 +67,8 @@ const DIN18065 = Object.freeze({
       laufbreiteMin: 80,
 
       // Lichte Durchgangshöhe: ≥ 200 cm
-      // Quelle: DIN 18065 – nicht an einer Quelle geprüft (im Tool noch nicht verwendet)
-      // TODO: Quelle prüfen
+      // Quelle: Baunetz Wissen „Spindeltreppen“ (mit Verweis auf DIN 18065, Ausgabe nicht genannt),
+      // abgerufen 18.11.; Original nicht eingesehen. Im Tool nur bei der Spindeltreppe geprüft.
       durchgangshoeheMin: 200,
 
       // Podest spätestens nach 18 Steigungen: gilt hier nicht (Ausnahme für Wohngebäude
@@ -75,8 +94,8 @@ const DIN18065 = Object.freeze({
       laufbreiteMin: 100,
 
       // Lichte Durchgangshöhe: ≥ 200 cm
-      // Quelle: DIN 18065 – nicht an einer Quelle geprüft (im Tool noch nicht verwendet)
-      // TODO: Quelle prüfen
+      // Quelle: Baunetz Wissen „Spindeltreppen“ (mit Verweis auf DIN 18065, Ausgabe nicht genannt),
+      // abgerufen 18.11.; Original nicht eingesehen. Im Tool nur bei der Spindeltreppe geprüft.
       durchgangshoeheMin: 200,
 
       // Podest spätestens nach 18 Steigungen (höchstens 18 Steigungen je Lauf).

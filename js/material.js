@@ -22,6 +22,11 @@ const MATERIALIEN = {
     konstruktion: "laufplatte",
     bauteile: {
       laufplatte: { dicke: 18 }, // cm – Annahme (Vorgabe des Nutzers, 16.11.), kein Normwert
+      // Spindeltreppe: Kragstufen um die Spindel – vereinfacht, in Wirklichkeit meist eine
+      // monolithische Wendelplatte (Hinweis in der Legende und im README)
+      kragstufe: { dicke: 8 },     // cm – Annahme (Nutzer, 18.11.), kein Normwert
+      spindel: { durchmesser: 20 }, // cm – Annahme (Nutzer, 18.11.), kein Normwert
+      gelaender: { zuschlag: 5 },   // cm, Spindeltreppe: Geländer außen um die nutzbare Laufbreite – Annahme (Nutzer, 18.11.)
     },
     // 45°-Linien wie bisher – vereinfacht, in Anlehnung an DIN 1356-1 (Original nicht eingesehen)
     schraffur: { art: "linien", winkel: 45, abstand: 5 },
@@ -33,6 +38,8 @@ const MATERIALIEN = {
       trittstufe: { dicke: 5 },                    // cm – Annahme (Nutzer, 17.11.), kein Normwert
       wange: { dicke: 6, hoehe: 30, ueberstand: 5 }, // cm – Annahme (Nutzer, 17.11.), kein Normwert;
       // ueberstand = Oberkante Wange über der Linie der Stufenvorderkanten (senkrecht zur Steigung)
+      spindel: { durchmesser: 12 }, // cm – Annahme (Nutzer, 18.11.), kein Normwert
+      gelaender: { zuschlag: 5 },   // cm, Spindeltreppe: Geländer außen um die nutzbare Laufbreite – Annahme (Nutzer, 18.11.)
     },
     // Linien parallel zur Faser (längs der Trittstufe), dicht und etwas kräftiger, damit die dünne
     // Trittstufe als geschnitten lesbar ist – vereinfacht, Darstellung nicht normgeprüft
@@ -45,6 +52,8 @@ const MATERIALIEN = {
     bauteile: {
       trittstufe: { dicke: 4 },                        // cm – Annahme (Nutzer, 17.11.), kein Normwert
       wange: { dicke: 1.5, hoehe: 25, ueberstand: 5 }, // cm – Annahme (Flachstahl, Nutzer 17.11.), kein Normwert
+      spindel: { durchmesser: 10 }, // cm – Annahme (Stahlrohr, Nutzer 18.11.), kein Normwert
+      gelaender: { zuschlag: 5 },   // cm, Spindeltreppe: Geländer außen um die nutzbare Laufbreite – Annahme (Nutzer, 18.11.)
     },
     // Vollflächig schwarz (üblich für dünne Metallquerschnitte) – vereinfacht, Quelle nicht geprüft
     schraffur: { art: "voll" },
@@ -59,6 +68,21 @@ function materialVon(ergebnis) {
 /** Maße eines Bauteils, z. B. bauteil(material, "trittstufe").dicke; null, wenn es das Bauteil nicht gibt. */
 function bauteil(material, name) {
   return material.bauteile[name] ?? null;
+}
+
+/**
+ * Maße der Spindeltreppe aus dem Material (alles Annahmen, keine Normwerte):
+ * Spindeldurchmesser, Geländerzuschlag außen und Stufendicke (Holz/Stahl: die Trittstufe
+ * wie bei der Wangentreppe, Stahlbeton: Kragstufe). Die Stufendicke geht in die lichte
+ * Durchgangshöhe ein.
+ */
+function spindelMasse(material) {
+  const stufe = bauteil(material, "trittstufe") ?? bauteil(material, "kragstufe");
+  return {
+    spindelDurchmesser: bauteil(material, "spindel").durchmesser,
+    gelaenderZuschlag: bauteil(material, "gelaender").zuschlag,
+    stufendicke: stufe.dicke,
+  };
 }
 
 /** Wangendicke im Grundriss (0 ohne Wangen). */

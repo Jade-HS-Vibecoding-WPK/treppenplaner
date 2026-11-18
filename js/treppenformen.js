@@ -1,10 +1,11 @@
 /*
  * treppenformen.js – Aufteilung der Steigungen auf Läufe und Podeste.
  *
- * Formen (nur Podestlösungen, keine gewendelten Stufen):
+ * Formen (gerade, L, U: nur Podestlösungen, keine gewendelten Stufen):
  *   gerade – ein Lauf
  *   L      – zwei Läufe im rechten Winkel, Viertelpodest B × B (Richtung links oder rechts)
  *   U      – zwei parallele Läufe, Halbpodest (Tiefe B, Breite 2B + Treppenauge)
+ *   spindel – Spindeltreppe: eigene Geometrie in spindeltreppe.js, gleiches Ergebnisformat
  *
  * Steigung und Auftritt hängen nicht von der Form ab (berechnung.js); hier wird nur aufgeteilt.
  * Das Podest ersetzt einen Auftritt: Lauf i hat nᵢ Steigungen und nᵢ − 1 Auftritte;
@@ -74,7 +75,7 @@ function pruefeLaeufe(form, laeufe, podest, grenzen, laufbreite) {
   const pruefungen = [];
   const steigungen = laeufe.map((l) => l.steigungen);
 
-  if (form !== "gerade") {
+  if (form === "L" || form === "U") {
     const min = DIN18065.treppenlauf.minSteigungen;
     const wert = Math.min(...steigungen);
     pruefungen.push({ kriterium: "laufMin", wert, grenze: { min }, einheit: "anzahl", ok: wert >= min });
@@ -118,11 +119,12 @@ function waehleAufteilung(form, stufung, grenzen, laufbreite, raumVorgabe) {
 
 /**
  * Hauptfunktion: berechnet eine Treppe der gewünschten Form.
- * @param {"gerade"|"L"|"U"} form
- * @param {"links"|"rechts"|null} richtung nur für L (Drehsinn beim Hinaufgehen)
+ * @param {"gerade"|"L"|"U"|"spindel"} form
+ * @param {"links"|"rechts"|null} richtung nur für L und Spindeltreppe (Drehsinn beim Hinaufgehen)
  * @param {object|null} stufungVorgabe Stufung aus stufenKandidaten() (null = die bequemste)
  * @param {{geschosshoehe: number, gebaeudeart: string, laufbreite: number,
- *          raumVorgabe: {laenge: number|null, breite: number|null}|null}} eingabe
+ *          raumVorgabe: {laenge: number|null, breite: number|null}|null,
+ *          material?: string}} eingabe – material geht nur bei der Spindeltreppe in die Berechnung ein
  */
 function berechneTreppe(form, richtung, eingabe, stufungVorgabe = null) {
   const { geschosshoehe, gebaeudeart, laufbreite, raumVorgabe = null } = eingabe;
@@ -130,6 +132,7 @@ function berechneTreppe(form, richtung, eingabe, stufungVorgabe = null) {
 
   // Ohne Vorgabe die bequemste Stufung; bewertung.js gibt je Form ggf. eine steilere vor.
   const stufung = stufungVorgabe ?? stufenKandidaten(geschosshoehe, grenzen)[0];
+  if (form === "spindel") return berechneSpindeltreppe(richtung, eingabe, stufung); // spindeltreppe.js
   const wahl = waehleAufteilung(form, stufung, grenzen, laufbreite, raumVorgabe);
 
   const stufenPruefungen = pruefeVariante(stufung, grenzen);

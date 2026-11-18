@@ -59,6 +59,7 @@ const TEXTE = {
     "form.gerade": "Gerade Treppe",
     "form.L": "L-Treppe",
     "form.U": "U-Treppe",
+    "form.spindel": "Spindeltreppe",
     "richtung.links": "links",
     "richtung.rechts": "rechts",
     "vergleich.titel": "Variantenvergleich",
@@ -100,6 +101,7 @@ const TEXTE = {
     "urteil.podestNoetig":
       "✗ Mehr als {max} Steigungen ohne Podest – für Gebäude im Allgemeinen ist ein Podest nötig (L- oder U-Treppe).",
     "urteil.laeufe": "✗ Die Aufteilung auf die Läufe erfüllt die Anforderungen nicht (siehe Normprüfung).",
+    "urteil.spindel": "✗ Die Geometrie der Spindeltreppe erfüllt die Anforderungen nicht (siehe Normprüfung).",
 
     "kriterium.steigung": "Steigung s",
     "kriterium.auftritt": "Auftritt a",
@@ -108,6 +110,10 @@ const TEXTE = {
     "kriterium.laufMin": "Steigungen je Lauf (mind.)",
     "kriterium.laufMax": "Steigungen je Lauf ohne Podest",
     "kriterium.podestlaenge": "Podestlänge",
+    "kriterium.spindelLaufbreite": "Nutzbare Laufbreite (Regel Gehbereich)",
+    "kriterium.auftrittInnen": "Auftritt an der inneren Begrenzung",
+    "kriterium.lauflinieGehbereich": "Lauflinie im Gehbereich (Abstand von innen)",
+    "kriterium.durchgangshoehe": "Lichte Durchgangshöhe",
 
     "pruefung.titel": "Normprüfung",
     "pruefung.kriterium": "Kriterium",
@@ -236,6 +242,7 @@ const TEXTE = {
     "form.gerade": "Straight stair",
     "form.L": "L-shaped stair",
     "form.U": "U-shaped stair",
+    "form.spindel": "Spiral staircase",
     "richtung.links": "left",
     "richtung.rechts": "right",
     "vergleich.titel": "Comparison of options",
@@ -277,6 +284,7 @@ const TEXTE = {
     "urteil.podestNoetig":
       "✗ More than {max} risers without a landing – buildings in general need a landing (L- or U-shaped stair).",
     "urteil.laeufe": "✗ The division into flights does not meet the requirements (see standard check).",
+    "urteil.spindel": "✗ The geometry of the spiral staircase does not meet the requirements (see standard check).",
 
     "kriterium.steigung": "Rise s",
     "kriterium.auftritt": "Going a",
@@ -285,6 +293,10 @@ const TEXTE = {
     "kriterium.laufMin": "Risers per flight (min.)",
     "kriterium.laufMax": "Risers per flight without landing",
     "kriterium.podestlaenge": "Landing length",
+    "kriterium.spindelLaufbreite": "Clear width (walking zone rule)",
+    "kriterium.auftrittInnen": "Going at the inner boundary",
+    "kriterium.lauflinieGehbereich": "Walking line within walking zone (distance from inside)",
+    "kriterium.durchgangshoehe": "Headroom",
 
     "pruefung.titel": "Check against DIN 18065",
     "pruefung.kriterium": "Criterion",
@@ -414,6 +426,7 @@ const TEXTE = {
     "form.gerade": "Escalier droit",
     "form.L": "Escalier en L",
     "form.U": "Escalier en U",
+    "form.spindel": "Escalier à vis",
     "richtung.links": "à gauche",
     "richtung.rechts": "à droite",
     "vergleich.titel": "Comparaison des variantes",
@@ -457,6 +470,7 @@ const TEXTE = {
     "urteil.podestNoetig":
       "✗ Plus de {max} marches sans palier – les bâtiments en général exigent un palier (escalier en L ou en U).",
     "urteil.laeufe": "✗ La répartition en volées ne satisfait pas aux exigences (voir vérification).",
+    "urteil.spindel": "✗ La géométrie de l'escalier à vis ne satisfait pas aux exigences (voir vérification).",
 
     "kriterium.steigung": "Hauteur de marche s",
     "kriterium.auftritt": "Giron a",
@@ -465,6 +479,10 @@ const TEXTE = {
     "kriterium.laufMin": "Marches par volée (min.)",
     "kriterium.laufMax": "Marches par volée sans palier",
     "kriterium.podestlaenge": "Longueur du palier",
+    "kriterium.spindelLaufbreite": "Emmarchement (règle de la zone de marche)",
+    "kriterium.auftrittInnen": "Giron à la limite intérieure",
+    "kriterium.lauflinieGehbereich": "Ligne de foulée dans la zone de marche (distance depuis l'intérieur)",
+    "kriterium.durchgangshoehe": "Échappée",
 
     "pruefung.titel": "Vérification selon la DIN 18065",
     "pruefung.kriterium": "Critère",

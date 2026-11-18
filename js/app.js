@@ -44,7 +44,8 @@ function urteilText(e) {
   if (e.normgerecht) return t("urteil.normgerecht");
   if (!e.stufenNormgerecht) return t("urteil.keineLoesung");
   if (!e.laufbreiteNormgerecht) return t("urteil.laufbreite");
-  if (e.form === "gerade") {
+  if (e.form === "spindel" && !e.spindelNormgerecht) return t("urteil.spindel");
+  if (e.form === "gerade" || e.form === "spindel") {
     return t("urteil.podestNoetig", { max: DIN18065.gebaeudearten[e.gebaeudeart].maxSteigungenJeLauf });
   }
   return t("urteil.laeufe");
