@@ -4,7 +4,7 @@ Web-App für Architekturstudierende: Aus Geschosshöhe, Gebäudeart und verfügb
 
 **Live:** https://jade-hs-vibecoding-wpk.github.io/treppenplaner/
 
-![Treppenplaner: Eingabe links, Empfehlung und drei Variantenkarten rechts](docs/screenshot.png)
+![Treppenplaner: Eingabe links, Empfehlung und vier Variantenkarten rechts](docs/screenshot.png)
 
 *WPK Vibecoding KI-Werkstatt · Jade Hochschule · November 2026*
 
