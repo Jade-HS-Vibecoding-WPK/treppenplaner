@@ -27,6 +27,7 @@ const TEXTE = {
     "seite.untertitelL": "L-Treppe mit Viertelpodest – Bemessung nach DIN 18065",
     "seite.untertitelU": "U-Treppe mit Halbpodest – Bemessung nach DIN 18065",
     "seite.untertitelSpindel": "Spindeltreppe – Bemessung nach DIN 18065",
+    "seite.motto": "Vier Treppenformen nach DIN 18065 – berechnet, verglichen, gezeichnet.",
     "sprachwahl.label": "Sprache",
 
     "eingabe.titel": "Eingabe",
@@ -233,6 +234,7 @@ const TEXTE = {
       "U-shaped stair with half landing – design to DIN 18065 (German standard for stairs in buildings)",
     "seite.untertitelSpindel":
       "Spiral staircase – design to DIN 18065 (German standard for stairs in buildings)",
+    "seite.motto": "Four stair types to DIN 18065 – calculated, compared, drawn.",
     "sprachwahl.label": "Language",
 
     "eingabe.titel": "Input",
@@ -439,6 +441,7 @@ const TEXTE = {
       "Escalier en U avec palier – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
     "seite.untertitelSpindel":
       "Escalier à vis – dimensionnement selon la DIN 18065 (norme allemande relative aux escaliers)",
+    "seite.motto": "Quatre types d’escaliers selon la DIN 18065 – calculés, comparés, dessinés.",
     "sprachwahl.label": "Langue",
 
     "eingabe.titel": "Saisie",
@@ -650,6 +653,7 @@ const TEXTE = {
       "Yarım sahanlıklı U merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
     "seite.untertitelSpindel":
       "Orta dikmeli döner merdiven – DIN 18065'e göre boyutlandırma (merdivenler için Alman normu)",
+    "seite.motto": "DIN 18065’e göre dört merdiven tipi – hesaplanır, karşılaştırılır, çizilir.",
     "sprachwahl.label": "Dil",
 
     "eingabe.titel": "Girdi",

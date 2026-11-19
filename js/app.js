@@ -452,6 +452,14 @@ function zeigeAuswahl() {
   zeigeErgebnis(letzterVergleich.varianten.find((v) => v.form === auswahl.form).treppe);
 }
 
+// Nur im einspaltigen Layout (Handy/Tablet): nach der Kartenwahl sanft zu den Zeichnungen.
+// Am Laptop stehen Karten und Zeichnungen nebeneinander bzw. im Blick – dort kein Scrollen.
+function scrolleZuZeichnungen() {
+  if (!window.matchMedia("(max-width: 63.99rem)").matches) return;
+  const reduziert = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelector(".zeichnungen")?.scrollIntoView({ behavior: reduziert ? "auto" : "smooth", block: "start" });
+}
+
 document.getElementById("varianten").addEventListener("click", (ereignis) => {
   const richtungKnopf = ereignis.target.closest("[data-richtung]");
   const karte = ereignis.target.closest(".karte");
@@ -462,12 +470,13 @@ document.getElementById("varianten").addEventListener("click", (ereignis) => {
     berechneVergleich(false);
   } else {
     zeigeAuswahl();
+    scrolleZuZeichnungen();
   }
   // Die Karten werden neu aufgebaut: Fokus auf dieselbe Schaltfläche zurücksetzen.
   const ziel = richtungKnopf
     ? `.karte[data-form="${auswahl.form}"] [data-richtung="${auswahl.richtung[auswahl.form]}"]`
     : `.karte[data-form="${auswahl.form}"] .karte-wahl`;
-  document.querySelector(ziel)?.focus();
+  document.querySelector(ziel)?.focus({ preventScroll: true });
 });
 
 // Materialwahl: zeichnet die gewählte Variante neu. Gerade, L und U bleiben gleich; bei der

@@ -67,7 +67,7 @@ h1, h2, h3 { font-family: var(--schrift-titel); font-weight: 700; }
 
 h1 {
   margin: 0;
-  font-size: 2.75rem;
+  font-size: clamp(2rem, 8vw, 3.75rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
@@ -84,7 +84,8 @@ h3 {
   margin: calc(4 * var(--r)) 0 calc(1.5 * var(--r));
 }
 
-.untertitel { margin: var(--r) 0 0; }
+.motto { margin: calc(1.5 * var(--r)) 0 0; font-size: 1.125rem; }
+.untertitel { margin: var(--r) 0 0; font-size: var(--klein); }
 
 /* Sprachwahl DE | EN | FR | TR */
 .sprachwahl {
@@ -373,6 +374,8 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
 @media (max-width: 480px) {
   body { padding-top: calc(2.5 * var(--r)); }
   h1 { font-size: 2rem; }
+  /* Sprachwahl über dem Titel, damit nichts über den Rand läuft */
+  header { flex-direction: column-reverse; align-items: flex-start; gap: var(--r); }
   .block { padding: calc(2 * var(--r)); }
   .pruefung { font-size: 0.85rem; }
 }
@@ -392,9 +395,13 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   flex-direction: column;
   border: var(--linie);
   cursor: pointer;
+  outline: 0 solid var(--tinte);
+  outline-offset: -1px;
+  transition: outline-width 150ms ease;
 }
-/* Gewählte Variante: kräftiger Rahmen */
-.karte.gewaehlt { outline: 2px solid var(--tinte); outline-offset: -1px; }
+/* Hover und gewählte Variante: Rahmen wird kräftiger (gleiche Überblendung) */
+.karte:hover,
+.karte.gewaehlt { outline-width: 2px; }
 /* Ausgeschlossen: gestrichelter Rahmen, Inhalt blass – Begründung bleibt kräftig rot */
 .karte.ausgeschlossen { border-style: dashed; }
 .karte.ausgeschlossen.gewaehlt { outline-style: dashed; }
@@ -464,6 +471,7 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
      auf eine Seite passen (Raster halbiert, Tabellen 9 pt) */
   header { margin-bottom: calc(1.5 * var(--r)); padding-bottom: var(--r); }
   h1 { font-size: 18pt; }
+  .motto { display: none; }
   .untertitel { margin-top: calc(0.5 * var(--r)); font-size: 10pt; }
   footer p { margin: 0; }
   .druck-eingabe { font-size: 9pt; margin-bottom: calc(1.5 * var(--r)); padding-bottom: var(--r); }
@@ -489,4 +497,13 @@ footer p { margin: calc(0.5 * var(--r)) 0; }
   border: var(--linie);
   margin-top: calc(0.25 * var(--r));
   white-space: nowrap;
+}
+
+/* Bewegung abschalten, wenn das Betriebssystem es wünscht */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
