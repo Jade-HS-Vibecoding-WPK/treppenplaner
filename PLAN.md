@@ -25,7 +25,7 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 - ✅ Export von Schnitt und Grundriss als DXF (für ArchiCAD, Revit, AutoCAD), zusätzlich SVG und PDF – Wunsch der Betreuung (in AutoCAD 2027 getestet; ArchiCAD/Revit offen)
 - ✅ Materialwahl Stahlbeton / Holz / Stahl (Wunsch der Betreuung, 17.11.): ändert die Konstruktion in Schnitt/Abwicklung (Laufplatte bzw. Wangen + Trittstufen) und die Schraffur, Materialangabe im Grundriss, in DXF/SVG/PDF und in der Druckzeile; Normprüfung unverändert; Maße als Annahmen in `js/material.js`; DE/EN/FR
 - ✅ Spindeltreppe als 4. Variante (Wunsch der Betreuung, 17.11.; Plan abgestimmt und umgesetzt 18.11. in 5 Schritten: Berechnung + Normprüfung, Karte + Punkte, Grundriss, Abwicklung, Texte + README) – offen: DXF in AutoCAD/Viewer öffnen, Kopfhöhe an der Deckenkante
-- [ ] Veröffentlichung auf GitHub Pages
+- ✅ Veröffentlichung auf GitHub Pages (https://jade-hs-vibecoding-wpk.github.io/treppenplaner/)
 - ✅ README auf Deutsch (mit Screenshot `docs/screenshot.png`)
 
 ### Could
@@ -111,7 +111,9 @@ Treppenplaner – Web-App, die Treppen nach DIN 18065 berechnet, prüft, Variant
 
 - ✅ Türkisch (18.11.): vierte Sprache TR in `js/i18n.js` (Fachbegriffe vom Nutzer, Tabelle in `notlar.md`), Zahlenformat tr-TR, Umschalter DE | EN | FR | TR; einmaliger Hinweis in der Normprüfung, dass türkische Vorschriften nicht geprüft werden; DXF auf Türkisch in Windows-1254 (`$DWGCODEPAGE` ANSI_1254). Kontrolle nur 275 / Wohngebäude / 80 und Szenario 9 (alle vier Varianten): keine Textüberschneidungen in Plan/Schnitt, Karten ohne Überlauf; Druck Seite 1 (simuliert) passt, Szenario 9 knapp (986 von 1009 px).
 
-**Stand 18.11., Spindeltreppe abgeschlossen (nicht gepusht).** Offen: DXF-Test in AutoCAD/Viewer, Kopfhöhe an der Deckenkante.
+**Stand 19.11.: Feature Freeze 19.11., 12:00** – ab jetzt nur noch Dokumentation und Kontrolle; README (Quellen, KI-Einsatz) nach Tag-5-Schablone ergänzt.
+
+**Stand 18.11., Spindeltreppe abgeschlossen.** Offen: DXF-Test in AutoCAD/Viewer, Kopfhöhe an der Deckenkante.
 
 **Stand 17.11., Materialwahl abgeschlossen und gepusht.** Offen: DXF mit Holz/Stahl in AutoCAD öffnen.
 

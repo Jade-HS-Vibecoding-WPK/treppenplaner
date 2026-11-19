@@ -92,16 +92,18 @@ und dann http://localhost:8000 im Browser öffnen.
 
 ## Quellen und Lizenzen
 
-- **DIN 18065:2020-08** „Gebäudetreppen“, Tabelle 1 (Steigung, Auftritt, nutzbare Laufbreite) – zitiert nach [WEKA-Fachportal](https://www.weka.de/architekten-ingenieure/din-18065/), **Original nicht eingesehen**.
-- **Schrittmaßregel 59–65 cm** nach DIN 18065 – zitiert nach Baunetz Wissen „Spindeltreppen“, **Original nicht eingesehen**.
-- **Baunetz Wissen** (mit Verweis auf DIN 18065, Original der Norm nicht eingesehen): mindestens 3 Steigungen je Lauf, Podest spätestens nach 18 Steigungen, Podestlänge ≥ Laufbreite.
+- **DIN 18065:2020-08** „Gebäudetreppen“, Tabelle 1 (Steigung, Auftritt, nutzbare Laufbreite) – zitiert nach [WEKA-Fachportal](https://www.weka.de/architekten-ingenieure/din-18065/), **Original nicht eingesehen** (abgerufen am 17.11.2026).
+- **Schrittmaßregel 59–65 cm** nach DIN 18065 – zitiert nach Baunetz Wissen „Spindeltreppen“, **Original nicht eingesehen** (abgerufen am 18.11.2026).
+- **Baunetz Wissen** (mit Verweis auf DIN 18065, Original der Norm nicht eingesehen): mindestens 3 Steigungen je Lauf, Podest spätestens nach 18 Steigungen, Podestlänge ≥ Laufbreite (abgerufen am 17.11.2026).
   - [Podest](https://www.baunetzwissen.de/glossar/p/podest-3468141)
   - [Treppenlauf](https://www.baunetzwissen.de/treppen/fachwissen/treppenelemente/treppenlauf-3354185)
-- **Spindeltreppe** – zitiert nach Baunetz Wissen (mit Verweis auf DIN 18065, Ausgabe nicht genannt), **Original nicht eingesehen**: Lauflinie und Schrittmaß wie bei geraden Treppen (59–65 cm), Gehbereich 2/10 der Laufbreite, Auftritt innen ≥ 10 cm, lichte Durchgangshöhe ≥ 200 cm.
+- **Spindeltreppe** – zitiert nach Baunetz Wissen (mit Verweis auf DIN 18065, Ausgabe nicht genannt), **Original nicht eingesehen**: Lauflinie und Schrittmaß wie bei geraden Treppen (59–65 cm), Gehbereich 2/10 der Laufbreite, Auftritt innen ≥ 10 cm, lichte Durchgangshöhe ≥ 200 cm (abgerufen am 18.11.2026).
   - [Spindeltreppen](https://www.baunetzwissen.de/treppen/fachwissen/treppenformen/spindeltreppen-3375193)
   - [Gehbereich](https://www.baunetzwissen.de/glossar/g/gehbereich-48139)
-- **DGUV Information 208-005** „Treppen“, Kap. 4 (Spindeltreppen nicht im ersten Fluchtweg) – [BGN](https://vorschriften.bgn-branchenwissen.de/daten/dguv/208_005/4.htm), **Original nicht eingesehen**. Ob eine Spindeltreppe als notwendige Treppe zulässig ist, regelt die jeweilige Landesbauordnung – dazu wurde keine eindeutige Quelle gefunden.
+- **DGUV Information 208-005** „Treppen“, Kap. 4 (Spindeltreppen nicht im ersten Fluchtweg) – [BGN](https://vorschriften.bgn-branchenwissen.de/daten/dguv/208_005/4.htm), **Original nicht eingesehen** (abgerufen am 18.11.2026). Ob eine Spindeltreppe als notwendige Treppe zulässig ist, regelt die jeweilige Landesbauordnung – dazu wurde keine eindeutige Quelle gefunden.
+- **Bibliotheken:** keine (Vanilla HTML/CSS/JS).
 - **Schriften:** Bitter und Nunito, SIL Open Font License 1.1, lokal in `fonts/` (`OFL-Bitter.txt`, `OFL-Nunito.txt`).
+- **Bilder:** eigene Screenshots (`docs/screenshot.png`).
 - **Code:** MIT-Lizenz (siehe `LICENSE`).
 
 **Eigene Annahmen (keine Normwerte):** Laufplatte 18 cm, Geschossdecke 20 cm, Treppenauge der U-Treppe 10 cm, Grenzen für „sehr steil“ (s ≥ 19 cm oder a ≤ 24 cm), Zielwerte 17/29 cm und die Gewichtung der Bewertung. Platzbedarf vereinfacht: Laufbreite = nutzbare Laufbreite, ohne Wangen, Wandabstand sowie Antritts- und Austrittsfläche.
@@ -112,9 +114,10 @@ und dann http://localhost:8000 im Browser öffnen.
 
 ## Einsatz von KI
 
-- **Code:** mit Claude Code (Claude Opus 5.5).
-- **Planung und Normrecherche:** mit Claude (Chat).
-- **Zeitraum:** 16.–20.11.2026.
+- **Werkzeug und Modell:** Claude Code mit Claude Opus 5.5; kleine Aufgaben mit Claude Sonnet 5.5. Planung und Normrecherche zusätzlich mit Claude (Chat).
+- **Zweck:** Programmierung, Umsetzung von Darstellung und Struktur, Normrecherche.
+- **Umfang:** Die KI hat den Code geschrieben und Vorschläge gemacht; Idee, Entscheidungen und Prüfung stammen von mir (siehe unten).
+- **Datum:** 16.–20.11.2026.
 
 **Wer hat was entschieden?**
 
